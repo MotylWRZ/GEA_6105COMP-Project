@@ -63,9 +63,11 @@ public:
 	FORCEINLINE bool IsAlive()   { return m_Health > 0; }
 
 	// Check if Actor1 is an enemy for the Actor2
-	 const virtual bool IsEnemy(AActor* Actor1, AActor* Actor2) const;
+		UFUNCTION(BlueprintPure, Category = "Stats")
+	static bool IsEnemyByActor(AActor* Actor1, AActor* Actor2);
 	// Check if two stats component should refers to each other as enemies or allies
-	 const virtual bool IsEnemy(UActorStatsComponent* StatsComponent1, UActorStatsComponent* StatsComponent2) const;
+		UFUNCTION(BlueprintPure, Category = "Stats")
+	static bool IsEnemyByComponent(UActorStatsComponent* StatsComponent1, UActorStatsComponent* StatsComponent2);
 
 	FORCEINLINE virtual void SetName		(FName NewName)		   { m_Name = NewName; }
 	FORCEINLINE virtual void SetDescription (FText NewDescription) { m_Description = NewDescription; }

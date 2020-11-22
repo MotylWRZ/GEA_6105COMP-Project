@@ -25,6 +25,6 @@ class LJMUTHIRDPERSON425_API IAttackableInterface
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ApplyDamage(AActor* InstigatorActor, int32 DamageToApply);
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	bool IsAlive();
 };

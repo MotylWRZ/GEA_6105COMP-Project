@@ -92,7 +92,7 @@ void UActorStatsComponent::TakeDamage(UPARAM(ref) AActor*& InstigatorActor, int3
 
 	// Check if the ComponentStats is valid and compare the team Ids in order to identify enemy/ally
 	// Apply damage to enemies only
-	if (tInstigatorStats && !IsEnemy(tInstigatorStats, this))
+	if (tInstigatorStats && !IsEnemyByComponent(tInstigatorStats, this))
 	{
 		return;
 	}
@@ -105,7 +105,7 @@ void UActorStatsComponent::AddHealth(UPARAM(ref) AActor*& InstigatorActor, int32
 
 	// Check if the ComponentStats is valid and compare the team Ids in order to identify enemy/ally
 	// Add health to allies only
-	if (tInstigatorStats && IsEnemy(tInstigatorStats, this))
+	if (tInstigatorStats && IsEnemyByComponent(tInstigatorStats, this))
 	{
 		return;
 	}
@@ -121,15 +121,15 @@ UActorStatsComponent* UActorStatsComponent::GetStatsComponent(AActor* FromActor)
 	return nullptr;
 }
 
-const bool UActorStatsComponent::IsEnemy(AActor* Actor1, AActor* Actor2) const
+bool UActorStatsComponent::IsEnemyByActor(AActor* Actor1, AActor* Actor2)
 {
 	UActorStatsComponent* tActor1Stats = UActorStatsComponent::GetStatsComponent(Actor1);
 	UActorStatsComponent* tActor2Stats = UActorStatsComponent::GetStatsComponent(Actor2);
 
-	return this->IsEnemy(tActor1Stats, tActor2Stats);
+	return UActorStatsComponent::IsEnemyByComponent(tActor1Stats, tActor2Stats);
 }
 
-const bool UActorStatsComponent::IsEnemy(UActorStatsComponent* StatsComponent1, UActorStatsComponent* StatsComponent2) const
+bool UActorStatsComponent::IsEnemyByComponent(UActorStatsComponent* StatsComponent1, UActorStatsComponent* StatsComponent2)
 {
 	if (StatsComponent1->GetTeamID() != StatsComponent2->GetTeamID())
 	{

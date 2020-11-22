@@ -188,6 +188,11 @@ void UCombatComponent::PerformMeleeAttack()
 
 	AActor* tOwner = this->GetOwner();
 
+	if (!this->m_TargetActor || !IAttackableInterface::Execute_IsAlive(this->m_TargetActor))
+	{
+		return;
+	}
+
 	IAttackableInterface::Execute_ApplyDamage(this->m_TargetActor, tOwner, this->m_MeleeAttackDamage);
 }
 
@@ -195,14 +200,14 @@ void UCombatComponent::PerformRangedAttack()
 {
 	this->OnAttackRanged.Broadcast();
 
-	if (!this->m_bInstantEffectRanged)
+	if (!this->m_bInstantEffectRanged || !this->m_TargetActor || !IAttackableInterface::Execute_IsAlive(this->m_TargetActor))
 	{
 		return;
 	}
 
 	AActor* tOwner = this->GetOwner();
 
-	IAttackableInterface::Execute_ApplyDamage(this->m_TargetActor, tOwner, this->m_MeleeAttackDamage);
+	IAttackableInterface::Execute_ApplyDamage(this->m_TargetActor, tOwner, this->m_RangedAttackDamage);
 }
 
 void UCombatComponent::SetTarget(AActor* NewTarget)
