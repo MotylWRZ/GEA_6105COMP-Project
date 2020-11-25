@@ -22,6 +22,28 @@ enum EAttackMode
 	Attack_None
 };
 
+USTRUCT(Blueprintable)
+struct FCombatStruct
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UAnimMontage* AnimationMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int32 AttackDamage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float AttackRange;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float AttackIntervalDuration;
+
+	// Should apply damage immediately after performing attack action ?
+	// On Attack can be binded into event in order to apply custom or additional effects
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool bInstantEffect = true;
+};
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LJMUTHIRDPERSON425_API UCombatComponent : public UActorComponent
@@ -64,14 +86,29 @@ public:
 	//////////////////////
 	// Accessors/Mutators
 	//////////////////////
-	virtual bool CanAttackRanged();
-	virtual bool CanAttackMelee();
-	virtual bool IsTargetInMeleeRange();
-	virtual bool IsTargetInRangedRange();
-	FORCEINLINE virtual void SetAttackMode(EAttackMode NewAttackMode) { this->m_CurrentAttackMode = NewAttackMode; }
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	bool CanAttackRanged();
 
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	bool CanAttackMelee();
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	bool IsTargetInMeleeRange();
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	bool IsTargetInRangedRange();
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void SetAttackMode(EAttackMode NewAttackMode) { this->m_CurrentAttackMode = NewAttackMode; }
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
 	// Get the distance to the current target
-	virtual float GetDistanceToTarget();
+	float GetDistanceToTarget();
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	AActor* const GetCurrentTarget() const { return m_TargetActor; }
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	bool const IsAttacking() const { return m_IsAttacking; }
 
 	/////////////
 	// Delegates
@@ -102,59 +139,29 @@ public:
 	//Public Class Members
 	////////////////////////
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat Component")
-		AActor* m_TargetActor;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat Component")
 		USkeletalMeshComponent* m_AnimatedMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat Component")
 		float m_ComponentUpdateInterval;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat Component")
-	bool m_IsAttacking;
+
+
 	//-----------MELEE COMBAT---------------------------------
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee Combat")
 		bool m_bIsMeleeActive = true;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee Combat", meta = (EditCondition = "m_bIsMeleeActive"))
-		UAnimMontage* m_MeleeAnimationMontage;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee Combat", meta = (EditCondition = "m_bIsMeleeActive"))
-		int32 m_MeleeAttackDamage;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee Combat", meta = (EditCondition = "m_bIsMeleeActive"))
-		float m_MeleeAttackRange;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee Combat", meta = (EditCondition = "m_bIsMeleeActive"))
-		float m_MeleeAttackIntervalDuration;
-
-	// Should apply damage immediately after performing attack action ?
-	// OnAttackMelee can be binded into event in order to apply custom or additional effects
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee Combat", meta = (EditCondition = "m_bIsMeleeActive"))
-		bool m_bInstantEffectMelee = true;
-
+		FCombatStruct m_MeleeCombatStruct;
 
 	//-----------RANGED COMBAT---------------------------------
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ranged Combat")
 		bool m_bIsRangedActive = false;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ranged Combat", meta = (EditCondition = "m_bIsRangedActive"))
-		UAnimMontage* m_RangedAnimationMontage;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ranged Combat", meta = (EditCondition = "m_bIsRangedActive"))
-		int32 m_RangedAttackDamage;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ranged Combat", meta = (EditCondition = "m_bIsRangedActive"))
-		float m_RangedAttackRange;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ranged Combat", meta = (EditCondition = "m_bIsRangedActive"))
-		float m_RangedAttackIntervalDuration;
-
-	// Should apply damage immediately after performing attack action ?
-	// OnAttackRanged can be binded into event in order to apply custom or additional effects
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ranged Combat", meta = (EditCondition = "m_bIsRangedActive"))
-		bool m_bInstantEffectRanged;
+		FCombatStruct m_RangedCombatStruct;
 
 private:
 	TEnumAsByte<EAttackMode> m_CurrentAttackMode;
 	float m_CurrentTime;
 	FTimerHandle m_CombatTimerHandle;
+	bool m_IsAttacking;
+	AActor* m_TargetActor;
 };

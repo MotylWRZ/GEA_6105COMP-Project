@@ -11,16 +11,20 @@ UCombatComponent::UCombatComponent()
 	: m_TargetActor(nullptr)
 	, m_AnimatedMesh(nullptr)
 	, m_ComponentUpdateInterval(0.1f)
-	, m_MeleeAttackRange(300.0f)
-	, m_MeleeAttackIntervalDuration(3.0f)
-	, m_MeleeAttackDamage(10)
-	, m_RangedAttackRange(500.0f)
-	, m_RangedAttackIntervalDuration(3.0f)
-	, m_RangedAttackDamage(10)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
+
+	// Default Properties for Melee Combat
+	this->m_MeleeCombatStruct.AttackRange = 300.0f;
+	this->m_MeleeCombatStruct.AttackIntervalDuration = 3.0f;
+	this->m_MeleeCombatStruct.AttackDamage = 10;
+
+	// Default Properties for Ranged Combat
+	this->m_RangedCombatStruct.AttackRange = 500.0f;
+	this->m_RangedCombatStruct.AttackIntervalDuration = 3.0f;
+	this->m_RangedCombatStruct.AttackDamage = 10;
 }
 
 
@@ -33,11 +37,11 @@ void UCombatComponent::BeginPlay()
 	// Set CurrentTime to CurrentMode attack interval value in order to perform the initial Attack action immidiately
 	if (this->m_CurrentAttackMode = EAttackMode::Attack_Melee)
 	{
-		m_CurrentTime = this->m_MeleeAttackIntervalDuration;
+		m_CurrentTime = this->m_MeleeCombatStruct.AttackIntervalDuration;
 	}
 	else
 	{
-		m_CurrentTime = this->m_RangedAttackIntervalDuration;
+		m_CurrentTime = this->m_RangedCombatStruct.AttackIntervalDuration;
 	}
 
 	// Access the World Settings
@@ -99,25 +103,25 @@ void UCombatComponent::AttackStart()
 	case EAttackMode::Attack_Melee:
 	{
 		// If CurrentTimer is lower than the MeleeAttackSpeed, do not continue
-		if (this->m_MeleeAttackIntervalDuration > this->m_CurrentTime)
+		if (this->m_MeleeCombatStruct.AttackIntervalDuration > this->m_CurrentTime)
 		{
 			return;
 		}
-		UAnimationHelpers::PlayMontageRandomlyWithLength(this->m_MeleeAnimationMontage,
+		UAnimationHelpers::PlayMontageRandomlyWithLength(this->m_MeleeCombatStruct.AnimationMontage,
 														 this->m_AnimatedMesh,
-														 this->m_MeleeAttackIntervalDuration);
+														 this->m_MeleeCombatStruct.AttackIntervalDuration);
 		break;
 	}
 	case EAttackMode::Attack_Ranged:
 	{
 		// If CurrentTimer is lower than the RangedAttackSpeed, do not continue
-		if (this->m_RangedAttackIntervalDuration > this->m_CurrentTime)
+		if (this->m_RangedCombatStruct.AttackIntervalDuration > this->m_CurrentTime)
 		{
 			return;
 		}
-		UAnimationHelpers::PlayMontageRandomlyWithLength(this->m_RangedAnimationMontage,
+		UAnimationHelpers::PlayMontageRandomlyWithLength(this->m_RangedCombatStruct.AnimationMontage,
 														 this->m_AnimatedMesh,
-														 this->m_RangedAttackIntervalDuration);
+														 this->m_RangedCombatStruct.AttackIntervalDuration);
 		break;
 	}
 	}
@@ -169,21 +173,21 @@ void UCombatComponent::PerformMeleeAttack()
 		return;
 	}
 
-	IAttackableInterface::Execute_ApplyDamage(this->m_TargetActor, tOwner, this->m_MeleeAttackDamage);
+	IAttackableInterface::Execute_ApplyDamage(this->m_TargetActor, tOwner, this->m_MeleeCombatStruct.AttackDamage);
 }
 
 void UCombatComponent::PerformRangedAttack()
 {
 	this->OnAttackRanged.Broadcast();
 
-	if (!this->m_bInstantEffectRanged || !this->m_TargetActor || !IAttackableInterface::Execute_IsAlive(this->m_TargetActor))
+	if (!this->m_RangedCombatStruct.bInstantEffect || !this->m_TargetActor || !IAttackableInterface::Execute_IsAlive(this->m_TargetActor))
 	{
 		return;
 	}
 
 	AActor* tOwner = this->GetOwner();
 
-	IAttackableInterface::Execute_ApplyDamage(this->m_TargetActor, tOwner, this->m_RangedAttackDamage);
+	IAttackableInterface::Execute_ApplyDamage(this->m_TargetActor, tOwner, this->m_RangedCombatStruct.AttackDamage);
 }
 
 void UCombatComponent::SetTarget(AActor* NewTarget)
@@ -224,11 +228,11 @@ void UCombatComponent::ResetAttack()
 	// Set CurrentTime to CurrentMode attack interval value in order to perform the initial Attack action immidiately
 	if (this->m_CurrentAttackMode = EAttackMode::Attack_Melee)
 	{
-		m_CurrentTime = this->m_MeleeAttackIntervalDuration;
+		m_CurrentTime = this->m_MeleeCombatStruct.AttackIntervalDuration;
 	}
 	else
 	{
-		m_CurrentTime = this->m_RangedAttackIntervalDuration;
+		m_CurrentTime = this->m_RangedCombatStruct.AttackIntervalDuration;
 	}
 
 
@@ -264,7 +268,7 @@ bool UCombatComponent::IsTargetInMeleeRange()
 {
 	float tDistance = this->GetDistanceToTarget();
 
-	if (tDistance < this->m_MeleeAttackRange)
+	if (tDistance < this->m_MeleeCombatStruct.AttackRange)
 	{
 		return true;
 	}
@@ -276,7 +280,7 @@ bool UCombatComponent::IsTargetInRangedRange()
 {
 	float tDistance = this->GetDistanceToTarget();
 
-	if (tDistance < this->m_RangedAttackRange)
+	if (tDistance < this->m_RangedCombatStruct.AttackRange)
 	{
 		return true;
 	}

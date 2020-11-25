@@ -12,7 +12,7 @@ UCharacterCombatComponent::UCharacterCombatComponent()
 	:UCombatComponent()
 	, m_Owner(nullptr)
 {
-	this->m_MeleeAnimationMontage = CreateDefaultSubobject<UAnimMontage>(TEXT("AnimationMontage"));
+	//this->m_MeleeAnimationMontage = CreateDefaultSubobject<UAnimMontage>(TEXT("AnimationMontage"));
 }
 
 void UCharacterCombatComponent::BeginPlay()
