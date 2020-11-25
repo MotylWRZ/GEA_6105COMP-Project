@@ -68,20 +68,12 @@ void UCombatComponent::CustomTickComponent()
 		return;
 	}
 
-	AActor* tOwner = this->GetOwner();
-
-	FVector tOwnerLoc = tOwner->GetActorLocation();
-	FVector tTargetLoc = this->m_TargetActor->GetTargetLocation();
-
-	// Calculate the distance between the target and the owner
-	const float tDistance = FVector::Dist(tOwnerLoc, tTargetLoc);
-
 	// Decide whether the Melee or Ranged attack should be performed
-	if (this->CanAttackMelee(tDistance))
+	if (this->CanAttackMelee())
 	{
 		this->SetAttackMode(EAttackMode::Attack_Melee);
 	}
-	else if (this->CanAttackRanged(tDistance))
+	else if (this->CanAttackRanged())
 	{
 		this->SetAttackMode(EAttackMode::Attack_Ranged);
 	}
@@ -144,24 +136,6 @@ void UCombatComponent::AttackStart()
 	this->m_CurrentTime = 0.0f;
 
 	this->OnAttackStart.Broadcast();
-}
-
-bool UCombatComponent::CanAttackRanged(float DistanceToTarget)
-{
-	if (DistanceToTarget > this->m_RangedAttackRange || !this->m_bIsRangedActive)
-	{
-		return false;
-	}
-	return true;
-}
-
-bool UCombatComponent::CanAttackMelee(float DistanceToTarget)
-{
-	if (DistanceToTarget > this->m_MeleeAttackRange || !this->m_bIsMeleeActive)
-	{
-		return false;
-	}
-	return true;
 }
 
 void UCombatComponent::PerformAttack()
@@ -230,11 +204,11 @@ void UCombatComponent::SetTarget(AActor* NewTarget)
 		return;
 	}
 
-		// If it is alive set it as a new target
-		this->m_TargetActor = NewTarget;
+	// If it is alive set it as a new target
+	this->m_TargetActor = NewTarget;
 
-		// UnPause the Timer
-		GetWorld()->GetTimerManager().UnPauseTimer(this->m_CombatTimerHandle);
+	// UnPause the Timer
+	GetWorld()->GetTimerManager().UnPauseTimer(this->m_CombatTimerHandle);
 }
 
 void UCombatComponent::ResetAttack()
@@ -267,4 +241,67 @@ void UCombatComponent::ResetAttack()
 
 	this->OnReturnToIdle.Broadcast();
 }
+
+bool UCombatComponent::CanAttackRanged()
+{
+	if (this->IsTargetInRangedRange() && this->m_bIsRangedActive)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool UCombatComponent::CanAttackMelee()
+{
+	if (this->IsTargetInMeleeRange() && this->m_bIsMeleeActive)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool UCombatComponent::IsTargetInMeleeRange()
+{
+	float tDistance = this->GetDistanceToTarget();
+
+	if (tDistance < this->m_MeleeAttackRange)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool UCombatComponent::IsTargetInRangedRange()
+{
+	float tDistance = this->GetDistanceToTarget();
+
+	if (tDistance < this->m_RangedAttackRange)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+float UCombatComponent::GetDistanceToTarget()
+{
+	// Return false if there is no active target
+	if (!this->m_TargetActor)
+	{
+		return false;
+	}
+
+	AActor* tOwner = this->GetOwner();
+
+	FVector tOwnerLoc = tOwner->GetActorLocation();
+	FVector tTargetLoc = this->m_TargetActor->GetTargetLocation();
+
+	// Calculate the distance between the target and the owner
+	const float tDistance = FVector::Dist(tOwnerLoc, tTargetLoc);
+
+	return tDistance;
+}
+
+
 

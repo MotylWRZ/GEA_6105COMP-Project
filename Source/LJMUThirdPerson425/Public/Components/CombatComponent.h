@@ -39,39 +39,68 @@ protected:
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+public:
+	///////////////////////////
+	// Public Member Functions
+	///////////////////////////
+
+	// Custom Component Update
 	virtual void CustomTickComponent();
-	virtual void AttackStart();
-	virtual bool CanAttackRanged(float DistanceToTarget);
-	virtual bool CanAttackMelee(float DistanceToTarget);
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
+	// Perform Attack from the current attack mode (Melee/Ranged)
+	// This should be called in the AnimNotiy class in order to correctly intergrate the attack action with animation
 	virtual void PerformAttack();
-	virtual void PerformMeleeAttack();
-	virtual void PerformRangedAttack();
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
+	// Set a specified Actor as a target
 	virtual void SetTarget(AActor* NewTarget);
-	//UFUNCTION(BlueprintCallable, Category = "Combat")
+
+	//Reset the Attack (it will also clear the current target)
 	virtual void ResetAttack();
 
+
+	//////////////////////
+	// Accessors/Mutators
+	//////////////////////
+	virtual bool CanAttackRanged();
+	virtual bool CanAttackMelee();
+	virtual bool IsTargetInMeleeRange();
+	virtual bool IsTargetInRangedRange();
 	FORCEINLINE virtual void SetAttackMode(EAttackMode NewAttackMode) { this->m_CurrentAttackMode = NewAttackMode; }
+
+	// Get the distance to the current target
+	virtual float GetDistanceToTarget();
+
 	/////////////
 	// Delegates
 	/////////////
 	UPROPERTY(BlueprintAssignable, Category = "Attributes")
-	FOnAttackStart OnAttackStart;
+		FOnAttackStart OnAttackStart;
 	UPROPERTY(BlueprintAssignable, Category = "Attributes")
-	FOnAttack OnAttack;
+		FOnAttack OnAttack;
 	UPROPERTY(BlueprintAssignable, Category = "Attributes")
-	FOnAttackMelee OnAttackMelee;
+		FOnAttackMelee OnAttackMelee;
 	UPROPERTY(BlueprintAssignable, Category = "Attributes")
-	FOnAttackRanged OnAttackRanged;
+		FOnAttackRanged OnAttackRanged;
 	UPROPERTY(BlueprintAssignable, Category = "Attributes")
-	FOnReturnToIdle OnReturnToIdle;
+		FOnReturnToIdle OnReturnToIdle;
 
+protected:
+	///////////////////////////
+	// Protected Member Functions
+	///////////////////////////
+
+	// Start an Attack action
+	virtual void AttackStart();
+	virtual void PerformMeleeAttack();
+	virtual void PerformRangedAttack();
 
 public:
-
+	////////////////////////
+	//Public Class Members
+	////////////////////////
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat Component")
 		AActor* m_TargetActor;
