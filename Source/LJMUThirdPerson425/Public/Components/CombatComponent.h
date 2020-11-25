@@ -71,10 +71,10 @@ public:
 	virtual void CustomTickComponent();
 
 	//UFUNCTION(BlueprintCallable, Category = "Combat")
-	//// Start an Attack manually, this will fail if the attack interval is to finished (the duration between attacks)
+	//// Start an Attack manually, this will force an attack even if interval (between attacks) is not finished
 	//// This will use current AttackMode
-	//// This will also fail if the AutoAttackMode is enabled
-	//// Returns true is succesful and false otherwise
+	//// This will fail if the AutoAttackMode is enabled
+	//// Returns true if succesful and false otherwise
 	//virtual bool Attack();
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
@@ -146,18 +146,19 @@ public:
 	//Public Class Members
 	////////////////////////
 
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat Component")
 		USkeletalMeshComponent* m_AnimatedMesh;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat Component")
+		// If Enabled, the attack will start automatically once the target is within attack range
+		// Additionally the Attack Mode will be automatically picked, based on the current target distance (target is far - RangedMode/ target is close - MeleeMode)
+		// If Disabled, the attack must be called explicitly (call Attack Start )
+		bool m_bAutoAttackModeEnabled = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat Component")
+		// Combat component update frequency.
+		// AutoAttackModeEnabled must be set to TRUE in order to enable Component updating
 		float m_ComponentUpdateInterval;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat Component")
-	//	// If Enabled, the attack will start automatically once the target is within attack range
-	//	// Additionally the Attack Mode will be automatically picked, based on the current target distance (target is far - RangedMode/ target is close - MeleeMode)
-	//	// If Disabled, the attack must be called explicitly (call Attack Start )
-	//	bool m_bAutoAttackModeEnabled = true;
-
 
 	//-----------MELEE COMBAT---------------------------------
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee Combat")

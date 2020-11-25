@@ -11,6 +11,7 @@ UCombatComponent::UCombatComponent()
 	: m_TargetActor(nullptr)
 	, m_AnimatedMesh(nullptr)
 	, m_ComponentUpdateInterval(0.1f)
+	, m_CurrentAttackMode(EAttackMode::Attack_Melee)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -87,15 +88,17 @@ void UCombatComponent::CustomTickComponent()
 		return;
 	}
 
+
 	// Initiate attack action
 	this->AttackStart();
 }
 
 void UCombatComponent::AttackStart()
 {
+	//// Update Current Time
+	//this->m_CurrentTime += GetWorld()->GetTimerManager().GetTimerElapsed(this->m_CombatTimerHandle);
 	// Update Current Time
 	this->m_CurrentTime += GetWorld()->GetTimerManager().GetTimerElapsed(this->m_CombatTimerHandle);
-
 
 	// Play AnimMontage based on the curent AttackMode
 	switch (this->m_CurrentAttackMode)
@@ -107,6 +110,7 @@ void UCombatComponent::AttackStart()
 		{
 			return;
 		}
+
 		UAnimationHelpers::PlayMontageRandomlyWithLength(this->m_MeleeCombatStruct.AnimationMontage,
 														 this->m_AnimatedMesh,
 														 this->m_MeleeCombatStruct.AttackIntervalDuration);
@@ -119,6 +123,7 @@ void UCombatComponent::AttackStart()
 		{
 			return;
 		}
+
 		UAnimationHelpers::PlayMontageRandomlyWithLength(this->m_RangedCombatStruct.AnimationMontage,
 														 this->m_AnimatedMesh,
 														 this->m_RangedCombatStruct.AttackIntervalDuration);
@@ -248,7 +253,7 @@ void UCombatComponent::ResetAttack()
 
 bool UCombatComponent::CanAttackRanged()
 {
-	if (this->IsTargetInRangedRange() && this->m_bIsRangedActive)
+	if (this->IsTargetInRangedRange()&& this->m_bIsRangedActive)
 	{
 		return true;
 	}
@@ -306,6 +311,53 @@ float UCombatComponent::GetDistanceToTarget()
 
 	return tDistance;
 }
+
+
+
+//bool UCombatComponent::Attack()
+//{
+//	/*if (this->m_bAutoAttackModeEnabled)
+//	{
+//		return false;
+//	}*/
+//
+//	if (!this->m_TargetActor)
+//	{
+//		return false;
+//	}
+//
+//	// Play AnimMontage based on the curent AttackMode
+//	switch (this->m_CurrentAttackMode)
+//	{
+//	case EAttackMode::Attack_Melee:
+//	{
+//		UAnimationHelpers::PlayMontageRandomlyWithLength(this->m_MeleeCombatStruct.AnimationMontage,
+//			this->m_AnimatedMesh,
+//			this->m_MeleeCombatStruct.AttackIntervalDuration);
+//		break;
+//	}
+//	case EAttackMode::Attack_Ranged:
+//	{
+//		UAnimationHelpers::PlayMontageRandomlyWithLength(this->m_RangedCombatStruct.AnimationMontage,
+//			this->m_AnimatedMesh,
+//			this->m_RangedCombatStruct.AttackIntervalDuration);
+//		break;
+//	}
+//	}
+//
+//	// Return if target is not alive or is not valid
+//	if (!this->m_TargetActor || !IAttackableInterface::Execute_IsAlive(this->m_TargetActor))
+//	{
+//		this->ResetAttack();
+//		return false;
+//	}
+//
+//	// Change the IsAttacking flag to true
+//	this->m_bIsAttacking = true;
+//
+//	return true;
+//}
+
 
 
 
