@@ -79,7 +79,8 @@ public:
 		USkeletalMeshComponent* m_AnimatedMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat Component")
 		float m_ComponentUpdateInterval;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat Component")
+	bool m_IsAttacking;
 	//-----------MELEE COMBAT---------------------------------
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee Combat")
 		bool m_bIsMeleeActive = true;
@@ -126,6 +127,5 @@ public:
 private:
 	TEnumAsByte<EAttackMode> m_CurrentAttackMode;
 	float m_CurrentTime;
-	bool m_IsAttacking;
 	FTimerHandle m_CombatTimerHandle;
 };

@@ -41,12 +41,14 @@ void UCombatComponent::BeginPlay()
 	}
 
 	// Access the World Settings
-	AWorldSettings* tWorldSettings = GetWorld()->GetWorldSettings();
-	const float tTimeDilation = tWorldSettings->GetEffectiveTimeDilation();
-
+	// Activate the timer
 	GetWorld()->GetTimerManager().SetTimer(this->m_CombatTimerHandle, this,
 		&UCombatComponent::CustomTickComponent, this->m_ComponentUpdateInterval,
 		true);
+
+	// Pause the timer
+	GetWorld()->GetTimerManager().PauseTimer(this->m_CombatTimerHandle);
+
 }
 
 
@@ -230,6 +232,9 @@ void UCombatComponent::SetTarget(AActor* NewTarget)
 
 		// If it is alive set it as a new target
 		this->m_TargetActor = NewTarget;
+
+		// UnPause the Timer
+		GetWorld()->GetTimerManager().UnPauseTimer(this->m_CombatTimerHandle);
 }
 
 void UCombatComponent::ResetAttack()
@@ -256,6 +261,9 @@ void UCombatComponent::ResetAttack()
 	this->m_IsAttacking = false;
 
 	this->m_TargetActor = nullptr;
+
+	// Pause the timer
+	GetWorld()->GetTimerManager().PauseTimer(this->m_CombatTimerHandle);
 
 	this->OnReturnToIdle.Broadcast();
 }

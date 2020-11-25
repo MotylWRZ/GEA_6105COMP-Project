@@ -131,11 +131,11 @@ bool UActorStatsComponent::IsEnemyByActor(AActor* Actor1, AActor* Actor2)
 
 bool UActorStatsComponent::IsEnemyByComponent(UActorStatsComponent* StatsComponent1, UActorStatsComponent* StatsComponent2)
 {
-	if (StatsComponent1->GetTeamID() != StatsComponent2->GetTeamID())
+	if (!StatsComponent1 || !StatsComponent2 || StatsComponent1->GetTeamID() == StatsComponent2->GetTeamID())
 	{
-		return true;
+		return false;
 	}
-	return false;
+	return true;
 }
 
 
