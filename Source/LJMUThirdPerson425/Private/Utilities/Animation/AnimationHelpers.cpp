@@ -45,6 +45,11 @@ void UAnimationHelpers::PlayMontageRandomly(UAnimMontage* MontageToPlay, USkelet
 
 void UAnimationHelpers::PlayMontageRandomlyWithLength(UAnimMontage* MontageToPlay, USkeletalMeshComponent* SkeletalMeshComp, float SectionLengthMax, float SectionLengthMin, float DefautPlayRate)
 {
+	if (!MontageToPlay)
+	{
+		return;
+	}
+
 	//Generate random section from the AnimMontage
 	int32 tSectionIndex = UAnimationHelpers::GetRandomSectionIndexFromMontage(MontageToPlay);
 

@@ -70,6 +70,13 @@ public:
 	// Custom Component Update
 	virtual void CustomTickComponent();
 
+	//UFUNCTION(BlueprintCallable, Category = "Combat")
+	//// Start an Attack manually, this will fail if the attack interval is to finished (the duration between attacks)
+	//// This will use current AttackMode
+	//// This will also fail if the AutoAttackMode is enabled
+	//// Returns true is succesful and false otherwise
+	//virtual bool Attack();
+
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	// Perform Attack from the current attack mode (Melee/Ranged)
 	// This should be called in the AnimNotiy class in order to correctly intergrate the attack action with animation
@@ -108,7 +115,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	AActor* const GetCurrentTarget() const { return m_TargetActor; }
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	bool const IsAttacking() const { return m_IsAttacking; }
+	bool const IsAttacking() const { return m_bIsAttacking; }
 
 	/////////////
 	// Delegates
@@ -145,6 +152,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat Component")
 		float m_ComponentUpdateInterval;
 
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat Component")
+	//	// If Enabled, the attack will start automatically once the target is within attack range
+	//	// Additionally the Attack Mode will be automatically picked, based on the current target distance (target is far - RangedMode/ target is close - MeleeMode)
+	//	// If Disabled, the attack must be called explicitly (call Attack Start )
+	//	bool m_bAutoAttackModeEnabled = true;
+
 
 	//-----------MELEE COMBAT---------------------------------
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee Combat")
@@ -162,6 +175,6 @@ private:
 	TEnumAsByte<EAttackMode> m_CurrentAttackMode;
 	float m_CurrentTime;
 	FTimerHandle m_CombatTimerHandle;
-	bool m_IsAttacking;
+	bool m_bIsAttacking;
 	AActor* m_TargetActor;
 };

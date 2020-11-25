@@ -28,6 +28,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 		virtual void ResetAttack() override;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Charater Combat")
+	// If the character is fighting (target is within range), disable movement
+	// Movement will be automatically enabled, once the character stops fighting
+	bool m_bDisableMovementDuringAttack;
 private:
 	ACharacter* m_Owner;
 

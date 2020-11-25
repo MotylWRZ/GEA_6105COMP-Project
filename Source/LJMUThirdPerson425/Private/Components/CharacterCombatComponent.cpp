@@ -11,6 +11,7 @@
 UCharacterCombatComponent::UCharacterCombatComponent()
 	:UCombatComponent()
 	, m_Owner(nullptr)
+	, m_bDisableMovementDuringAttack(true)
 {
 	//this->m_MeleeAnimationMontage = CreateDefaultSubobject<UAnimMontage>(TEXT("AnimationMontage"));
 }
@@ -43,8 +44,12 @@ void UCharacterCombatComponent::AttackStart()
 		this->ResetAttack();
 		return;
 	}
-	// Disable Movement
-	this->m_Owner->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+
+	if (this->m_bDisableMovementDuringAttack)
+	{
+		// Disable Movement
+		this->m_Owner->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+	}
 }
 
 void UCharacterCombatComponent::PerformMeleeAttack()
@@ -56,6 +61,9 @@ void UCharacterCombatComponent::ResetAttack()
 {
 	Super::ResetAttack();
 
-	// Enable Player movement
-	this->m_Owner->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+	if (this->m_bDisableMovementDuringAttack)
+	{
+		// Enable Player movement
+		this->m_Owner->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+	}
 }

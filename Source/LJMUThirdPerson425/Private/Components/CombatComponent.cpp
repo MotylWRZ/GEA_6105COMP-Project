@@ -134,7 +134,7 @@ void UCombatComponent::AttackStart()
 	}
 
 	// Change the IsAttacking flag to true
-	this->m_IsAttacking = true;
+	this->m_bIsAttacking = true;
 
 	// Reset CurrentTime and continue Attack
 	this->m_CurrentTime = 0.0f;
@@ -217,7 +217,7 @@ void UCombatComponent::SetTarget(AActor* NewTarget)
 
 void UCombatComponent::ResetAttack()
 {
-	if (!this->m_IsAttacking)
+	if (!this->m_bIsAttacking)
 	{
 		return;
 	}
@@ -236,7 +236,7 @@ void UCombatComponent::ResetAttack()
 	}
 
 
-	this->m_IsAttacking = false;
+	this->m_bIsAttacking = false;
 
 	this->m_TargetActor = nullptr;
 
