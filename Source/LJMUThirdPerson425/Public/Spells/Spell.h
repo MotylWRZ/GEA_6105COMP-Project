@@ -37,6 +37,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bCustomiseSpell"))
 		TEnumAsByte<EMagicSphereTypes> MagicSphereType;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bCustomiseSpell", ClampMin = "0"))
+		int32 ManaCost;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bCustomiseSpell", ClampMin = "0", ClampMax = "100"))
+		int32 SuccessChance;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bCustomiseSpell"))
 		TArray<TSubclassOf<AAbility>> Abilities;
@@ -68,7 +73,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void Initialise(FSpellStruct SpellStruct) { m_SpellStruct = SpellStruct; }
 	UFUNCTION(BlueprintCallable)
-	virtual void CastSpell(AActor* CasterRef);
+	virtual bool CastSpell(AActor* CasterRef);
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -76,6 +82,8 @@ protected:
 	virtual void UseAbilities();
 	virtual void AutoDestroy();
 	virtual void ClearInActiveAbility(AAbility* InActiveAbility);
+	// Checki the Spell should be casted based on the SuccessChance
+	FORCEINLINE bool ShouldCast() { return FMath::RandRange(1, 100) <= m_SpellStruct.SuccessChance ? true : false; }
 
 public:
 	// Called every frame

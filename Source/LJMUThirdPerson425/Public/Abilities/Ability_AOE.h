@@ -19,7 +19,6 @@ public:
 
 	virtual void Initialise(AActor* AbilityUser) override;
 
-		void UseAbility() {};
 		virtual void UseAbility_Implementation() override;
 
 

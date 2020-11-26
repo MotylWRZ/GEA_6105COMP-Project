@@ -41,6 +41,31 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 
+public:
+
+	UFUNCTION(BlueprintCallable, Category = "Spellbook")
+		void ModifyMana(int32 ModifyingValue);
+	UFUNCTION(BlueprintCallable, Category = "Spellbook")
+		void ModifyManaMax(int32 ModifyingValue);
+	UFUNCTION(BlueprintCallable, Category = "Spellbook")
+		void AddMana(int32 ManaToAdd);
+	UFUNCTION(BlueprintCallable, Category = "Spellbook")
+		void TakeMana(int32 ManaToTake);
+
+
+	///////////////////////
+	// Accessors/Mutators
+	///////////////////////
+	UFUNCTION(BlueprintCallable, Category = "Spellbook")
+	int32 const GetMana() const { return m_Mana; }
+
+	/*UFUNCTION(BlueprintCallable, Category = "Spellbook")
+	void SetMana(int32 NewManaAmount) {};*/
+
+
+protected:
+
+
 private:
 	void InitialiseMagicSpheres();
 
@@ -67,5 +92,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<TEnumAsByte<EMagicSphereTypes>,FMagicSphere> m_MagicSpheres;
 
-
+private:
+	UPROPERTY(EditDefaultsOnly)
+	int32 m_Mana;
+	UPROPERTY(EditDefaultsOnly)
+	int32 m_ManaMax;
 };

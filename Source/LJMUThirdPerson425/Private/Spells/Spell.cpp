@@ -21,11 +21,18 @@ ASpell::ASpell()
 
 }
 
-void ASpell::CastSpell(AActor* CasterRef)
+bool ASpell::CastSpell(AActor* CasterRef)
 {
 	this->m_Caster = CasterRef;
 
-	UseAbilities();
+	// Check if the spell should be casted based on its SuccessChance
+	if (this->ShouldCast())
+	{
+		UseAbilities();
+		return true;
+	}
+
+	return false;
 }
 
 // Called when the game starts or when spawned
@@ -36,11 +43,11 @@ void ASpell::BeginPlay()
 
 void ASpell::UseAbilities()
 {
-	/*for (auto& tAbilityClass : this->m_SpellStruct.Abilities)
+	for (auto& tAbilityClass : this->m_SpellStruct.Abilities)
 	{
 		AAbility* tNewAbility = CreateAbility(tAbilityClass);
 		UseAbility(tNewAbility);
-	}*/
+	}
 
 	for (auto& tAbility : this->m_SpellStruct.Abilities_AOE)
 	{

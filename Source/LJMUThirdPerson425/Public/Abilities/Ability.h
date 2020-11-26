@@ -10,7 +10,7 @@
 DECLARE_DELEGATE_OneParam(FOnAbilityDestroyed, AAbility*);
 
 
-UCLASS()
+UCLASS(Abstract)
 class LJMUTHIRDPERSON425_API AAbility : public AActor
 {
 	GENERATED_BODY()
@@ -19,6 +19,22 @@ public:
 	// Sets default values for this actor's properties
 	AAbility();
 
+
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+
+public:
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+
+	///////////////////////////
+	// Public Member Functions
+	///////////////////////////
+public:
 	// Implement this function in BP in order to extend the UseAbility() function
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 		void UseAbility();
@@ -28,19 +44,22 @@ public:
 	virtual void Initialise(AActor* AbilityUser);
 
 	UFUNCTION(BlueprintCallable)
-		virtual void AutoDestroy();
+	virtual void AutoDestroy();
 
 	FOnAbilityDestroyed OnAbilityDestroyed;
+	///////////////////////////
+	// Accesors/Mutators
+	///////////////////////////
+	UFUNCTION(BlueprintCallable)
+	AActor* const GetAbilityUser() const { return m_AbilityUser; }
 
+
+	///////////////////////////
+	// Protected Member Functions
+	///////////////////////////
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 	virtual void ApplyDamageToActor(AActor* Actor, int32 DamageToApply);
 	virtual void AddHealthToActor(AActor* Actor, int32 HealthToAdd);
-
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 	// Class Members
 protected:

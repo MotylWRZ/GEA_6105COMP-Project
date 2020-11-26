@@ -93,7 +93,5 @@ void AAbility::AddHealthToActor(AActor* Actor, int32 HealthToAdd)
 // Called every frame
 void AAbility::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
-
 }
 

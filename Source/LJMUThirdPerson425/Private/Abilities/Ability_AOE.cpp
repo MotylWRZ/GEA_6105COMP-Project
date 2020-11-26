@@ -23,12 +23,12 @@ void AAbility_AOE::BeginPlay()
 
 void AAbility_AOE::Initialise(AActor* AbilityUser)
 {
-	AAbility::Initialise(AbilityUser);
+	Super::Initialise(AbilityUser);
 
 	this->m_SphereCollisionComponent->SetSphereRadius(this->m_AOEAbilityStruct.RadiousStart);
 
 	GetWorld()->GetTimerManager().SetTimer(this->m_AbilityTimerHandle, this,
-		&AAbility_AOE::UseAbility_Implementation, this->m_ChangeFrequency,
+		&AAbility_AOE::UseAbility, this->m_ChangeFrequency,
 		true);
 
 	// If Radious won't be changed dynamically, set the end radious equal to the start radious

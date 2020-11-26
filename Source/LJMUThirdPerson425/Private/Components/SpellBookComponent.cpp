@@ -45,8 +45,25 @@ void USpellBookComponent::CastSpell(int32 SpellID)
 	}
 
 
+	// Check if there is enough mana to cast the spell
+	if (this->m_Mana >= tNewSpell->m_SpellStruct.ManaCost)
+	{
+		// Take required mana to cast the spell
+		this->TakeMana(tNewSpell->m_SpellStruct.ManaCost);
 
-	tNewSpell->CastSpell(this->GetOwner());
+		if (!tNewSpell->CastSpell(this->GetOwner()))
+		{
+			UE_LOG(LogTemp, Error, TEXT("Spell casting unsuccesful"));
+			return;
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Not enought mana to cast the spell"));
+
+		return;
+	}
+
 
 	m_ActiveSpells.Add(tNewSpell);
 }
@@ -103,6 +120,57 @@ void USpellBookComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void USpellBookComponent::ModifyMana(int32 ModifyingValue)
+{
+	int32 OldMana = this->m_Mana;
+	int32 NewMana = FMath::Clamp(this->m_Mana + ModifyingValue, 0, this->m_ManaMax);
+
+	int32 Delta = NewMana - OldMana;
+
+	this->m_Mana = NewMana;
+
+	if (Delta != 0)
+	{
+		// MulticastHealthChanged
+		if (Delta > 0)
+		{
+			// MulticastOnManaAdded
+		}
+		else
+		{
+			// MulticastOnManaTaken
+		}
+	}
+
+	if (Delta < 0)
+	{
+		// MulticastOnMana = 0
+	}
+}
+
+void USpellBookComponent::ModifyManaMax(int32 ModifyingValue)
+{
+	int32 OldManaMax = this->m_ManaMax;
+	int32 NewManaMax = this->m_ManaMax + ModifyingValue;
+
+	if (this->m_Mana > NewManaMax)
+	{
+		this->m_Mana = FMath::Clamp(this->m_Mana, 0, NewManaMax);
+	}
+
+	this->m_ManaMax = NewManaMax;
+}
+
+void USpellBookComponent::AddMana(int32 ManaToAdd)
+{
+	this->ModifyMana(ManaToAdd);
+}
+
+void USpellBookComponent::TakeMana(int32 ManaToTake)
+{
+	this->ModifyMana(-ManaToTake);
 }
 
 void USpellBookComponent::InitialiseMagicSpheres()
