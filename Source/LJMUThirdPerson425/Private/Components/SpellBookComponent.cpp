@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+#include "Kismet/GameplayStatics.h"
+#include "GameInstances/RPGGameInstance.h"
 
 #include "Components/SpellBookComponent.h"
 
@@ -25,31 +26,18 @@ void USpellBookComponent::CastSpell(int32 SpellID)
 		return;
 	}
 
-	ASpell* tNewSpell;
+	const FSpellStruct& tSpellStruct = *this->m_SpellsList[SpellID];
 
-	// Check if Spell Class is set
-	if (m_SpellsList[SpellID]->SpellClass)
-	{
-		// If it is set, spawn the Spell using the SpellClass from struct
-		tNewSpell = GetWorld()->SpawnActor<ASpell>(m_SpellsList[SpellID]->SpellClass, this->GetOwner()->GetActorLocation(),
-			this->GetOwner()->GetActorRotation());
-	}
-	else
-	{
-		// If it is not set, spawn the basic Spell
-		tNewSpell = GetWorld()->SpawnActor<ASpell>(ASpell::StaticClass(), this->GetOwner()->GetActorLocation(),
-			this->GetOwner()->GetActorRotation());
+	URPGGameInstance* tRPGGameInstance = Cast<URPGGameInstance>(UGameplayStatics::GetGameInstance(this));
 
-		// Set the SpellStruct for the newly created spell
-		tNewSpell->Initialise(*this->m_SpellsList[SpellID]);
-	}
-
+	// Spawn a new spell using the SpellStruct
+	ASpell* tNewSpell = tRPGGameInstance->GetSpellsManager()->CreateSpell(tSpellStruct);
 
 	// Check if there is enough mana to cast the spell
-	if (this->m_Mana >= tNewSpell->m_SpellStruct.ManaCost)
+	if (this->m_Mana >= tSpellStruct.ManaCost)
 	{
 		// Take required mana to cast the spell
-		this->TakeMana(tNewSpell->m_SpellStruct.ManaCost);
+		this->TakeMana(tSpellStruct.ManaCost);
 
 		if (!tNewSpell->CastSpell(this->GetOwner()))
 		{
@@ -63,9 +51,6 @@ void USpellBookComponent::CastSpell(int32 SpellID)
 
 		return;
 	}
-
-
-	m_ActiveSpells.Add(tNewSpell);
 }
 
 // Called when the game starts

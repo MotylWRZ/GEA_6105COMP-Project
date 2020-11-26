@@ -100,8 +100,9 @@ void ASpell::Tick(float DeltaTime)
 
 AAbility* ASpell::CreateAbility(TSubclassOf<AAbility> AbilityClass)
 {
-	AAbility* tNewAbility = GetWorld()->SpawnActor<AAbility>(AbilityClass, this->GetActorLocation(),
-		this->GetActorRotation());
+	FTransform tCasterTranform = this->m_Caster->GetTransform();
+
+	AAbility* tNewAbility = GetWorld()->SpawnActor<AAbility>(AbilityClass, tCasterTranform);
 
 	if (tNewAbility)
 	{
