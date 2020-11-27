@@ -25,8 +25,8 @@ URPGGameInstance* URPGGameInstance::GetRPGGameInstance(const UObject* WorldConte
 void URPGGameInstance::Init()
 {
 	// Create an instance of SpellsManager
-	this->m_SpellsManager = GetWorld()->SpawnActor<ASpellsManager>(ASpellsManager::StaticClass()); //CreateDefaultSubobject<ASpellsManager>(TEXT("SpellsManager"));
+	this->m_SpellsManager = GetWorld()->SpawnActor<ASpellsManager>(ASpellsManager::StaticClass());
 
-	ASpellsManager* aa = URPGGameInstance::GetSpellsManager(this);
-
+	// Create an instance of AbilitiesManager
+	this->m_AbilitiesManager = GetWorld()->SpawnActor<AAbilitiesManager>(AAbilitiesManager::StaticClass());
 }

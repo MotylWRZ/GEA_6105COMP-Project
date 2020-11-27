@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-
-
+#include "GameInstances/RPGGameInstance.h"
+#include "Managers/AbilitiesManager.h"
 #include "Abilities/Ability_Self.h"
 #include "Abilities/Ability_AOE.h"
 
@@ -44,7 +44,34 @@ void ASpell::BeginPlay()
 
 void ASpell::UseAbilities()
 {
+	AAbilitiesManager* tAbilitiesManager = URPGGameInstance::GetAbilitiesManager(this);
+
 	for (auto& tAbilityClass : this->m_SpellStruct.Abilities)
+	{
+		AAbility* tNewAbility = tAbilitiesManager->CreateAbility(tAbilityClass, this->m_Caster);
+		UseAbility(tNewAbility);
+	}
+
+	for (auto& tAbility : this->m_SpellStruct.Abilities_AOE)
+	{
+		AAbility_AOE* tNewAbility = Cast<AAbility_AOE>(tAbilitiesManager->CreateAbility(tAbility.AbilityAOEClass, this->m_Caster));
+
+		tNewAbility->m_AOEAbilityStruct = tAbility;
+
+		UseAbility(tNewAbility);
+	}
+
+	for (auto& tAbility : this->m_SpellStruct.Abilities_Self)
+	{
+		AAbility_Self* tNewAbility = Cast<AAbility_Self>(tAbilitiesManager->CreateAbility(tAbility.AbilitySelfClass, this->m_Caster));
+
+		tNewAbility->m_AbilityStructSelf = tAbility;
+
+		UseAbility(tNewAbility);
+	}
+
+
+	/*for (auto& tAbilityClass : this->m_SpellStruct.Abilities)
 	{
 		AAbility* tNewAbility = CreateAbility(tAbilityClass);
 		UseAbility(tNewAbility);
@@ -66,7 +93,7 @@ void ASpell::UseAbilities()
 		tNew->m_AbilityStructSelf = tAbility;
 
 		UseAbility(tNew);
-	}
+	}*/
 
 	// Destroy Spell if there are no Active abilities
 	if (this->m_ActiveSpells.Num() == 0)

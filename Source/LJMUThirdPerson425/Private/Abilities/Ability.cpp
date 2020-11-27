@@ -28,6 +28,7 @@ void AAbility::UseAbility_Implementation()
 		this->AutoDestroy();
 		return;
 	}
+	this->SetActorTransform(this->m_AbilityUser->GetTransform());
 }
 
 void AAbility::Initialise(AActor* AbilityUser)

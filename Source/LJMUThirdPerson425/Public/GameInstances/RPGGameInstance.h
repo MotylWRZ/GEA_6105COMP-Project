@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Managers/SpellsManager.h"
+#include "Managers/AbilitiesManager.h"
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
@@ -26,6 +27,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	static ASpellsManager* GetSpellsManager (const UObject* WorldContextObject) { return GetRPGGameInstance(WorldContextObject)->m_SpellsManager; }
 
+	UFUNCTION(BlueprintPure)
+	static AAbilitiesManager* GetAbilitiesManager(const UObject* WorldContextObject) { return GetRPGGameInstance(WorldContextObject)->m_AbilitiesManager; }
+
 	virtual void Init() override;
 
 public:
@@ -33,5 +37,6 @@ public:
 
 private:
 	ASpellsManager* m_SpellsManager;
+	AAbilitiesManager* m_AbilitiesManager;
 
 };
