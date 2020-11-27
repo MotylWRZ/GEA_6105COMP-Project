@@ -36,6 +36,7 @@ public:
 
 
 private:
+	TQueue<ASpell*> m_ActiveSpellsQueue;
 	TArray<ASpell*> m_ActiveSpells;
 	TArray<ASpell*> m_InactiveSpells;
 };

@@ -46,15 +46,15 @@ void ASpellsManager::Update()
 	AManagerBase::Update();
 
 	// Update all spells
-	for (auto i = 0; i < this->m_ActiveSpells.Num(); ++i)// tSpell : this->m_ActiveSpells)
+	for (int32 i = this->m_ActiveSpells.Num() - 1; i >= 0; --i)
 	{
 		ASpell* tSpell = m_ActiveSpells[i];
 
 		if (!tSpell->IsSpellActive())
 		{
 			// Destroy and clear inactive spell
-			tSpell->AutoDestroy();
 			this->m_ActiveSpells.RemoveSwap(tSpell);
+			tSpell->AutoDestroy();
 		}
 	}
 
