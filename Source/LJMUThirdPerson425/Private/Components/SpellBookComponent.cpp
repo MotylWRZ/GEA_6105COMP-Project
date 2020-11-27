@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-#include "Kismet/GameplayStatics.h"
 #include "GameInstances/RPGGameInstance.h"
+#include "Managers/SpellsManager.h"
 
 #include "Components/SpellBookComponent.h"
 
@@ -28,14 +28,16 @@ void USpellBookComponent::CastSpell(int32 SpellID)
 
 	const FSpellStruct& tSpellStruct = *this->m_SpellsList[SpellID];
 
-	URPGGameInstance* tRPGGameInstance = Cast<URPGGameInstance>(UGameplayStatics::GetGameInstance(this));
+	ASpellsManager& tSpellsManager = *URPGGameInstance::GetSpellsManager(this);
 
-	// Spawn a new spell using the SpellStruct
-	ASpell* tNewSpell = tRPGGameInstance->GetSpellsManager()->CreateSpell(tSpellStruct);
+	//URPGGameInstance& tRPGGameInstance = *URPGGameInstance::GetRPGGameInstance(this);
 
 	// Check if there is enough mana to cast the spell
 	if (this->m_Mana >= tSpellStruct.ManaCost)
 	{
+		// Spawn a new spell using the SpellStruct
+		ASpell* tNewSpell = tSpellsManager.CreateSpell(tSpellStruct);
+
 		// Take required mana to cast the spell
 		this->TakeMana(tSpellStruct.ManaCost);
 

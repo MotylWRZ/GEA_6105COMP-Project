@@ -29,7 +29,38 @@ ASpell* ASpellsManager::CreateSpell(const FSpellStruct& SpellStruct)
 		tNewSpell->Initialise(SpellStruct);
 	}
 
+	if (tNewSpell)
+	{
+		this->m_ActiveSpells.Add(tNewSpell);
+
+		this->SetShouldUpdate(true);
+	}
+
 	return tNewSpell;
 
-	this->m_ActiveSpells.Add(tNewSpell);
+
+}
+
+void ASpellsManager::Update()
+{
+	AManagerBase::Update();
+
+	// Update all spells
+	for (auto i = 0; i < this->m_ActiveSpells.Num(); ++i)// tSpell : this->m_ActiveSpells)
+	{
+		ASpell* tSpell = m_ActiveSpells[i];
+
+		if (!tSpell->IsSpellActive())
+		{
+			// Destroy and clear inactive spell
+			tSpell->AutoDestroy();
+			this->m_ActiveSpells.RemoveSwap(tSpell);
+		}
+	}
+
+	if (this->m_ActiveSpells.Num() == 0)
+	{
+		// Stop updating this manager
+		this->SetShouldUpdate(false);
+	}
 }

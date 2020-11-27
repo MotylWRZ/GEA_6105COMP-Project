@@ -11,6 +11,7 @@
 
 // Sets default values
 ASpell::ASpell()
+	:m_bIsActive(true)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -31,7 +32,7 @@ bool ASpell::CastSpell(AActor* CasterRef)
 		UseAbilities();
 		return true;
 	}
-
+	this->m_bIsActive = false;
 	return false;
 }
 
@@ -70,7 +71,9 @@ void ASpell::UseAbilities()
 	// Destroy Spell if there are no Active abilities
 	if (this->m_ActiveSpells.Num() == 0)
 	{
-		this->AutoDestroy();
+		// Mark the spell as inactive so that it can be destroyed
+		this->m_bIsActive = false;
+		//this->AutoDestroy();
 	}
 }
 
@@ -87,7 +90,8 @@ void ASpell::ClearInActiveAbility(AAbility* InActiveAbility)
 	if (this->m_ActiveSpells.Num() <= 0)
 	{
 		// If not, destroy the spell
-		this->AutoDestroy();
+		//this->AutoDestroy();
+		this->m_bIsActive = false;
 	}
 }
 

@@ -7,7 +7,7 @@
 
 
 AAbility_AOE::AAbility_AOE()
-	: m_ChangeFrequency(0.1f)
+	:m_ChangeFrequency(0.1f)
 {
 	// Sphere Collision Component setup
 

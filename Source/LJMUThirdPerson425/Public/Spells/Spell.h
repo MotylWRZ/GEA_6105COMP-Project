@@ -75,12 +75,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual bool CastSpell(AActor* CasterRef);
 
+	FORCEINLINE bool IsSpellActive() { return m_bIsActive; }
+	virtual void AutoDestroy();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void UseAbilities();
-	virtual void AutoDestroy();
+
 	virtual void ClearInActiveAbility(AAbility* InActiveAbility);
 	// Checki the Spell should be casted based on the SuccessChance
 	FORCEINLINE bool ShouldCast() { return FMath::RandRange(1, 100) <= m_SpellStruct.SuccessChance ? true : false; }
@@ -102,4 +104,5 @@ public:
 	USceneComponent* m_RootComponent;
 	TMap<AAbility*, AAbility*> m_ActiveSpells;
 	AActor* m_Caster;
+	bool m_bIsActive;
 };

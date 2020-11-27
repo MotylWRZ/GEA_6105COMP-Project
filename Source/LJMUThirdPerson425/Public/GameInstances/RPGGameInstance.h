@@ -20,8 +20,11 @@ class LJMUTHIRDPERSON425_API URPGGameInstance : public UGameInstance
 public:
 	URPGGameInstance();
 
-	UFUNCTION()
-	FORCEINLINE ASpellsManager* const GetSpellsManager() const { return m_SpellsManager; }
+	UFUNCTION(BlueprintPure)
+	static URPGGameInstance* GetRPGGameInstance(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintPure)
+	static ASpellsManager* GetSpellsManager (const UObject* WorldContextObject) { return GetRPGGameInstance(WorldContextObject)->m_SpellsManager; }
 
 	virtual void Init() override;
 
