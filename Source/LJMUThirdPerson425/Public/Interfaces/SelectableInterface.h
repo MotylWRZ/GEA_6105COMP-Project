@@ -6,14 +6,14 @@
 #include "Components/DecalComponent.h"
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "Selectable.generated.h"
+#include "SelectableInterface.generated.h"
 
 //class UDecalComponent;
 //class USelectableActorComponent;
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI, Blueprintable)
-class USelectable : public UInterface
+class USelectableInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -21,7 +21,7 @@ class USelectable : public UInterface
 /**
  *
  */
-class LJMUTHIRDPERSON425_API ISelectable
+class LJMUTHIRDPERSON425_API ISelectableInterface
 {
 	GENERATED_BODY()
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.

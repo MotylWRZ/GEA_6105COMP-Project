@@ -3,7 +3,7 @@
 #include "Components/DecalComponent.h"
 
 #include "../../LJMUThirdPerson425.h"
-#include "Interfaces/Selectable.h"
+#include "Interfaces/SelectableInterface.h"
 
 #include "Components/SelectableActorComponent.h"
 
@@ -28,15 +28,15 @@ void USelectableActorComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// Check if owner implements the ISelectible Interface
-	if (this->GetOwner()->GetClass()->ImplementsInterface(USelectable::StaticClass()))
+	if (this->GetOwner()->GetClass()->ImplementsInterface(USelectableInterface::StaticClass()))
 	{
 		// If it implements the interface, get the decal components
-		this->m_OwnerHoverDecalComponent = ISelectable::Execute_GetHoverDecalComponent(this->GetOwner());
-		this->m_OwnerSelectDecalComponent = ISelectable::Execute_GetSelectDecalComponent(this->GetOwner());
+		this->m_OwnerHoverDecalComponent = ISelectableInterface::Execute_GetHoverDecalComponent(this->GetOwner());
+		this->m_OwnerSelectDecalComponent = ISelectableInterface::Execute_GetSelectDecalComponent(this->GetOwner());
 
 		// Check if GetSelectableCompoenent Interface function has been implemented by the component owner class
 		// If it does not provide an implementation this function, display an error message
-		USelectableActorComponent* tOwnerSelectbleComponentCheck = ISelectable::Execute_GetSelectableComponent(this->GetOwner());
+		USelectableActorComponent* tOwnerSelectbleComponentCheck = ISelectableInterface::Execute_GetSelectableComponent(this->GetOwner());
 		if (!tOwnerSelectbleComponentCheck)
 		{
 			UE_LOG(LogSelectableSystem, Error, TEXT("%s will not work. %s have to provide an implementation for GetSelectableComponent function."), *this->GetName(), *this->GetOwner()->GetName());

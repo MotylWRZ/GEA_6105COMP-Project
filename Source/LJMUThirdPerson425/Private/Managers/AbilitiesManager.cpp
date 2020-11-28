@@ -20,6 +20,12 @@ void AAbilitiesManager::Update()
 		{
 			// Destroy and clear inactive spell
 			this->m_ActiveAbilities.RemoveSwap(tAbility);
+
+			if (!tAbility)
+			{
+				return;
+			}
+
 			tAbility->AutoDestroy();
 		}
 	}

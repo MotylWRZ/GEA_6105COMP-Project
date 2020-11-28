@@ -2,7 +2,7 @@
 
 #include "../../LJMUThirdPerson425.h"
 #include "Components/SelectableActorComponent.h"
-#include "Interfaces/Selectable.h"
+#include "Interfaces/SelectableInterface.h"
 
 #include "Controllers/HeroPlayerController.h"
 
@@ -73,7 +73,7 @@ void AHeroPlayerController::SelectHoveredActor()
 	if (this->m_SelectedActor)
 	{
 
-		USelectableActorComponent* tPreviousActorSelectedComp = ISelectable::Execute_GetSelectableComponent(this->m_SelectedActor);
+		USelectableActorComponent* tPreviousActorSelectedComp = ISelectableInterface::Execute_GetSelectableComponent(this->m_SelectedActor);
 
 		if (tPreviousActorSelectedComp)
 		{
@@ -86,7 +86,7 @@ void AHeroPlayerController::SelectHoveredActor()
 	// Check if the hit Actor implements the Selectable Interface
 	if (this->m_HoveredActor)
 	{
-		USelectableActorComponent* tCurrentActorSelectedComp = ISelectable::Execute_GetSelectableComponent(this->m_HoveredActor);
+		USelectableActorComponent* tCurrentActorSelectedComp = ISelectableInterface::Execute_GetSelectableComponent(this->m_HoveredActor);
 
 		tCurrentActorSelectedComp->ToggleIsSelected(true);
 
@@ -111,7 +111,7 @@ void AHeroPlayerController::HoverActor(AActor* HoveredActor)
 	// set the HoveredActor ptr to nullptr
 	if (this->m_HoveredActor)
 	{
-		USelectableActorComponent* tPreviousHoveredSelectable = ISelectable::Execute_GetSelectableComponent(m_HoveredActor);
+		USelectableActorComponent* tPreviousHoveredSelectable = ISelectableInterface::Execute_GetSelectableComponent(m_HoveredActor);
 
 		tPreviousHoveredSelectable->ToggleIsHovered(false);
 
@@ -119,9 +119,9 @@ void AHeroPlayerController::HoverActor(AActor* HoveredActor)
 	}
 
 	// Check if the hit Actor implements the Selectable Interface
-	if (HoveredActor && HoveredActor->GetClass()->ImplementsInterface(USelectable::StaticClass()))
+	if (HoveredActor && HoveredActor->GetClass()->ImplementsInterface(USelectableInterface::StaticClass()))
 	{
-		USelectableActorComponent* tCurrentHoveredCSelectable = ISelectable::Execute_GetSelectableComponent(HoveredActor);
+		USelectableActorComponent* tCurrentHoveredCSelectable = ISelectableInterface::Execute_GetSelectableComponent(HoveredActor);
 
 		if (!tCurrentHoveredCSelectable)
 		{
