@@ -27,6 +27,7 @@ protected:
 	virtual void UpdateSphereCollision();
 	virtual void ApplyDamageToActor(AActor* Actor, int32 DamageToApply) override;
 	virtual void AddHealthToActor(AActor* Actor, int32 HealthToAdd) override;
+	virtual void Update() override;
 
 
 public:

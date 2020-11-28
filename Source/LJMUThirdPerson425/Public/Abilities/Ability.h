@@ -53,9 +53,13 @@ public:
 	///////////////////////////
 	UFUNCTION(BlueprintCallable)
 	AActor* const GetAbilityUser() const { return m_AbilityUser; }
+	UFUNCTION(BlueprintCallable)
+	float GetDesiredUpdateFrequency() { return m_DesiredUpdateFrequency; }
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE bool IsAbilityActive() { return m_bIsAbilityActive; }
+	UFUNCTION(BlueprintCallable)
+	void SetDesiredUpdateFrequency(float NewDesiredUpdateFrequency);
 
 	UFUNCTION(BlueprintCallable)
 	void SetIsAbilityActive(bool IsActive) { m_bIsAbilityActive = IsActive; }
@@ -67,6 +71,8 @@ protected:
 	virtual void ApplyDamageToActor(AActor* Actor, int32 DamageToApply);
 	virtual void AddHealthToActor(AActor* Actor, int32 HealthToAdd);
 
+	virtual void Update();
+
 	// Class Members
 protected:
 	AActor* m_AbilityUser;
@@ -75,6 +81,7 @@ protected:
 
 	bool m_bInitialised;
 	float m_DesiredUpdateFrequency;
+	bool m_bShouldUpdate;
 	bool m_bIsAbilityActive;
 
 };

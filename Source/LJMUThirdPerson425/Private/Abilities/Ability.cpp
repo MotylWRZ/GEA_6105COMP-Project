@@ -11,6 +11,7 @@
 AAbility::AAbility()
 	:m_AbilityUser(nullptr)
 	, m_bInitialised(false)
+	, m_bShouldUpdate(false)
 	, m_bIsAbilityActive(true)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -43,6 +44,11 @@ void AAbility::Initialise(AActor* AbilityUser)
 		return;
 	}
 
+
+	GetWorld()->GetTimerManager().SetTimer(this->m_AbilityTimerHandle, this,
+		&AAbility::Update, this->m_DesiredUpdateFrequency,
+		true);
+
 	// If everyhting has been set properly, set m_bInitialised to TRUE
 	this->m_bInitialised = true;
 }
@@ -63,6 +69,15 @@ void AAbility::BeginPlay()
 	Super::BeginPlay();
 
 
+}
+
+void AAbility::SetDesiredUpdateFrequency(float NewDesiredUpdateFrequency)
+{
+	GetWorld()->GetTimerManager().SetTimer(this->m_AbilityTimerHandle, this,
+		&AAbility::Update, NewDesiredUpdateFrequency,
+		true);
+
+	this->m_DesiredUpdateFrequency = NewDesiredUpdateFrequency;
 }
 
 void AAbility::ApplyDamageToActor(AActor* Actor, int32 DamageToApply)
@@ -89,6 +104,16 @@ void AAbility::AddHealthToActor(AActor* Actor, int32 HealthToAdd)
 	if (tStatsComponent)
 	{
 		tStatsComponent->AddHealth(this->m_AbilityUser, HealthToAdd);
+	}
+}
+
+void AAbility::Update()
+{
+	// return if there is no need to update the ability
+	if (!this->m_bShouldUpdate)
+	{
+		this->m_bIsAbilityActive = false;
+		return;
 	}
 }
 

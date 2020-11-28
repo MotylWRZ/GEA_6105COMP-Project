@@ -25,11 +25,9 @@ void AAbility_AOE::Initialise(AActor* AbilityUser)
 {
 	Super::Initialise(AbilityUser);
 
-	this->m_SphereCollisionComponent->SetSphereRadius(this->m_AOEAbilityStruct.RadiousStart);
+	this->SetDesiredUpdateFrequency(this->m_ChangeFrequency);
 
-	GetWorld()->GetTimerManager().SetTimer(this->m_AbilityTimerHandle, this,
-		&AAbility_AOE::UseAbility, this->m_ChangeFrequency,
-		true);
+	this->m_SphereCollisionComponent->SetSphereRadius(this->m_AOEAbilityStruct.RadiousStart);
 
 	// If Radious won't be changed dynamically, set the end radious equal to the start radious
 	if (!this->m_AOEAbilityStruct.bChangeRadiousDynamically)
@@ -46,21 +44,8 @@ void AAbility_AOE::UseAbility_Implementation()
 
 	this->m_SphereCollisionComponent->GetOverlappingActors(tActors, TSubclassOf<AActor>());
 
-	/*if (!this->m_AbilityUser->GetClass()->ImplementsInterface(UStatsComponentInterface::StaticClass()))
-	{
-		this->AutoDestroy();
-		return;
-	}*/
-
 	for (auto& tActor : tActors)
 	{
-		//// Check if overlapping Actor implements StatsCompoenentInterface
-		//if (!tActor->GetClass()->ImplementsInterface(UStatsComponentInterface::StaticClass()))
-		//{
-		//	continue;
-		//}
-
-
 		// Add Health and apply damage to the actors
 		AddHealthToActor(tActor, this->m_AOEAbilityStruct.HealthToAdd);
 		ApplyDamageToActor(tActor, this->m_AOEAbilityStruct.Damage);
@@ -72,7 +57,6 @@ void AAbility_AOE::UseAbility_Implementation()
 		!this->m_AOEAbilityStruct.bChangeRadiousDynamically)
 	{
 		this->SetIsAbilityActive(false);
-		//this->AutoDestroy();
 	}
 
 	UpdateSphereCollision();
@@ -105,4 +89,11 @@ void AAbility_AOE::AddHealthToActor(AActor* Actor, int32 HealthToAdd)
 		Super::AddHealthToActor(Actor, HealthToAdd);
 		this->m_AffectedActors.AddUnique(Actor);
 	}*/
+}
+
+void AAbility_AOE::Update()
+{
+	AAbility::Update();
+
+	this->UseAbility();
 }
