@@ -45,58 +45,33 @@ void ASpell::BeginPlay()
 void ASpell::UseAbilities()
 {
 	AAbilitiesManager* tAbilitiesManager = URPGGameInstance::GetAbilitiesManager(this);
-
+	AAbility* tNewAbility;
 	for (auto& tAbilityClass : this->m_SpellStruct.Abilities)
 	{
-		AAbility* tNewAbility = tAbilitiesManager->CreateAbility(tAbilityClass, this->m_Caster);
+		tNewAbility = tAbilitiesManager->CreateAbility(tAbilityClass, this->m_Caster);
 		UseAbility(tNewAbility);
 	}
 
 	for (auto& tAbility : this->m_SpellStruct.Abilities_AOE)
 	{
-		AAbility_AOE* tNewAbility = Cast<AAbility_AOE>(tAbilitiesManager->CreateAbility(tAbility.AbilityAOEClass, this->m_Caster));
+		tNewAbility = tAbilitiesManager->CreateAbility(tAbility.AbilityAOEClass, this->m_Caster);
 
-		tNewAbility->m_AOEAbilityStruct = tAbility;
+		Cast<AAbility_AOE>(tNewAbility)->m_AOEAbilityStruct = tAbility;
 
 		UseAbility(tNewAbility);
 	}
 
 	for (auto& tAbility : this->m_SpellStruct.Abilities_Self)
 	{
-		AAbility_Self* tNewAbility = Cast<AAbility_Self>(tAbilitiesManager->CreateAbility(tAbility.AbilitySelfClass, this->m_Caster));
+		tNewAbility = tAbilitiesManager->CreateAbility(tAbility.AbilitySelfClass, this->m_Caster);
 
-		tNewAbility->m_AbilityStructSelf = tAbility;
+		Cast<AAbility_Self>(tNewAbility)->m_AbilityStructSelf = tAbility;
 
 		UseAbility(tNewAbility);
 	}
-
-
-	/*for (auto& tAbilityClass : this->m_SpellStruct.Abilities)
-	{
-		AAbility* tNewAbility = CreateAbility(tAbilityClass);
-		UseAbility(tNewAbility);
-	}
-
-	for (auto& tAbility : this->m_SpellStruct.Abilities_AOE)
-	{
-		AAbility_AOE* tNew = Cast<AAbility_AOE>(CreateAbility(tAbility.AbilityAOEClass));
-
-		tNew->m_AOEAbilityStruct = tAbility;
-
-		UseAbility(tNew);
-	}
-
-	for (auto& tAbility : this->m_SpellStruct.Abilities_Self)
-	{
-		AAbility_Self* tNew = Cast<AAbility_Self>(CreateAbility(tAbility.AbilitySelfClass));
-
-		tNew->m_AbilityStructSelf = tAbility;
-
-		UseAbility(tNew);
-	}*/
 
 	// Destroy Spell if there are no Active abilities
-	if (this->m_ActiveSpells.Num() == 0)
+	if (this->m_ActiveAbilities.Num() == 0)
 	{
 		// Mark the spell as inactive so that it can be destroyed
 		this->m_bIsActive = false;
@@ -111,13 +86,12 @@ void ASpell::AutoDestroy()
 
 void ASpell::ClearInActiveAbility(AAbility* InActiveAbility)
 {
-	this->m_ActiveSpells.Remove(InActiveAbility);
+	this->m_ActiveAbilities.Remove(InActiveAbility);
 
 	// Check if there are any active spells
-	if (this->m_ActiveSpells.Num() <= 0)
+	if (this->m_ActiveAbilities.Num() <= 0)
 	{
-		// If not, destroy the spell
-		//this->AutoDestroy();
+		// If not, mark the spell as inactive
 		this->m_bIsActive = false;
 	}
 }
@@ -126,25 +100,6 @@ void ASpell::ClearInActiveAbility(AAbility* InActiveAbility)
 void ASpell::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-}
-
-AAbility* ASpell::CreateAbility(TSubclassOf<AAbility> AbilityClass)
-{
-	FTransform tCasterTranform = this->m_Caster->GetTransform();
-
-	AAbility* tNewAbility = GetWorld()->SpawnActor<AAbility>(AbilityClass, tCasterTranform);
-
-	if (tNewAbility)
-	{
-		return tNewAbility;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot Create Ability !"));
-		return nullptr;
-	}
-
 }
 
 void ASpell::UseAbility(AAbility* Ability)
@@ -153,11 +108,9 @@ void ASpell::UseAbility(AAbility* Ability)
 	{
 		Ability->OnAbilityDestroyed.BindUObject(this, &ASpell::ClearInActiveAbility);
 
-		Ability->Initialise(this->m_Caster);
-
 		Ability->UseAbility();
 
 		// Add recently used Ability to Active Spells map
-		this->m_ActiveSpells.Emplace(Ability);
+		this->m_ActiveAbilities.Emplace(Ability);
 	}
 }

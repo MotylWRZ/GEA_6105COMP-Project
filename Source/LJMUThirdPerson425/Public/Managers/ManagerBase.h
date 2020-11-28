@@ -21,7 +21,10 @@ public:
 
 protected:
 	void SetShouldUpdate(bool ShouldUpdate);
+	void SetUpdateFrequency(float NewUpdateFrequency);
+
 	FORCEINLINE bool ShouldUpdate() { return m_bShouldUpdate; }
+	FORCEINLINE float GetUpdateFrequency() { return m_UpdateFrequency; }
 
 	FORCEINLINE void UpdateStart() { GetWorld()->GetTimerManager().UnPauseTimer(m_ManagerTimerHandle); }
 	FORCEINLINE void UpdateStop() { GetWorld()->GetTimerManager().PauseTimer(m_ManagerTimerHandle); }
@@ -30,4 +33,5 @@ public:
 private:
 	FTimerHandle m_ManagerTimerHandle;
 	bool m_bShouldUpdate;
+	float m_UpdateFrequency;
 };

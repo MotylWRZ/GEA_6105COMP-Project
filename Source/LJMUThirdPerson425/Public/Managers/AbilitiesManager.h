@@ -21,4 +21,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	AAbility* CreateAbility(TSubclassOf<AAbility> AbilityClass, AActor* AbilityUser);
+
+private:
+	TArray<AAbility*> m_ActiveAbilities;
 };

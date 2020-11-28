@@ -37,3 +37,10 @@ void AManagerBase::SetShouldUpdate(bool ShouldUpdate)
 
 	this->m_bShouldUpdate = ShouldUpdate;
 }
+
+void AManagerBase::SetUpdateFrequency(float NewUpdateFrequency)
+{
+	GetWorld()->GetTimerManager().SetTimer(this->m_ManagerTimerHandle, this, &AManagerBase::Update, NewUpdateFrequency, true);
+
+	this->m_UpdateFrequency = NewUpdateFrequency;
+}

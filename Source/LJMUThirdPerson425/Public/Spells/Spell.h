@@ -93,7 +93,6 @@ public:
 
 
 private:
-	AAbility* CreateAbility(TSubclassOf<AAbility> AbilityClass);
 	void UseAbility(AAbility* Ability);
 
 
@@ -102,7 +101,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FSpellStruct m_SpellStruct;
 	USceneComponent* m_RootComponent;
-	TMap<AAbility*, AAbility*> m_ActiveSpells;
+	TMap<AAbility*, AAbility*> m_ActiveAbilities;
 	AActor* m_Caster;
 	bool m_bIsActive;
 };

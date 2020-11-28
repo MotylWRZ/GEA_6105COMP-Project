@@ -71,7 +71,8 @@ void AAbility_AOE::UseAbility_Implementation()
 	if (this->m_SphereCollisionComponent->GetUnscaledSphereRadius() >= this->m_AOEAbilityStruct.RadiousEnd ||
 		!this->m_AOEAbilityStruct.bChangeRadiousDynamically)
 	{
-		this->AutoDestroy();
+		this->SetIsAbilityActive(false);
+		//this->AutoDestroy();
 	}
 
 	UpdateSphereCollision();

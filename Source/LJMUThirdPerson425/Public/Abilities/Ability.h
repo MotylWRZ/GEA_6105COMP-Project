@@ -42,6 +42,7 @@ public:
 	virtual void UseAbility_Implementation();
 
 	virtual void Initialise(AActor* AbilityUser);
+	//virtual void Update();
 
 	UFUNCTION(BlueprintCallable)
 	virtual void AutoDestroy();
@@ -53,6 +54,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	AActor* const GetAbilityUser() const { return m_AbilityUser; }
 
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE bool IsAbilityActive() { return m_bIsAbilityActive; }
+
+	UFUNCTION(BlueprintCallable)
+	void SetIsAbilityActive(bool IsActive) { m_bIsAbilityActive = IsActive; }
 
 	///////////////////////////
 	// Protected Member Functions
@@ -68,5 +74,7 @@ protected:
 	FTimerHandle m_AbilityTimerHandle;
 
 	bool m_bInitialised;
+	float m_DesiredUpdateFrequency;
+	bool m_bIsAbilityActive;
 
 };
