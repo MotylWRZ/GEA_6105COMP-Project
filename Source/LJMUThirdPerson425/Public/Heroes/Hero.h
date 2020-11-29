@@ -2,12 +2,18 @@
 
 #pragma once
 
+#include "Interfaces/AttackableInterface.h"
+#include "Characters/CharacterBase.h"
+
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Hero.generated.h"
 
+class USpellBookComponent;
+class UCharacterCombatComponent;
+
 UCLASS()
-class LJMUTHIRDPERSON425_API AHero : public ACharacter
+class LJMUTHIRDPERSON425_API AHero : public ACharacterBase, public IAttackableInterface
 {
 	GENERATED_BODY()
 
@@ -72,4 +78,18 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	// IAttackableInterface implementation
+	UFUNCTION(BlueprintCallable)
+		virtual void ApplyDamage_Implementation(AActor* InstigatorActor, int32 DamageToApply) override;
+	UFUNCTION(BlueprintCallable)
+		virtual bool IsAlive_Implementation() override;
+public:
+
+protected:
+private:
+	UPROPERTY(EditDefaultsOnly)
+	USpellBookComponent* m_SpellbookComponent;
+	UPROPERTY(EditDefaultsOnly)
+	UCharacterCombatComponent* m_CharacterCombatComponent;
 };

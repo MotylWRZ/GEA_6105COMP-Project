@@ -16,7 +16,7 @@ ACharacterBase::ACharacterBase()
 	this->RootComponent = this->m_RootComponent;*/
 
 	// CharacterStatsComponent setup
-	this->m_CharaterStatsComponent = CreateDefaultSubobject<UCharacterStatsComponent>(TEXT("Actor Stats Component"));
+	this->m_CharaterStatsComponent = CreateDefaultSubobject<UCharacterStatsComponent>(TEXT("Character Stats Component"));
 
 }
 

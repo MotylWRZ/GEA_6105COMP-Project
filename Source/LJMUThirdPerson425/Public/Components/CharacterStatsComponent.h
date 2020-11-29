@@ -51,16 +51,8 @@ public:
 	////////////////
 	// Stats
 protected:
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0"))
-	int32 m_MeleeAttack;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	bool m_bUseRangedAttack;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0"))
-	int32 m_RangedAttack;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0"))
-	float m_AttackRange;*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0"))
-	int32 Armor;
+	int32 m_Armor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0"))
 	int32 m_Speed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0"))

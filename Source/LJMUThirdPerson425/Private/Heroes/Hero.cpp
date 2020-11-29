@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "Components/CharacterStatsComponent.h"
+#include "Components/CharacterCombatComponent.h"
+#include "Components/SpellBookComponent.h"
 
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
@@ -44,8 +46,8 @@ AHero::AHero()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character)
-	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+	this->m_SpellbookComponent = CreateDefaultSubobject<USpellBookComponent>(TEXT("SpellbookComponent"));
+	this->m_CharacterCombatComponent = CreateDefaultSubobject<UCharacterCombatComponent>(TEXT("CharacterCombatComponent"));
 }
 
 void AHero::OnResetVR()
@@ -114,6 +116,16 @@ void AHero::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AHero::ApplyDamage_Implementation(AActor* InstigatorActor, int32 DamageToApply)
+{
+	this->m_CharaterStatsComponent->TakeDamage(InstigatorActor, DamageToApply);
+}
+
+bool AHero::IsAlive_Implementation()
+{
+	return this->m_CharaterStatsComponent->IsAlive();
 }
 
 // Called to bind functionality to input

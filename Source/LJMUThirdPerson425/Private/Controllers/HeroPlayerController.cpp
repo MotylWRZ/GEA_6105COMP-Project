@@ -1,8 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "../../LJMUThirdPerson425.h"
+#include "Heroes/Hero.h"
 #include "Components/SelectableActorComponent.h"
 #include "Interfaces/SelectableInterface.h"
+#include "Interfaces/AttackableInterface.h"
+#include "GameFramework/PlayerController.h"
+#include "Blueprint/AIBlueprintHelperLibrary.h"
 
 #include "Controllers/HeroPlayerController.h"
 
@@ -19,7 +23,9 @@ void AHeroPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 	auto& result = this->InputComponent->BindAction("LeftMouseClick", IE_Pressed, this, &AHeroPlayerController::SelectHoveredActor);
+	auto& result2 = this->InputComponent->BindAction("LeftMouseClick", IE_Pressed, this, &AHeroPlayerController::MoveCharacter);
 	result.bConsumeInput = false;
+	result2.bConsumeInput = false;
 }
 
 void AHeroPlayerController::BeginPlay()
@@ -55,6 +61,8 @@ void AHeroPlayerController::CheckForTarget()
 	CollisionParams.TraceTag = TraceTag;
 
 	GetWorld()->LineTraceSingleByChannel(tHitResult, tWorldPos, tWorldPos + tWorldDir * 10000, ECollisionChannel::ECC_Visibility, CollisionParams);
+
+	this->m_HitLocation = tHitResult.Location;
 
 	AActor* tHitActor = tHitResult.GetActor();
 
@@ -133,5 +141,27 @@ void AHeroPlayerController::HoverActor(AActor* HoveredActor)
 
 		//Assign the pointer to it, making it a new hovered actor
 		this->m_HoveredActor = HoveredActor;
+	}
+}
+
+void AHeroPlayerController::MoveCharacter()
+{
+	APawn* tPlayerPawn = Cast<ACharacter>(this->GetPawn());
+
+	if (!tPlayerPawn)
+	{
+		return;
+	}
+
+	if (this->m_HoveredActor
+		&& this->m_HoveredActor->GetClass()->ImplementsInterface(UAttackableInterface::StaticClass()))
+	{
+		// If HoveredActor is valid, move pawn to its location
+		UAIBlueprintHelperLibrary::SimpleMoveToActor(this, this->m_HoveredActor);
+	}
+	else
+	{
+		// Move pawn to mouse hit location
+		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, this->m_HitLocation);
 	}
 }

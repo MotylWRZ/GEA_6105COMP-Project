@@ -21,6 +21,7 @@ public:
 		virtual void CheckForTarget();
 		virtual void SelectHoveredActor();
 		virtual void HoverActor(AActor* HoveredActor);
+		virtual void MoveCharacter();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -28,4 +29,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AActor* m_SelectedActor;
 	FTimerHandle m_ControllerTimerHandle;
+
+	FVector m_HitLocation;
 };

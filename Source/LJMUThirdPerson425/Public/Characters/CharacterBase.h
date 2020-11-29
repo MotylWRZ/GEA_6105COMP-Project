@@ -2,6 +2,8 @@
 
 #pragma once
 
+
+
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "CharacterBase.generated.h"
@@ -27,6 +29,8 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+
 
 
 	// Class Members
