@@ -27,8 +27,6 @@ void AAbility_AOE::Initialise(AActor* AbilityUser)
 {
 	Super::Initialise(AbilityUser);
 
-	this->SetDesiredUpdateInterval(this->m_DesiredUpdateInterval);
-
 	this->m_SphereCollisionComponent->SetSphereRadius(this->m_AOEAbilityStruct.RadiousStart);
 
 	// If Radious won't be changed dynamically, set the end radious equal to the start radious
@@ -36,16 +34,6 @@ void AAbility_AOE::Initialise(AActor* AbilityUser)
 	{
 		this->m_AOEAbilityStruct.RadiousEnd = this->m_AOEAbilityStruct.RadiousStart;
 	}
-}
-
-void AAbility_AOE::Initialise(AActor* AbilityUser, FAbilityStruct AbilityStruct)
-{
-	Super::Initialise(AbilityUser);
-
-	FAbilityStruct_AOE tAOEStruct = *reinterpret_cast<FAbilityStruct_AOE*>(&AbilityStruct);
-
-	this->m_AOEAbilityStruct = tAOEStruct;
-
 }
 
 void AAbility_AOE::UseAbility_Implementation()
@@ -70,8 +58,6 @@ void AAbility_AOE::UseAbility_Implementation()
 	{
 		this->SetIsAbilityActive(false);
 	}
-
-
 }
 
 void AAbility_AOE::UpdateSphereCollision(float DeltaTime)

@@ -28,10 +28,6 @@ void AAbility_Self::BeginPlay()
 void AAbility_Self::Initialise(AActor* AbilityUser)
 {
 	AAbility::Initialise(AbilityUser);
-
-	// Tests Only // Tests Only // Tests Only// Tests Only// Tests Only
-// Set timer
-	GetWorld()->GetTimerManager().SetTimer(this->m_AbilityTimerHandle, this, &AAbility_Self::UseAbility_Implementation, this->m_AbilityStructSelf.IntervalDuration, true);
 }
 
 void AAbility_Self::UseAbility_Implementation()

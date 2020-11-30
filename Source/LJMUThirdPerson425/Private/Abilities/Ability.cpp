@@ -46,18 +46,8 @@ void AAbility::Initialise(AActor* AbilityUser)
 		return;
 	}
 
-
-	//GetWorld()->GetTimerManager().SetTimer(this->m_AbilityTimerHandle, this,
-	//	&AAbility::Update, this->m_DesiredUpdateFrequency,
-	//	true);
-
 	// If everyhting has been set properly, set m_bInitialised to TRUE
 	this->m_bInitialised = true;
-}
-
-void AAbility::Initialise(AActor* AbilityUser, FAbilityStruct AbilityStruct)
-{
-	this->Initialise(AbilityUser);
 }
 
 void AAbility::AutoDestroy()
@@ -80,10 +70,6 @@ void AAbility::BeginPlay()
 
 void AAbility::SetDesiredUpdateInterval(float NewDesiredUpdateInterval)
 {
-	/*GetWorld()->GetTimerManager().SetTimer(this->m_AbilityTimerHandle, this,
-		&AAbility::Update, NewDesiredUpdateFrequency,
-		true);*/
-
 	this->m_DesiredUpdateInterval = NewDesiredUpdateInterval;
 }
 

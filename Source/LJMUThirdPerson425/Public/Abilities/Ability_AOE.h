@@ -18,11 +18,7 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void Initialise(AActor* AbilityUser) override;
-	virtual void Initialise(AActor* AbilityUser, FAbilityStruct AbilityStruct) override;
-
-		virtual void UseAbility_Implementation() override;
-
-
+	virtual void UseAbility_Implementation() override;
 
 protected:
 	virtual void UpdateSphereCollision(float DeltaTime);

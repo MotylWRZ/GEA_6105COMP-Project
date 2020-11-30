@@ -42,13 +42,7 @@ public:
 	virtual void UseAbility_Implementation();
 
 	virtual void Initialise(AActor* AbilityUser);
-
-	// Version of Initialise function which allows for AbilityStruct overriding
-	// Each class with different AbilityStructs should provide its own implementation for this function
-	virtual void Initialise(AActor* AbilityUser, FAbilityStruct AbilityStruct);
-	//virtual void Update();
-
-		virtual void Update(float DeltaTime);
+	virtual void Update(float DeltaTime);
 
 	UFUNCTION(BlueprintCallable)
 	virtual void AutoDestroy();
@@ -86,7 +80,6 @@ public:
 protected:
 	AActor* m_AbilityUser;
 	USceneComponent* m_RootComponent;
-	FTimerHandle m_AbilityTimerHandle;
 
 	bool m_bInitialised;
 	bool m_bShouldUpdate;
