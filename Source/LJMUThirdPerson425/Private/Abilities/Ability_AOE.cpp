@@ -7,13 +7,15 @@
 
 
 AAbility_AOE::AAbility_AOE()
-	:m_ChangeFrequency(0.1f)
 {
 	// Sphere Collision Component setup
 
 	this->m_SphereCollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere Collision Component"));
 
 	this->m_SphereCollisionComponent->SetupAttachment(this->RootComponent);
+
+	this->m_bShouldUpdate = true;
+	this->m_DesiredUpdateInterval = 1.1f;
 }
 
 void AAbility_AOE::BeginPlay()
@@ -25,7 +27,7 @@ void AAbility_AOE::Initialise(AActor* AbilityUser)
 {
 	Super::Initialise(AbilityUser);
 
-	this->SetDesiredUpdateFrequency(this->m_ChangeFrequency);
+	this->SetDesiredUpdateInterval(this->m_DesiredUpdateInterval);
 
 	this->m_SphereCollisionComponent->SetSphereRadius(this->m_AOEAbilityStruct.RadiousStart);
 
@@ -36,9 +38,19 @@ void AAbility_AOE::Initialise(AActor* AbilityUser)
 	}
 }
 
+void AAbility_AOE::Initialise(AActor* AbilityUser, FAbilityStruct AbilityStruct)
+{
+	Super::Initialise(AbilityUser);
+
+	FAbilityStruct_AOE tAOEStruct = *reinterpret_cast<FAbilityStruct_AOE*>(&AbilityStruct);
+
+	this->m_AOEAbilityStruct = tAOEStruct;
+
+}
+
 void AAbility_AOE::UseAbility_Implementation()
 {
-	AAbility::UseAbility_Implementation();
+	Super::UseAbility_Implementation();
 	// Check all the overlapping Actors and apply damage to those that are Attackable
 	TArray<AActor*> tActors;
 
@@ -59,12 +71,12 @@ void AAbility_AOE::UseAbility_Implementation()
 		this->SetIsAbilityActive(false);
 	}
 
-	UpdateSphereCollision();
+
 }
 
-void AAbility_AOE::UpdateSphereCollision()
+void AAbility_AOE::UpdateSphereCollision(float DeltaTime)
 {
-	float tStep = (this->m_AOEAbilityStruct.RadiousEnd - this->m_AOEAbilityStruct.RadiousStart) / this->m_AOEAbilityStruct.ChangeDuration * this->m_ChangeFrequency;
+	float tStep = (this->m_AOEAbilityStruct.RadiousEnd - this->m_AOEAbilityStruct.RadiousStart) / this->m_AOEAbilityStruct.ChangeDuration * DeltaTime;
 
 	float tTargetRadious = this->m_SphereCollisionComponent->GetUnscaledSphereRadius() + tStep;
 
@@ -91,9 +103,10 @@ void AAbility_AOE::AddHealthToActor(AActor* Actor, int32 HealthToAdd)
 	}*/
 }
 
-void AAbility_AOE::Update()
+void AAbility_AOE::Update(float DeltaTime)
 {
-	AAbility::Update();
+	AAbility::Update(DeltaTime);
 
 	this->UseAbility();
+	UpdateSphereCollision(DeltaTime);
 }

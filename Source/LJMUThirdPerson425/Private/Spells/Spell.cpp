@@ -88,7 +88,7 @@ void ASpell::ClearInActiveAbility(AAbility* InActiveAbility)
 {
 	this->m_ActiveAbilities.Remove(InActiveAbility);
 
-	// Check if there are any active spells
+	// Check if there are any active abilities
 	if (this->m_ActiveAbilities.Num() <= 0)
 	{
 		// If not, mark the spell as inactive

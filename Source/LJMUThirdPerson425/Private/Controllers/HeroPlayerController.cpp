@@ -1,5 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+
+
 #include "../../LJMUThirdPerson425.h"
 #include "Heroes/Hero.h"
 #include "Components/SelectableActorComponent.h"
@@ -9,6 +11,7 @@
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 
 #include "Controllers/HeroPlayerController.h"
+
 
 AHeroPlayerController::AHeroPlayerController()
 	:Super()
@@ -67,8 +70,6 @@ void AHeroPlayerController::CheckForTarget()
 	AActor* tHitActor = tHitResult.GetActor();
 
 	this->HoverActor(tHitActor);
-
-
 }
 
 void AHeroPlayerController::SelectHoveredActor()

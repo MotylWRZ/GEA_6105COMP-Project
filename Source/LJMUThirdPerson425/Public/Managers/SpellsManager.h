@@ -26,6 +26,7 @@ public:
 	ASpell* CreateSpell(const FSpellStruct& SpellStruct);
 
 	virtual void Update() override;
+	virtual void Clear() override;
 
 protected:
 
@@ -36,7 +37,6 @@ public:
 
 
 private:
-	TQueue<ASpell*> m_ActiveSpellsQueue;
 	TArray<ASpell*> m_ActiveSpells;
 	TArray<ASpell*> m_InactiveSpells;
 };

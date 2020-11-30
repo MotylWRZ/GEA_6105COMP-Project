@@ -18,16 +18,17 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void Initialise(AActor* AbilityUser) override;
+	virtual void Initialise(AActor* AbilityUser, FAbilityStruct AbilityStruct) override;
 
 		virtual void UseAbility_Implementation() override;
 
 
 
 protected:
-	virtual void UpdateSphereCollision();
+	virtual void UpdateSphereCollision(float DeltaTime);
 	virtual void ApplyDamageToActor(AActor* Actor, int32 DamageToApply) override;
 	virtual void AddHealthToActor(AActor* Actor, int32 HealthToAdd) override;
-	virtual void Update() override;
+	virtual void Update(float DeltaTime) override;
 
 
 public:
@@ -35,9 +36,6 @@ public:
 	FAbilityStruct_AOE m_AOEAbilityStruct;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USphereComponent* m_SphereCollisionComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	float m_ChangeFrequency;
 
 	// Container of affected actors. It can be used to avoid applying the ability
 	// more than once on the actors (damaging more than once per Ability).

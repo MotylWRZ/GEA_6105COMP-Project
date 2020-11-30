@@ -13,6 +13,7 @@ AAbility::AAbility()
 	, m_bInitialised(false)
 	, m_bShouldUpdate(false)
 	, m_bIsAbilityActive(true)
+	, m_CurrentUpdateInterval(0.0f)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -45,12 +46,17 @@ void AAbility::Initialise(AActor* AbilityUser)
 	}
 
 
-	GetWorld()->GetTimerManager().SetTimer(this->m_AbilityTimerHandle, this,
-		&AAbility::Update, this->m_DesiredUpdateFrequency,
-		true);
+	//GetWorld()->GetTimerManager().SetTimer(this->m_AbilityTimerHandle, this,
+	//	&AAbility::Update, this->m_DesiredUpdateFrequency,
+	//	true);
 
 	// If everyhting has been set properly, set m_bInitialised to TRUE
 	this->m_bInitialised = true;
+}
+
+void AAbility::Initialise(AActor* AbilityUser, FAbilityStruct AbilityStruct)
+{
+	this->Initialise(AbilityUser);
 }
 
 void AAbility::AutoDestroy()
@@ -71,13 +77,13 @@ void AAbility::BeginPlay()
 
 }
 
-void AAbility::SetDesiredUpdateFrequency(float NewDesiredUpdateFrequency)
+void AAbility::SetDesiredUpdateInterval(float NewDesiredUpdateInterval)
 {
-	GetWorld()->GetTimerManager().SetTimer(this->m_AbilityTimerHandle, this,
+	/*GetWorld()->GetTimerManager().SetTimer(this->m_AbilityTimerHandle, this,
 		&AAbility::Update, NewDesiredUpdateFrequency,
-		true);
+		true);*/
 
-	this->m_DesiredUpdateFrequency = NewDesiredUpdateFrequency;
+	this->m_DesiredUpdateInterval = NewDesiredUpdateInterval;
 }
 
 void AAbility::ApplyDamageToActor(AActor* Actor, int32 DamageToApply)
@@ -107,7 +113,7 @@ void AAbility::AddHealthToActor(AActor* Actor, int32 HealthToAdd)
 	}
 }
 
-void AAbility::Update()
+void AAbility::Update(float DeltaTime)
 {
 	// return if there is no need to update the ability
 	if (!this->m_bShouldUpdate)
@@ -115,6 +121,15 @@ void AAbility::Update()
 		this->m_bIsAbilityActive = false;
 		return;
 	}
+
+	this->m_CurrentUpdateInterval += DeltaTime;
+
+	if (this->m_CurrentUpdateInterval < this->m_DesiredUpdateInterval)
+	{
+		return;
+	}
+
+	this->m_CurrentUpdateInterval = 0.0f;
 }
 
 // Called every frame

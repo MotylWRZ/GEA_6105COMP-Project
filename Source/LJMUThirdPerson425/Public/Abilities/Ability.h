@@ -42,7 +42,13 @@ public:
 	virtual void UseAbility_Implementation();
 
 	virtual void Initialise(AActor* AbilityUser);
+
+	// Version of Initialise function which allows for AbilityStruct overriding
+	// Each class with different AbilityStructs should provide its own implementation for this function
+	virtual void Initialise(AActor* AbilityUser, FAbilityStruct AbilityStruct);
 	//virtual void Update();
+
+		virtual void Update(float DeltaTime);
 
 	UFUNCTION(BlueprintCallable)
 	virtual void AutoDestroy();
@@ -54,12 +60,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	AActor* const GetAbilityUser() const { return m_AbilityUser; }
 	UFUNCTION(BlueprintCallable)
-	float GetDesiredUpdateFrequency() { return m_DesiredUpdateFrequency; }
+	float GetDesiredUpdateInterval() { return m_DesiredUpdateInterval; }
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE bool IsAbilityActive() { return m_bIsAbilityActive; }
 	UFUNCTION(BlueprintCallable)
-	void SetDesiredUpdateFrequency(float NewDesiredUpdateFrequency);
+	void SetDesiredUpdateInterval(float NewDesiredUpdateFrequency);
 
 	UFUNCTION(BlueprintCallable)
 	void SetIsAbilityActive(bool IsActive) { m_bIsAbilityActive = IsActive; }
@@ -71,17 +77,20 @@ protected:
 	virtual void ApplyDamageToActor(AActor* Actor, int32 DamageToApply);
 	virtual void AddHealthToActor(AActor* Actor, int32 HealthToAdd);
 
-	virtual void Update();
+
 
 	// Class Members
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		float m_DesiredUpdateInterval;
 protected:
 	AActor* m_AbilityUser;
 	USceneComponent* m_RootComponent;
 	FTimerHandle m_AbilityTimerHandle;
 
 	bool m_bInitialised;
-	float m_DesiredUpdateFrequency;
 	bool m_bShouldUpdate;
 	bool m_bIsAbilityActive;
+	float m_CurrentUpdateInterval;
 
 };

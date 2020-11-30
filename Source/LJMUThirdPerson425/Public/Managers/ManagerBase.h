@@ -6,6 +6,9 @@
 #include "GameFramework/Info.h"
 #include "ManagerBase.generated.h"
 
+
+const float DEFAULT_UPDATE_INTERVAL = 0.5f;
+const float DEFAULT_CLEAR_INTERVAL = 5.0f;
 /**
  *
  */
@@ -17,21 +20,29 @@ public:
 	AManagerBase();
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-	virtual void Update() {};
+	virtual void Update();
+	virtual void Clear();
 
 protected:
 	void SetShouldUpdate(bool ShouldUpdate);
-	void SetUpdateFrequency(float NewUpdateFrequency);
+	void SetUpdateInterval(float NewUpdateInterval);
 
 	FORCEINLINE bool ShouldUpdate() { return m_bShouldUpdate; }
-	FORCEINLINE float GetUpdateFrequency() { return m_UpdateFrequency; }
+	FORCEINLINE float GetUpdateInterval() { return m_UpdateInterval; }
 
+	FORCEINLINE void ResetUpdateInterval() { m_UpdateInterval = DEFAULT_UPDATE_INTERVAL; }
+	FORCEINLINE void ResetClearInterval() { m_ClearInterval = DEFAULT_CLEAR_INTERVAL; }
 	FORCEINLINE void UpdateStart() { GetWorld()->GetTimerManager().UnPauseTimer(m_ManagerTimerHandle); }
 	FORCEINLINE void UpdateStop() { GetWorld()->GetTimerManager().PauseTimer(m_ManagerTimerHandle); }
-public:
 
-private:
+	FORCEINLINE bool ShouldClear() { return m_ClearInterval <= m_CurrentClearInterval; }
+public:
+protected:
 	FTimerHandle m_ManagerTimerHandle;
 	bool m_bShouldUpdate;
-	float m_UpdateFrequency;
+	float m_UpdateInterval;
+	float m_CurrentClearInterval;
+	float m_ClearInterval;
+private:
+
 };

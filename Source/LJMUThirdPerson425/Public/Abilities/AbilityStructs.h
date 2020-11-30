@@ -15,9 +15,15 @@ class AAbility_Self;
 class AAbility_AOE;
 class AAbility;
 
+USTRUCT()
+struct FAbilityStruct : public FTableRowBase
+{
+	GENERATED_BODY()
+};
+
 // Ability Struct - Area Of Effect. It will affect the targets within the given radious.
 USTRUCT(Blueprintable)
-struct FAbilityStruct_AOE : public FTableRowBase
+struct FAbilityStruct_AOE : public FAbilityStruct
 {
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -41,7 +47,7 @@ struct FAbilityStruct_AOE : public FTableRowBase
 
 // Ability Struct - Self. The Ablility will directly affect the user of this ability(an Actor).
 USTRUCT(Blueprintable)
-struct FAbilityStruct_Self : public FTableRowBase
+struct FAbilityStruct_Self : public FAbilityStruct
 {
 	GENERATED_BODY()
 
@@ -66,4 +72,24 @@ struct FAbilityStruct_Self : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int32 IntervalsNum;
 
+};
+
+USTRUCT(Blueprintable)
+struct FBaseStruct
+{
+	GENERATED_BODY()
+
+	int32 a;
+	int32 b;
+	int32 c;
+};
+
+USTRUCT(Blueprintable)
+struct FChildStruct : public FBaseStruct
+{
+	GENERATED_BODY()
+
+	int32 x;
+	int32 y1;
+	int32 z2;
 };

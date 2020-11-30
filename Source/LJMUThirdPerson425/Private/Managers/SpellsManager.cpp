@@ -53,14 +53,38 @@ void ASpellsManager::Update()
 		if (!tSpell->IsSpellActive())
 		{
 			// Destroy and clear inactive spell
-			this->m_ActiveSpells.RemoveSwap(tSpell);
-			tSpell->AutoDestroy();
+			//this->m_ActiveSpells.RemoveSwap(tSpell);
+			//tSpell->AutoDestroy();
+
+			this->m_InactiveSpells.Add(tSpell);
 		}
 	}
+	// Remove all inactive pointers from the Active array
+	m_ActiveSpells.RemoveAll([](ASpell* Spell)
+		{
+			return !Spell->IsSpellActive();
+		});
 
-	if (this->m_ActiveSpells.Num() == 0)
+	if (this->ShouldClear())
+	{
+		this->Clear();
+	}
+
+
+	if (this->m_ActiveSpells.Num() == 0 && this->m_InactiveSpells.Num() == 0)
 	{
 		// Stop updating this manager
 		this->SetShouldUpdate(false);
 	}
+}
+
+void ASpellsManager::Clear()
+{
+	Super::Clear();
+
+	for (int32 i = this->m_InactiveSpells.Num() - 1; i >= 0; --i)
+	{
+		this->m_InactiveSpells[i]->AutoDestroy();
+	}
+	m_InactiveSpells.Empty();
 }
