@@ -47,7 +47,8 @@ void AAbility_Self::UseAbility_Implementation()
 	}
 	else
 	{
-		this->AutoDestroy();
+		this->SetIsAbilityActive(false);
+		//this->AutoDestroy();
 	}
 }
 

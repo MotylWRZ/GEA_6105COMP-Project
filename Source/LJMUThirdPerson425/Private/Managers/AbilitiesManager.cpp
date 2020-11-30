@@ -5,8 +5,6 @@
 
 AAbilitiesManager::AAbilitiesManager()
 {
-	this->m_bShouldUpdate = true;
-	//this->SetUpdateInterval(0.1f);
 }
 
 void AAbilitiesManager::Update()
@@ -14,7 +12,7 @@ void AAbilitiesManager::Update()
 	AManagerBase::Update();
 	// Update all spells
 
-	for (int32 i = 0; i < this->m_ActiveAbilities.Num(); ++i)
+	for (int32 i = 0; i < this->m_ActiveAbilities.Num(); i++)
 	{
 		AAbility* tAbility = this->m_ActiveAbilities[i];
 
@@ -32,8 +30,10 @@ void AAbilitiesManager::Update()
 			return !Ability->IsAbilityActive();
 		});
 
+
 	if (this->ShouldClear())
 	{
+		// Clear the the inactive abilitoes array and destroy inactive Ability intances
 		this->Clear();
 	}
 
@@ -42,6 +42,7 @@ void AAbilitiesManager::Update()
 		// Stop updating this manager
 		this->SetShouldUpdate(false);
 
+		// Reset Update interval to Default value
 		this->ResetUpdateInterval();
 	}
 }
@@ -50,7 +51,7 @@ void AAbilitiesManager::Clear()
 {
 	Super::Clear();
 
-	for (int32 i = this->m_InactiveAbilities.Num() - 1; i >= 0; --i)
+	for (int32 i = 0; i < this->m_InactiveAbilities.Num(); i++)
 	{
 		this->m_InactiveAbilities[i]->AutoDestroy();
 	}

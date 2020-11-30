@@ -30,9 +30,15 @@ protected:
 	FORCEINLINE bool ShouldUpdate() { return m_bShouldUpdate; }
 	FORCEINLINE float GetUpdateInterval() { return m_UpdateInterval; }
 
+	// Reset Update interval to Default value
 	FORCEINLINE void ResetUpdateInterval() { m_UpdateInterval = DEFAULT_UPDATE_INTERVAL; }
+	// Reset Clear interval to Default value
 	FORCEINLINE void ResetClearInterval() { m_ClearInterval = DEFAULT_CLEAR_INTERVAL; }
+
+	// Unpause the Updating
 	FORCEINLINE void UpdateStart() { GetWorld()->GetTimerManager().UnPauseTimer(m_ManagerTimerHandle); }
+
+	// Pause the Updating
 	FORCEINLINE void UpdateStop() { GetWorld()->GetTimerManager().PauseTimer(m_ManagerTimerHandle); }
 
 	FORCEINLINE bool ShouldClear() { return m_ClearInterval <= m_CurrentClearInterval; }

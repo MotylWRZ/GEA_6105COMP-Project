@@ -13,6 +13,7 @@ AAbility::AAbility()
 	, m_bInitialised(false)
 	, m_bShouldUpdate(false)
 	, m_bIsAbilityActive(true)
+	, m_DesiredUpdateInterval(0.1f)
 	, m_CurrentUpdateInterval(0.0f)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.

@@ -28,12 +28,12 @@ void AManagerBase::Tick(float DeltaTime)
 
 void AManagerBase::Update()
 {
-	this->m_ClearInterval += GetWorld()->GetTimerManager().GetTimerElapsed(this->m_ManagerTimerHandle);
+	this->m_CurrentClearInterval += GetWorld()->GetTimerManager().GetTimerElapsed(this->m_ManagerTimerHandle);
 }
 
 void AManagerBase::Clear()
 {
-	this->m_ClearInterval = 0.0f;
+	this->m_CurrentClearInterval = 0.0f;
 }
 
 void AManagerBase::SetShouldUpdate(bool ShouldUpdate)
