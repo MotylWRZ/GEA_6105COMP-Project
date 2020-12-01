@@ -10,13 +10,33 @@ ASpellsManager::ASpellsManager()
 
 }
 
-ASpell* ASpellsManager::CreateSpell(const FSpellStruct& SpellStruct)
+ASpell* ASpellsManager::CreateSpell(TSubclassOf<ASpell> SpellClass)
+{
+	ASpell* tNewSpell;
+	tNewSpell = GetWorld()->SpawnActor<ASpell>(SpellClass);
+
+	if (tNewSpell)
+	{
+		this->m_ActiveSpells.Add(tNewSpell);
+
+		this->SetShouldUpdate(true);
+	}
+
+	return tNewSpell;
+}
+
+ASpell* ASpellsManager::CreateSpellFromStruct(const FSpellStruct& SpellStruct)
 {
 	ASpell* tNewSpell;
 
 	// Check if Spell Class is set
-	if (SpellStruct.SpellClass)
+	if (SpellStruct.bUseCompleteSpellClass)
 	{
+		if (!SpellStruct.SpellClass)
+		{
+				UE_LOG(LogTemp, Error, TEXT("%s spell with ID '%i' cannot be spawned. It is set to use complete Spell Class. Please provide a complete Spell Class or set bUseCompleteSpellClass to false if the Spell should be customised directly in SpellBook."), *SpellStruct.SpellName.ToString(), SpellStruct.SpellID);
+				return nullptr;
+		}
 		// If it is set, spawn the Spell using the SpellClass from struct
 		tNewSpell = GetWorld()->SpawnActor<ASpell>(SpellStruct.SpellClass);
 	}
@@ -52,10 +72,6 @@ void ASpellsManager::Update()
 
 		if (!tSpell->IsSpellActive())
 		{
-			// Destroy and clear inactive spell
-			//this->m_ActiveSpells.RemoveSwap(tSpell);
-			//tSpell->AutoDestroy();
-
 			this->m_InactiveSpells.Add(tSpell);
 		}
 	}
@@ -69,7 +85,6 @@ void ASpellsManager::Update()
 	{
 		this->Clear();
 	}
-
 
 	if (this->m_ActiveSpells.Num() == 0 && this->m_InactiveSpells.Num() == 0)
 	{

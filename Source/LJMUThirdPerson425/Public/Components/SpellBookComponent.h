@@ -68,6 +68,8 @@ protected:
 
 private:
 	void InitialiseMagicSpheres();
+	// Override specific SpellStruct with a struct from the CompleteClass(it has to be set in the TargetSpellStruct)
+	bool LoadSpellStructFromCompleteClass(FSpellStruct& TargetSpellStruct);
 
 public:
 	// Class Members
@@ -76,7 +78,7 @@ public:
 	TArray<FSpellStruct> m_Spells;
 
 	// Final list of spells. It is not editable and not exposed.
-	TMap<int32, FSpellStruct*> m_SpellsList;
+	TMap<int32, FSpellStruct> m_SpellsList;
 
 	TArray<ASpell*> m_ActiveSpells;
 

@@ -73,23 +73,3 @@ struct FAbilityStruct_Self : public FAbilityStruct
 		int32 IntervalsNum;
 
 };
-
-USTRUCT(Blueprintable)
-struct FBaseStruct
-{
-	GENERATED_BODY()
-
-	int32 a;
-	int32 b;
-	int32 c;
-};
-
-USTRUCT(Blueprintable)
-struct FChildStruct : public FBaseStruct
-{
-	GENERATED_BODY()
-
-	int32 x;
-	int32 y1;
-	int32 z2;
-};

@@ -9,15 +9,14 @@ USpellBookComponent::USpellBookComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
-	// ...
+
 }
 
 
 void USpellBookComponent::CastSpell(int32 SpellID)
 {
-
 	// Try to find the spell with given ID
 	if (!this->m_SpellsList.Find(SpellID))
 	{
@@ -26,17 +25,15 @@ void USpellBookComponent::CastSpell(int32 SpellID)
 		return;
 	}
 
-	const FSpellStruct& tSpellStruct = *this->m_SpellsList[SpellID];
+	const FSpellStruct& tSpellStruct = this->m_SpellsList[SpellID];
 
 	ASpellsManager& tSpellsManager = *URPGGameInstance::GetSpellsManager(this);
-
-	//URPGGameInstance& tRPGGameInstance = *URPGGameInstance::GetRPGGameInstance(this);
 
 	// Check if there is enough mana to cast the spell
 	if (this->m_Mana >= tSpellStruct.ManaCost)
 	{
 		// Spawn a new spell using the SpellStruct
-		ASpell* tNewSpell = tSpellsManager.CreateSpell(tSpellStruct);
+		ASpell* tNewSpell = tSpellsManager.CreateSpellFromStruct(tSpellStruct);
 
 		// Take required mana to cast the spell
 		this->TakeMana(tSpellStruct.ManaCost);
@@ -49,7 +46,7 @@ void USpellBookComponent::CastSpell(int32 SpellID)
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("Not enought mana to cast the spell"));
+		UE_LOG(LogTemp, Error, TEXT("Not enough mana to cast the spell"));
 
 		return;
 	}
@@ -65,10 +62,18 @@ void USpellBookComponent::BeginPlay()
 		// Create a new ID for the Spell
 		int32 tNewSpellID = m_SpellsList.Num() + 1;
 
+		if (tSpellStruct.bUseCompleteSpellClass)
+		{
+			if (!this->LoadSpellStructFromCompleteClass(tSpellStruct))
+			{
+				continue;
+			}
+		}
+
 		// Assign spell ID to the Spell structure
 		tSpellStruct.SpellID = tNewSpellID;
 
-		m_SpellsList.Add(tNewSpellID, &tSpellStruct);
+		m_SpellsList.Add(tNewSpellID, tSpellStruct);
 	}
 
 	if (this->m_bUseSpellsDataTable)
@@ -89,15 +94,24 @@ void USpellBookComponent::LoadDataTable(UDataTable* DataTable)
 {
 	for (auto& tRow : DataTable->GetRowMap())
 	{
-		FSpellStruct* SpellStructure = reinterpret_cast<FSpellStruct*>(tRow.Value);
+		// Create a Spell structure from the structure stored in data table
+		FSpellStruct tSpellStructure = *reinterpret_cast<FSpellStruct*>(tRow.Value);
 
 		// Create a new ID for the Spell
 		int32 tNewSpellID = m_SpellsList.Num() + 1;
 
-		// Assign spell ID to the Spell structure
-		SpellStructure->SpellID = tNewSpellID;
+		if (tSpellStructure.bUseCompleteSpellClass)
+		{
+			if (!this->LoadSpellStructFromCompleteClass(tSpellStructure))
+			{
+				continue;
+			}
+		}
 
-		m_SpellsList.Add(tNewSpellID, SpellStructure);
+		// Assign spell ID to the Spell structure
+		tSpellStructure.SpellID = tNewSpellID;
+
+		m_SpellsList.Add(tNewSpellID, tSpellStructure);
 	}
 }
 
@@ -171,18 +185,30 @@ void USpellBookComponent::InitialiseMagicSpheres()
 
 	for (auto& tRow : this->m_MagicSpheresDT->GetRowMap())
 	{
+		// Create a Sphere structure from the structure stored in data table
 		FMagicSphere SphereStructure = *reinterpret_cast<FMagicSphere*>(tRow.Value);
 
 		// Load all the spells from this Magic Sphere into the the SphereStruct
 		for (auto& tSpellsMapElem : this->m_SpellsList)
 		{
-			if (tSpellsMapElem.Value->MagicSphereType == SphereStructure.MagicSphereType)
+			if (tSpellsMapElem.Value.MagicSphereType == SphereStructure.MagicSphereType)
 			{
-					SphereStructure.Spells.Add(*tSpellsMapElem.Value);
+					SphereStructure.Spells.Add(tSpellsMapElem.Value);
 			}
 
 		}
 		m_MagicSpheres.Add(SphereStructure.MagicSphereType, SphereStructure);
 	}
+}
+
+bool USpellBookComponent::LoadSpellStructFromCompleteClass(FSpellStruct& TargetSpellStruct)
+{
+	if (!TargetSpellStruct.SpellClass)
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s spell with ID '%i' cannot be spawned. It is set to use complete Spell Class. Please provide a complete Spell Class or set bUseCompleteSpellClass to false if the Spell should be customised directly in SpellBook."), *TargetSpellStruct.SpellName.ToString(), TargetSpellStruct.SpellID);
+		return false;
+	}
+	TargetSpellStruct = TargetSpellStruct.SpellClass.GetDefaultObject()->m_SpellStruct;
+	return true;
 }
 

@@ -23,7 +23,9 @@ public:
 	ASpellsManager();
 
 	UFUNCTION(BlueprintCallable)
-	ASpell* CreateSpell(const FSpellStruct& SpellStruct);
+	ASpell* CreateSpell(TSubclassOf<ASpell> SpellClass);
+	UFUNCTION(BlueprintCallable)
+	ASpell* CreateSpellFromStruct(const FSpellStruct& SpellStruct);
 
 	virtual void Update() override;
 	virtual void Clear() override;

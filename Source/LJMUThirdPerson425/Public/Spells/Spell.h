@@ -20,42 +20,42 @@ struct FSpellStruct : public FTableRowBase
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool bCustomiseSpell;
+		bool bUseCompleteSpellClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!bCustomiseSpell"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bUseCompleteSpellClass"))
 		TSubclassOf<ASpell> SpellClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bCustomiseSpell"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!bUseCompleteSpellClass"))
 		FName SpellName;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bCustomiseSpell"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!bUseCompleteSpellClass"))
 		FText SpellDescription;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bCustomiseSpell"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!bUseCompleteSpellClass"))
 		UTexture2D* SpellIcon;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bCustomiseSpell"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!bUseCompleteSpellClass"))
 		TEnumAsByte<EMagicSphereTypes> MagicSphereType;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bCustomiseSpell", ClampMin = "0"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!bUseCompleteSpellClass", ClampMin = "0"))
 		int32 ManaCost;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bCustomiseSpell", ClampMin = "0", ClampMax = "100"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!bUseCompleteSpellClass", ClampMin = "0", ClampMax = "100"))
 		int32 SuccessChance;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bCustomiseSpell"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!bUseCompleteSpellClass"))
 		TArray<TSubclassOf<AAbility>> Abilities;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bCustomiseSpell"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!bUseCompleteSpellClass"))
 		bool bCustomiseAbilities;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bCustomiseAbilities"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!bUseCompleteSpellClass"))
 		TArray<FAbilityStruct_AOE> Abilities_AOE;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bCustomiseAbilities"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!bUseCompleteSpellClass"))
 		TArray<FAbilityStruct_Self> Abilities_Self;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (EditCondition = "bCustomiseAbilities"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (EditCondition = "!bUseCompleteSpellClass"))
 	int32 SpellID;
 
 };
