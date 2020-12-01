@@ -70,6 +70,13 @@ void USpellBookComponent::BeginPlay()
 			}
 		}
 
+		// Clear custom abilities arrays if bCustomAbilities flag is set to false
+		// This will help to save some space as they won't be used, therefore there is no need to store them
+		if (!tSpellStruct.bCustomiseAbilities)
+		{
+			this->ClearCustomAbilities(tSpellStruct);
+		}
+
 		// Assign spell ID to the Spell structure
 		tSpellStruct.SpellID = tNewSpellID;
 
@@ -106,6 +113,13 @@ void USpellBookComponent::LoadDataTable(UDataTable* DataTable)
 			{
 				continue;
 			}
+		}
+
+		// Clear custom abilities arrays if bCustomAbilities flag is set to false
+		// This will help to save some space as they won't be used, therefore there is no need to store them
+		if (!tSpellStructure.bCustomiseAbilities)
+		{
+			this->ClearCustomAbilities(tSpellStructure);
 		}
 
 		// Assign spell ID to the Spell structure
@@ -210,5 +224,11 @@ bool USpellBookComponent::LoadSpellStructFromCompleteClass(FSpellStruct& TargetS
 	}
 	TargetSpellStruct = TargetSpellStruct.SpellClass.GetDefaultObject()->m_SpellStruct;
 	return true;
+}
+
+void USpellBookComponent::ClearCustomAbilities(FSpellStruct& TargetSpellStruct)
+{
+	TargetSpellStruct.Abilities_AOE.Empty();
+	TargetSpellStruct.Abilities_Self.Empty();
 }
 

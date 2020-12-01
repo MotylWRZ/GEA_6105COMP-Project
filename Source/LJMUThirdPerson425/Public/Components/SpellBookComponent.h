@@ -70,6 +70,7 @@ private:
 	void InitialiseMagicSpheres();
 	// Override specific SpellStruct with a struct from the CompleteClass(it has to be set in the TargetSpellStruct)
 	bool LoadSpellStructFromCompleteClass(FSpellStruct& TargetSpellStruct);
+	void ClearCustomAbilities(FSpellStruct& TargetSpellStruct);
 
 public:
 	// Class Members
