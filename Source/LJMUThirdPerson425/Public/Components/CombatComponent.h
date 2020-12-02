@@ -117,6 +117,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	bool const IsAttacking() const { return m_bIsAttacking; }
 
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+		static UCombatComponent* GetCombatComponent(AActor* FromActor);
+
 	/////////////
 	// Delegates
 	/////////////

@@ -10,7 +10,7 @@
 #include "AbilityStructs.generated.h"
 
 
-
+class AAbility_Targeted;
 class AAbility_Self;
 class AAbility_AOE;
 class AAbility;
@@ -19,6 +19,9 @@ USTRUCT()
 struct FAbilityStruct : public FTableRowBase
 {
 	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UParticleSystem* ParticleSystem;
 };
 
 // Ability Struct - Area Of Effect. It will affect the targets within the given radious.
@@ -40,9 +43,6 @@ struct FAbilityStruct_AOE : public FAbilityStruct
 		float RadiousEnd;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bChangeRadiousDynamically"))
 		float ChangeDuration;
-
-
-
 };
 
 // Ability Struct - Self. The Ablility will directly affect the user of this ability(an Actor).
@@ -61,7 +61,30 @@ struct FAbilityStruct_Self : public FAbilityStruct
 		int32 DamageToApply;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UParticleSystem* ParticleSystem;
+		bool UseIntervals;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float IntervalDuration;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int32 IntervalsNum;
+
+};
+
+// Ability Struct - Self. The Ablility will directly affect the user of this ability(an Actor).
+USTRUCT(Blueprintable)
+struct FAbilityStruct_Targeted : public FAbilityStruct
+{
+	GENERATED_BODY()
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AAbility_Targeted> AbilityTargetedClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int32 HealthToAdd;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int32 DamageToApply;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool UseIntervals;
@@ -71,5 +94,4 @@ struct FAbilityStruct_Self : public FAbilityStruct
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int32 IntervalsNum;
-
 };

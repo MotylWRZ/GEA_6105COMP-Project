@@ -312,6 +312,15 @@ float UCombatComponent::GetDistanceToTarget()
 	return tDistance;
 }
 
+UCombatComponent* UCombatComponent::GetCombatComponent(AActor* FromActor)
+{
+	if (FromActor)
+	{
+		return Cast<UCombatComponent>(FromActor->GetComponentByClass(UCombatComponent::StaticClass()));
+	}
+	return nullptr;
+}
+
 
 
 //bool UCombatComponent::Attack()

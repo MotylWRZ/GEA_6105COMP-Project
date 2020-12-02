@@ -5,6 +5,7 @@
 #include "Managers/AbilitiesManager.h"
 #include "Abilities/Ability_Self.h"
 #include "Abilities/Ability_AOE.h"
+#include "Abilities/Ability_Targeted.h"
 
 #include "Spells/Spell.h"
 
@@ -66,6 +67,15 @@ void ASpell::UseAbilities()
 		tNewAbility = tAbilitiesManager->CreateAbility(tAbility.AbilitySelfClass, this->m_Caster);
 
 		Cast<AAbility_Self>(tNewAbility)->m_AbilityStructSelf = tAbility;
+
+		UseAbility(tNewAbility);
+	}
+
+	for (auto& tAbility : this->m_SpellStruct.Abilities_Targeted)
+	{
+		tNewAbility = tAbilitiesManager->CreateAbility(tAbility.AbilityTargetedClass, this->m_Caster);
+
+		Cast<AAbility_Targeted>(tNewAbility)->m_AbilityTargetedStruct = tAbility;
 
 		UseAbility(tNewAbility);
 	}

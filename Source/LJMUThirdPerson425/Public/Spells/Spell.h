@@ -55,6 +55,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bCustomiseAbilities && !bUseCompleteSpellClass", EditConditionHides))
 		TArray<FAbilityStruct_Self> Abilities_Self;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bCustomiseAbilities && !bUseCompleteSpellClass", EditConditionHides))
+		TArray<FAbilityStruct_Targeted> Abilities_Targeted;
+
 	UPROPERTY(BlueprintReadOnly)
 	int32 SpellID;
 

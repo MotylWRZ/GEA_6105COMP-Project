@@ -1,8 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "../../LJMUThirdPerson425.h"
+
+#include "Utilities/General/HelperFunctionsLibrary.h"
 #include "Components/ActorStatsComponent.h"
 #include "Interfaces/AttackableInterface.h"
+
 #include "Abilities/Ability.h"
 
 
@@ -48,6 +51,23 @@ void AAbility::Initialise(AActor* AbilityUser)
 
 	// If everyhting has been set properly, set m_bInitialised to TRUE
 	this->m_bInitialised = true;
+
+	//FAbilityStruct_AOE b;
+	//b.Damage = 999;
+
+	//TArray<FAbilityStruct*> arrayAbilities;
+
+	//FAbilityStruct m;
+
+	//arrayAbilities.Add(&b);
+	//arrayAbilities.Add(&m);
+
+	//for (int32 i = 0; i < arrayAbilities.Num(); i++)
+	//{
+	//	FAbilityStruct_AOE a = *UHelperFunctionsLibrary::CastToDerived<FAbilityStruct_AOE>(arrayAbilities[i]);
+	//}
+
+
 }
 
 void AAbility::AutoDestroy()
