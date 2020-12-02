@@ -41,6 +41,8 @@ bool ASpell::CastSpell(AActor* CasterRef)
 void ASpell::BeginPlay()
 {
 	Super::BeginPlay();
+
+
 }
 
 void ASpell::UseAbilities()
@@ -53,30 +55,9 @@ void ASpell::UseAbilities()
 		UseAbility(tNewAbility);
 	}
 
-	for (auto& tAbility : this->m_SpellStruct.Abilities_AOE)
+	for (auto& tAbilityCustomisedStruct : this->m_SpellStruct.CustomisedAbilities)
 	{
-		tNewAbility = tAbilitiesManager->CreateAbility(tAbility.AbilityAOEClass, this->m_Caster);
-
-		Cast<AAbility_AOE>(tNewAbility)->m_AOEAbilityStruct = tAbility;
-
-		UseAbility(tNewAbility);
-	}
-
-	for (auto& tAbility : this->m_SpellStruct.Abilities_Self)
-	{
-		tNewAbility = tAbilitiesManager->CreateAbility(tAbility.AbilitySelfClass, this->m_Caster);
-
-		Cast<AAbility_Self>(tNewAbility)->m_AbilityStructSelf = tAbility;
-
-		UseAbility(tNewAbility);
-	}
-
-	for (auto& tAbility : this->m_SpellStruct.Abilities_Targeted)
-	{
-		tNewAbility = tAbilitiesManager->CreateAbility(tAbility.AbilityTargetedClass, this->m_Caster);
-
-		Cast<AAbility_Targeted>(tNewAbility)->m_AbilityTargetedStruct = tAbility;
-
+		tNewAbility = tAbilitiesManager->CreateCustomisedAbilityFromStruct(&tAbilityCustomisedStruct, this->m_Caster);
 		UseAbility(tNewAbility);
 	}
 

@@ -15,13 +15,20 @@ class AAbility_Self;
 class AAbility_AOE;
 class AAbility;
 
+
+
 USTRUCT()
 struct FAbilityStruct : public FTableRowBase
 {
 	GENERATED_BODY()
 
+		explicit FAbilityStruct() {};
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UParticleSystem* ParticleSystem;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AAbility> AbilityClasss;
 };
 
 // Ability Struct - Area Of Effect. It will affect the targets within the given radious.
@@ -29,6 +36,7 @@ USTRUCT(Blueprintable)
 struct FAbilityStruct_AOE : public FAbilityStruct
 {
 	GENERATED_BODY()
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AAbility_AOE> AbilityAOEClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -94,4 +102,31 @@ struct FAbilityStruct_Targeted : public FAbilityStruct
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int32 IntervalsNum;
+};
+
+
+UENUM(BlueprintType)enum class EAbilityType : uint8
+{
+	Ability_Targeted,
+	Ability_Self,
+	Ability_AOE,
+};
+
+USTRUCT()
+struct FAbilityStructCustomised : public FTableRowBase
+{
+	GENERATED_BODY()
+
+
+		UPROPERTY(EditAnywhere, Category = "CustomisedAbility")
+		EAbilityType AbilityType = EAbilityType::Ability_Self;
+
+	UPROPERTY(EditAnywhere, Category = "CustomisedAbility", meta = (EditCondition = "AbilityType == EAbilityType::Ability_Targeted", EditConditionHides))
+		FAbilityStruct_Targeted AbilityTargetedStruct;
+	UPROPERTY(EditAnywhere, Category = "CustomisedAbility", meta = (EditCondition = "AbilityType == EAbilityType::Ability_Self", EditConditionHides))
+		FAbilityStruct_Self AbilitySelfStruct;
+	UPROPERTY(EditAnywhere, Category = "CustomisedAbility", meta = (EditCondition = "AbilityType == EAbilityType::Ability_AOE", EditConditionHides))
+		FAbilityStruct_AOE AbilityAOEStruct;
+
+	FAbilityStruct* AbilityStruct;
 };

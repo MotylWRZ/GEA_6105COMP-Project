@@ -42,6 +42,7 @@ public:
 	virtual void UseAbility_Implementation();
 
 	virtual void Initialise(AActor* AbilityUser);
+
 	virtual void Update(float DeltaTime);
 
 	UFUNCTION(BlueprintCallable)
@@ -55,6 +56,13 @@ public:
 	AActor* const GetAbilityUser() const { return m_AbilityUser; }
 	UFUNCTION(BlueprintCallable)
 	float GetDesiredUpdateInterval() { return m_DesiredUpdateInterval; }
+
+	// Get a pointer to AbilityStruct
+	virtual const FAbilityStruct* GetAbilityStruct()  const PURE_VIRTUAL(AAbility::GetAbilityStruct, return nullptr;)
+
+	// Set a AbilityStruct
+	// It overrides the current AbilityStruct
+	virtual void SetAbilityStruct(FAbilityStruct* AbilityStruct) PURE_VIRTUAL(AAbility::SetAbilityStruct;)
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE bool IsAbilityActive() { return m_bIsAbilityActive; }

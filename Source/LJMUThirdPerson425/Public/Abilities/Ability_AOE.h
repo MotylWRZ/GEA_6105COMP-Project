@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "Utilities/General/HelperFunctionsLibrary.h"
+
 #include "CoreMinimal.h"
 #include "Ability.h"
 #include "Ability_AOE.generated.h"
@@ -20,6 +22,9 @@ public:
 	virtual void Initialise(AActor* AbilityUser) override;
 	virtual void UseAbility_Implementation() override;
 
+	FORCEINLINE virtual const FAbilityStruct* GetAbilityStruct() const override { return &m_AOEAbilityStruct; }
+	FORCEINLINE virtual void SetAbilityStruct(FAbilityStruct* AbilityStruct) override { this->m_AOEAbilityStruct = *UHelperFunctionsLibrary::CastToDerived<FAbilityStruct_AOE>(AbilityStruct); }
+
 protected:
 	virtual void UpdateSphereCollision(float DeltaTime);
 	virtual void ApplyDamageToActor(AActor* Actor, int32 DamageToApply) override;
@@ -29,10 +34,11 @@ protected:
 
 public:
 	USceneComponent* m_RootComponent;
-	FAbilityStruct_AOE m_AOEAbilityStruct;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USphereComponent* m_SphereCollisionComponent;
 
+protected:
+	FAbilityStruct_AOE m_AOEAbilityStruct;
 	// Container of affected actors. It can be used to avoid applying the ability
 	// more than once on the actors (damaging more than once per Ability).
 	TArray<AActor*>  m_AffectedActors;

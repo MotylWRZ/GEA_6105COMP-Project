@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "Utilities/General/HelperFunctionsLibrary.h"
+
 #include "CoreMinimal.h"
 #include "Ability.h"
 #include "Ability_Self.generated.h"
@@ -27,12 +29,16 @@ public:
 	void UseAbility();
 	virtual void UseAbility_Implementation() override;
 
+
+	FORCEINLINE virtual const FAbilityStruct* GetAbilityStruct() const override { return &m_AbilityStructSelf; }
+	FORCEINLINE virtual void SetAbilityStruct(FAbilityStruct* AbilityStruct) override { this->m_AbilityStructSelf = *UHelperFunctionsLibrary::CastToDerived<FAbilityStruct_Self>(AbilityStruct); }
+
 	// Class Members
 public:
-	FAbilityStruct_Self m_AbilityStructSelf;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UParticleSystemComponent* m_ParticleSystem;
 
 	int32 m_CurrentInterval;
+protected:
+	FAbilityStruct_Self m_AbilityStructSelf;
 };

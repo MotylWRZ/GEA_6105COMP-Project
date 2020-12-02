@@ -1,5 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Abilities/Ability_AOE.h"
+#include "Abilities/Ability_Self.h"
+#include "Abilities/Ability_Targeted.h"
 
 #include "Managers/AbilitiesManager.h"
 
@@ -79,14 +82,60 @@ AAbility* AAbilitiesManager::CreateAbility(TSubclassOf<AAbility> AbilityClass, A
 		return tNewAbility;
 	}
 
-
 		UE_LOG(LogTemp, Error, TEXT("Cannot Create Ability !"));
 		return nullptr;
 }
 
-//AAbility* AAbilitiesManager::CreateAbilityFromStruct(FAbilityStruct* AbilityStruct, AActor* AbilityUser)
-//{
-//	FAbilityStruct_AOE tStructAOE = *static_cast<FAbilityStruct_AOE*>(AbilityStruct);
-//	FAbilityStruct_Self tStructSelf = *static_cast<FAbilityStruct_Self*>(AbilityStruct);
-//	return nullptr;
-//}
+AAbility* AAbilitiesManager::CreateAbilityFromStruct(FAbilityStruct* AbilityStruct, AActor* AbilityUser)
+{
+	//FAbilityStruct_AOE tStructAOE = *static_cast<FAbilityStruct_AOE*>(AbilityStruct);
+
+	FTransform tUserTransform = AbilityUser->GetTransform();
+
+	AAbility* tNewAbility = GetWorld()->SpawnActor<AAbility>(AbilityStruct->AbilityClasss, tUserTransform);
+
+	if (tNewAbility)
+	{
+		tNewAbility->Initialise(AbilityUser);
+		tNewAbility->SetAbilityStruct(AbilityStruct);
+
+		this->m_ActiveAbilities.Add(tNewAbility);
+		this->SetShouldUpdate(true);
+
+		// Adjust the manager update interval to the ability desired interval
+		if (this->GetUpdateInterval() > tNewAbility->GetDesiredUpdateInterval())
+		{
+			this->SetUpdateInterval(tNewAbility->GetDesiredUpdateInterval());
+		}
+		return tNewAbility;
+	}
+	return nullptr;
+}
+
+AAbility* AAbilitiesManager::CreateCustomisedAbilityFromStruct(FAbilityStructCustomised* AbilityCustomisedStruct, AActor* AbilityUser)
+{
+	EAbilityType tAbilityType = AbilityCustomisedStruct->AbilityType;
+
+	AAbility* tNewAbility = nullptr;
+
+	switch (tAbilityType)
+	{
+	case EAbilityType::Ability_AOE:
+	{
+		tNewAbility = CreateAbilityFromStruct(&AbilityCustomisedStruct->AbilityAOEStruct, AbilityUser);
+		break;
+	}
+	case EAbilityType::Ability_Self:
+	{
+		tNewAbility = CreateAbilityFromStruct(&AbilityCustomisedStruct->AbilitySelfStruct, AbilityUser);
+		break;
+	}
+	case EAbilityType::Ability_Targeted:
+	{
+		tNewAbility = CreateAbilityFromStruct(&AbilityCustomisedStruct->AbilityTargetedStruct, AbilityUser);
+		break;
+	}
+	}
+
+	return tNewAbility;
+}
