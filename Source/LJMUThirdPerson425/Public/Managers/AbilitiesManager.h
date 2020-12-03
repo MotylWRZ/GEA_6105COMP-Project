@@ -25,8 +25,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	AAbility* CreateAbility(TSubclassOf<AAbility> AbilityClass, AActor* AbilityUser);
 
-	AAbility* CreateAbilityFromStruct(FAbilityStruct* AbilityStruct, AActor* AbilityUser);
-
 	AAbility* CreateCustomisedAbilityFromStruct(FAbilityStructCustomised* AbilityCustomisedStruct, AActor* AbilityUser);
 
 private:

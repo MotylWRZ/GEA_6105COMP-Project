@@ -3,8 +3,6 @@
 #pragma once
 
 
-
-
 #include "Engine/DataTable.h"
 #include "CoreMinimal.h"
 #include "AbilityStructs.generated.h"
@@ -22,13 +20,31 @@ struct FAbilityStruct : public FTableRowBase
 {
 	GENERATED_BODY()
 
-		explicit FAbilityStruct() {};
+	explicit FAbilityStruct();
 
+	// Particle system that will be used for this ability
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UParticleSystem* ParticleSystem;
 
+	// Amount of damage this ability will apply to its targets
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AAbility> AbilityClasss;
+	int32 Damage;
+
+	// Amount of health this ability will add to its targets
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 HealthToAdd;
+
+	// Allow this ability to take effect more than once  (i.e restart itself)?
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool UseIntervals;
+
+	// Duration between the next auto use
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "UseIntervals", EditConditionHides))
+	float IntervalDuration;
+
+	// Number of intervals
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "UseIntervals", EditConditionHides))
+	int32 IntervalsNum;
 };
 
 // Ability Struct - Area Of Effect. It will affect the targets within the given radious.
@@ -37,12 +53,10 @@ struct FAbilityStruct_AOE : public FAbilityStruct
 {
 	GENERATED_BODY()
 
+		explicit FAbilityStruct_AOE();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AAbility_AOE> AbilityAOEClass;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 Damage;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 HealthToAdd;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float RadiousStart;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -59,24 +73,10 @@ struct FAbilityStruct_Self : public FAbilityStruct
 {
 	GENERATED_BODY()
 
+		explicit FAbilityStruct_Self();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AAbility_Self> AbilitySelfClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 HealthToAdd;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 DamageToApply;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool UseIntervals;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float IntervalDuration;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 IntervalsNum;
-
 };
 
 // Ability Struct - Self. The Ablility will directly affect the user of this ability(an Actor).
@@ -85,23 +85,10 @@ struct FAbilityStruct_Targeted : public FAbilityStruct
 {
 	GENERATED_BODY()
 
+		explicit FAbilityStruct_Targeted();
+
 		UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AAbility_Targeted> AbilityTargetedClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 HealthToAdd;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 DamageToApply;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool UseIntervals;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float IntervalDuration;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 IntervalsNum;
 };
 
 
@@ -118,8 +105,8 @@ struct FAbilityStructCustomised : public FTableRowBase
 	GENERATED_BODY()
 
 
-		UPROPERTY(EditAnywhere, Category = "CustomisedAbility")
-		EAbilityType AbilityType = EAbilityType::Ability_Self;
+	UPROPERTY(EditAnywhere, Category = "CustomisedAbility")
+	EAbilityType AbilityType = EAbilityType::Ability_Self;
 
 	UPROPERTY(EditAnywhere, Category = "CustomisedAbility", meta = (EditCondition = "AbilityType == EAbilityType::Ability_Targeted", EditConditionHides))
 		FAbilityStruct_Targeted AbilityTargetedStruct;
@@ -127,6 +114,4 @@ struct FAbilityStructCustomised : public FTableRowBase
 		FAbilityStruct_Self AbilitySelfStruct;
 	UPROPERTY(EditAnywhere, Category = "CustomisedAbility", meta = (EditCondition = "AbilityType == EAbilityType::Ability_AOE", EditConditionHides))
 		FAbilityStruct_AOE AbilityAOEStruct;
-
-	FAbilityStruct* AbilityStruct;
 };

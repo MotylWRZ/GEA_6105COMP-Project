@@ -49,15 +49,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!bUseCompleteSpellClass", EditConditionHides))
 		bool bCustomiseAbilities;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite ,meta = (EditCondition = "bCustomiseAbilities && !bUseCompleteSpellClass", EditConditionHides))
-		TArray<FAbilityStruct_AOE> Abilities_AOE;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bCustomiseAbilities && !bUseCompleteSpellClass", EditConditionHides))
-		TArray<FAbilityStruct_Self> Abilities_Self;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bCustomiseAbilities && !bUseCompleteSpellClass", EditConditionHides))
-		TArray<FAbilityStruct_Targeted> Abilities_Targeted;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bCustomiseAbilities && !bUseCompleteSpellClass", EditConditionHides))
 	TArray<FAbilityStructCustomised> CustomisedAbilities;
 

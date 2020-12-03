@@ -55,10 +55,13 @@ void ASpell::UseAbilities()
 		UseAbility(tNewAbility);
 	}
 
-	for (auto& tAbilityCustomisedStruct : this->m_SpellStruct.CustomisedAbilities)
+	if (this->m_SpellStruct.bCustomiseAbilities)
 	{
-		tNewAbility = tAbilitiesManager->CreateCustomisedAbilityFromStruct(&tAbilityCustomisedStruct, this->m_Caster);
-		UseAbility(tNewAbility);
+		for (auto& tAbilityCustomisedStruct : this->m_SpellStruct.CustomisedAbilities)
+		{
+			tNewAbility = tAbilitiesManager->CreateCustomisedAbilityFromStruct(&tAbilityCustomisedStruct, this->m_Caster);
+			UseAbility(tNewAbility);
+		}
 	}
 
 	// Destroy Spell if there are no Active abilities

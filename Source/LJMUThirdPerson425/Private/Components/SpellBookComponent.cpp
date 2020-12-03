@@ -228,7 +228,7 @@ bool USpellBookComponent::LoadSpellStructFromCompleteClass(FSpellStruct& TargetS
 
 void USpellBookComponent::ClearCustomAbilities(FSpellStruct& TargetSpellStruct)
 {
-	TargetSpellStruct.Abilities_AOE.Empty();
-	TargetSpellStruct.Abilities_Self.Empty();
+	//TargetSpellStruct.Abilities_AOE.Empty();
+	//TargetSpellStruct.Abilities_Self.Empty();
 }
 
