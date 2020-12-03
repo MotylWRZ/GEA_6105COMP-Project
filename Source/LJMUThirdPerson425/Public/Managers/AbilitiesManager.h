@@ -23,9 +23,14 @@ public:
 	virtual void Clear() override;
 
 	UFUNCTION(BlueprintCallable)
-	AAbility* CreateAbility(TSubclassOf<AAbility> AbilityClass, AActor* AbilityUser);
+	// Create an new instance of Ability from the specific class.
+	// Returns UNINITIALISED ability
+	AAbility* CreateAbility(TSubclassOf<AAbility> AbilityClass);
 
-	AAbility* CreateCustomisedAbilityFromStruct(FAbilityStructCustomised* AbilityCustomisedStruct, AActor* AbilityUser);
+	// Spawn and initialise ability instance of a given class
+	AAbility* SpawnAbility(TSubclassOf<AAbility> AbilityClass, AActor* AbilityUser);
+	// Spawn and initialise ability instance from  AbilityCustomisedStruct
+	AAbility* SpawnCustomisedAbilityFromStruct(FAbilityStructCustomised* AbilityCustomisedStruct, AActor* AbilityUser);
 
 private:
 	TArray<AAbility*> m_ActiveAbilities;

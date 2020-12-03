@@ -71,6 +71,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetIsAbilityActive(bool IsActive) { m_bIsAbilityActive = IsActive; }
+	// Setup initial ability properties by loading most of them from struct
 
 	///////////////////////////
 	// Protected Member Functions
@@ -78,6 +79,8 @@ public:
 protected:
 	virtual void ApplyDamageToActor(AActor* Actor, int32 DamageToApply);
 	virtual void AddHealthToActor(AActor* Actor, int32 HealthToAdd);
+	virtual void SetupAbilityBase(FAbilityStruct& AbilityStruct);
+	virtual void UpdateAbilityIntervals(float DeltaTime);
 
 
 
@@ -92,13 +95,16 @@ protected:
 	bool m_bInitialised;
 	bool m_bShouldUpdate;
 	bool m_bIsAbilityActive;
-	float m_CurrentUpdateInterval;
+	float m_CurrentUpdateTime;
 
-	UParticleSystemComponent* m_ParticleSystemComponent;
+	// Initial functional Ability properties
+	bool m_bUseIntervals;
+	float m_IntervalDuration;
+	int32 m_IntervalsNum;
 	int32 m_CurrentInterval;
+	float m_CurrentIntervalTime;
 
 private:
 	// Pointer to BaseAbility Struct used for basic Ability class functionality
 	// Can point to any derived structs in order to access the base struct part without the need do cast
-	const FAbilityStruct* m_AbilityStruct;
 };

@@ -49,7 +49,7 @@ void ASpell::UseAbilities()
 	AAbility* tNewAbility;
 	for (auto& tAbilityClass : this->m_SpellStruct.Abilities)
 	{
-		tNewAbility = tAbilitiesManager->CreateAbility(tAbilityClass, this->m_Caster);
+		tNewAbility = tAbilitiesManager->SpawnAbility(tAbilityClass, this->m_Caster);
 		UseAbility(tNewAbility);
 	}
 
@@ -57,7 +57,7 @@ void ASpell::UseAbilities()
 	{
 		for (auto& tAbilityCustomisedStruct : this->m_SpellStruct.CustomisedAbilities)
 		{
-			tNewAbility = tAbilitiesManager->CreateCustomisedAbilityFromStruct(&tAbilityCustomisedStruct, this->m_Caster);
+			tNewAbility = tAbilitiesManager->SpawnCustomisedAbilityFromStruct(&tAbilityCustomisedStruct, this->m_Caster);
 			UseAbility(tNewAbility);
 		}
 	}

@@ -61,21 +61,18 @@ void AAbilitiesManager::Clear()
 	m_InactiveAbilities.Empty();
 }
 
-AAbility* AAbilitiesManager::CreateAbility(TSubclassOf<AAbility> AbilityClass, AActor* AbilityUser)
+AAbility* AAbilitiesManager::CreateAbility(TSubclassOf<AAbility> AbilityClass)
 {
-	FTransform tUserTransform = AbilityUser->GetTransform();
-
 	if (!AbilityClass)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Cannot Create Ability, beacause AbilityClass is not set !"));
 		return nullptr;
 	}
 
-	AAbility* tNewAbility = GetWorld()->SpawnActor<AAbility>(AbilityClass, tUserTransform);
+	AAbility* tNewAbility = GetWorld()->SpawnActor<AAbility>(AbilityClass);
 
 	if (tNewAbility)
 	{
-		tNewAbility->Initialise(AbilityUser);
 		this->m_ActiveAbilities.Add(tNewAbility);
 		this->SetShouldUpdate(true);
 
@@ -91,8 +88,14 @@ AAbility* AAbilitiesManager::CreateAbility(TSubclassOf<AAbility> AbilityClass, A
 		UE_LOG(LogTemp, Error, TEXT("Cannot Create Ability !"));
 		return nullptr;
 }
+AAbility* AAbilitiesManager::SpawnAbility(TSubclassOf<AAbility> AbilityClass, AActor* AbilityUser)
+{
+	AAbility* tNewAbility = this->CreateAbility(AbilityClass);
+	tNewAbility->Initialise(AbilityUser);
 
-AAbility* AAbilitiesManager::CreateCustomisedAbilityFromStruct(FAbilityStructCustomised* AbilityCustomisedStruct, AActor* AbilityUser)
+	return tNewAbility;
+}
+AAbility* AAbilitiesManager::SpawnCustomisedAbilityFromStruct(FAbilityStructCustomised* AbilityCustomisedStruct, AActor* AbilityUser)
 {
 	EAbilityType tAbilityType = AbilityCustomisedStruct->AbilityType;
 
@@ -102,25 +105,25 @@ AAbility* AAbilitiesManager::CreateCustomisedAbilityFromStruct(FAbilityStructCus
 	{
 	case EAbilityType::Ability_AOE:
 	{
-		tNewAbility = CreateAbility(AbilityCustomisedStruct->AbilityAOEStruct.AbilityAOEClass, AbilityUser);
+		tNewAbility = CreateAbility(AbilityCustomisedStruct->AbilityAOEStruct.AbilityAOEClass);
 		tNewAbility->SetAbilityStruct(&AbilityCustomisedStruct->AbilityAOEStruct);
 		break;
 	}
 	case EAbilityType::Ability_Self:
 	{
-		tNewAbility = CreateAbility(AbilityCustomisedStruct->AbilitySelfStruct.AbilitySelfClass, AbilityUser);
+		tNewAbility = CreateAbility(AbilityCustomisedStruct->AbilitySelfStruct.AbilitySelfClass);
 		tNewAbility->SetAbilityStruct(&AbilityCustomisedStruct->AbilitySelfStruct);
 		break;
 	}
 	case EAbilityType::Ability_Targeted:
 	{
-		tNewAbility = CreateAbility(AbilityCustomisedStruct->AbilityTargetedStruct.AbilityTargetedClass, AbilityUser);
+		tNewAbility = CreateAbility(AbilityCustomisedStruct->AbilityTargetedStruct.AbilityTargetedClass);
 		tNewAbility->SetAbilityStruct(&AbilityCustomisedStruct->AbilityTargetedStruct);
 		break;
 	}
 	}
 
-
+	tNewAbility->Initialise(AbilityUser);
 
 	return tNewAbility;
 }

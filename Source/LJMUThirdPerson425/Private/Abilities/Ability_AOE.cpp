@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Kismet/GameplayStatics.h"
 #include "Components/SphereComponent.h"
 
 #include "Components/ActorStatsComponent.h"
@@ -34,30 +35,17 @@ void AAbility_AOE::Initialise(AActor* AbilityUser)
 	{
 		this->m_AOEAbilityStruct.RadiousEnd = this->m_AOEAbilityStruct.RadiousStart;
 	}
+
+	// Setup base Class Properties
+	this->SetupAbilityBase(this->m_AOEAbilityStruct);
 }
 
 void AAbility_AOE::UseAbility_Implementation()
 {
 	Super::UseAbility_Implementation();
-	// Check all the overlapping Actors and apply damage to those that are Attackable
-	TArray<AActor*> tActors;
 
-	this->m_SphereCollisionComponent->GetOverlappingActors(tActors, TSubclassOf<AActor>());
+	this->m_bShouldUpdate = true;
 
-	for (auto& tActor : tActors)
-	{
-		// Add Health and apply damage to the actors
-		AddHealthToActor(tActor, this->m_AOEAbilityStruct.HealthToAdd);
-		ApplyDamageToActor(tActor, this->m_AOEAbilityStruct.Damage);
-	}
-
-	// Destroy the spell once the Collision sphere reaches its End value
-	// Or if it is set to not change the radious dynamically
-	if (this->m_SphereCollisionComponent->GetUnscaledSphereRadius() >= this->m_AOEAbilityStruct.RadiousEnd ||
-		!this->m_AOEAbilityStruct.bChangeRadiousDynamically)
-	{
-		this->SetIsAbilityActive(false);
-	}
 }
 
 void AAbility_AOE::UpdateSphereCollision(float DeltaTime)
@@ -93,6 +81,28 @@ void AAbility_AOE::Update(float DeltaTime)
 {
 	AAbility::Update(DeltaTime);
 
-	this->UseAbility();
+
+
+	// Check all the overlapping Actors and apply damage to those that are Attackable
+	TArray<AActor*> tActors;
+
+	this->m_SphereCollisionComponent->GetOverlappingActors(tActors, TSubclassOf<AActor>());
+
+	for (auto& tActor : tActors)
+	{
+		// Add Health and apply damage to the actors
+		AddHealthToActor(tActor, this->m_AOEAbilityStruct.HealthToAdd);
+		ApplyDamageToActor(tActor, this->m_AOEAbilityStruct.Damage);
+	}
+
+	// Destroy the spell once the Collision sphere reaches its End value
+	// Or if it is set to not change the radious dynamically
+	if (this->m_SphereCollisionComponent->GetUnscaledSphereRadius() >= this->m_AOEAbilityStruct.RadiousEnd
+		|| !this->m_AOEAbilityStruct.bChangeRadiousDynamically
+		&& !this->m_bUseIntervals)
+	{
+		this->SetIsAbilityActive(false);
+	}
+
 	UpdateSphereCollision(DeltaTime);
 }

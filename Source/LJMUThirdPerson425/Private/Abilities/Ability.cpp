@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "../../LJMUThirdPerson425.h"
+#include "Particles/ParticleSystemComponent.h"
 
 #include "Utilities/General/HelperFunctionsLibrary.h"
 #include "Components/ActorStatsComponent.h"
@@ -17,7 +18,7 @@ AAbility::AAbility()
 	, m_bShouldUpdate(false)
 	, m_bIsAbilityActive(true)
 	, m_DesiredUpdateInterval(0.1f)
-	, m_CurrentUpdateInterval(0.0f)
+	, m_CurrentUpdateTime(0.0f)
 	, m_CurrentInterval(0)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -115,15 +116,21 @@ void AAbility::Update(float DeltaTime)
 
 	// Ability Update Interval
 
-	this->m_CurrentUpdateInterval += DeltaTime;
+	this->m_CurrentUpdateTime += DeltaTime;
 
-	if (this->m_CurrentUpdateInterval < this->m_DesiredUpdateInterval)
+	if (this->m_CurrentUpdateTime < this->m_DesiredUpdateInterval)
 	{
 		return;
 	}
 
-	this->m_CurrentUpdateInterval = 0.0f;
+	this->m_CurrentUpdateTime = 0.0f;
 
+	// Is this ability supposed to restart itslef after certain amount of time ?
+	if (this->m_bUseIntervals)
+	{
+		// If yes, update the interval and restart (ie use) the ability
+		this->UpdateAbilityIntervals(DeltaTime);
+	}
 
 }
 
@@ -132,3 +139,38 @@ void AAbility::Tick(float DeltaTime)
 {
 }
 
+void AAbility::SetupAbilityBase(FAbilityStruct& AbilityStruct)
+{
+	 m_bUseIntervals = AbilityStruct.UseIntervals;
+	 m_IntervalDuration = AbilityStruct.IntervalDuration;
+	 m_IntervalsNum = AbilityStruct.IntervalsNum;
+
+	 if (this->m_bUseIntervals)
+	 {
+		 this->m_bShouldUpdate = true;
+	 }
+}
+
+void AAbility::UpdateAbilityIntervals(float DeltaTime)
+{
+	// Calculate the Interval time
+	this->m_CurrentIntervalTime += DeltaTime;
+
+	if (this->m_IntervalDuration > this->m_CurrentIntervalTime)
+	{
+		return;
+	}
+
+	// Check if all intervals have been used
+	if (this->m_CurrentInterval <= this->m_IntervalsNum)
+	{
+		// Restart the Ability
+		this->UseAbility();
+		this->m_CurrentIntervalTime = 0.0f;
+		this->m_CurrentInterval++;
+		return;
+	}
+
+	this->m_bUseIntervals = false;
+
+}
