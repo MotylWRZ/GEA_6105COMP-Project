@@ -10,6 +10,28 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActorDamaged);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActorHealed);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActorDestroyed);
 
+
+USTRUCT(Blueprintable)
+struct FActorStatsStruct
+{
+	GENERATED_BODY()
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+		FName Name;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+		FText Description;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0"))
+		int32 Health;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0"))
+		int32 HealthMax;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+		int32 TeamID;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+		bool CanBeDamaged = true;
+
+};
+
+
+
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LJMUTHIRDPERSON425_API UActorStatsComponent : public UActorComponent
 {
@@ -53,14 +75,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Stats")
 	static UActorStatsComponent* GetStatsComponent(AActor* FromActor);
 
-	FORCEINLINE const virtual FName& GetName() const		{ return m_Name; }
-	FORCEINLINE const virtual FText& GetDescription() const { return m_Description; }
-	FORCEINLINE const virtual int32& GetHealth() const		{ return m_Health; }
-	FORCEINLINE const virtual int32& GetHealthMax() const	{ return m_HealthMax; }
-	FORCEINLINE const virtual int32& GetTeamID() const		{ return m_TeamID; }
+	FORCEINLINE const virtual FName& GetName() const		{ return m_ActorStats.Name; }
+	FORCEINLINE const virtual FText& GetDescription() const { return m_ActorStats.Description; }
+	FORCEINLINE const virtual int32& GetHealth() const		{ return m_ActorStats.Health; }
+	FORCEINLINE const virtual int32& GetHealthMax() const	{ return m_ActorStats.HealthMax; }
+	FORCEINLINE const virtual int32& GetTeamID() const		{ return m_ActorStats.TeamID; }
 
 	UFUNCTION(BlueprintPure, Category = "Stats")
-	FORCEINLINE bool IsAlive()   { return m_Health > 0; }
+	FORCEINLINE bool IsAlive()   { return m_ActorStats.Health > 0; }
 
 	// Check if Actor1 is an enemy for the Actor2
 		UFUNCTION(BlueprintPure, Category = "Stats")
@@ -69,11 +91,11 @@ public:
 		UFUNCTION(BlueprintPure, Category = "Stats")
 	static bool IsEnemyByComponent(UActorStatsComponent* StatsComponent1, UActorStatsComponent* StatsComponent2);
 
-	FORCEINLINE virtual void SetName		(FName NewName)		   { m_Name = NewName; }
-	FORCEINLINE virtual void SetDescription (FText NewDescription) { m_Description = NewDescription; }
-	FORCEINLINE virtual void SetHealth		(int32 NewHealth)	   { m_Health = NewHealth; }
-	FORCEINLINE virtual void SetHealthMax	(int32 NewHealthMax)   {m_HealthMax = NewHealthMax; }
-	FORCEINLINE virtual void SetTeamID		(int32 NewTeamID)	   { m_TeamID = NewTeamID; }
+	FORCEINLINE virtual void SetName		(FName NewName)		   { m_ActorStats.Name = NewName; }
+	FORCEINLINE virtual void SetDescription (FText NewDescription) { m_ActorStats.Description = NewDescription; }
+	FORCEINLINE virtual void SetHealth		(int32 NewHealth)	   { m_ActorStats.Health = NewHealth; }
+	FORCEINLINE virtual void SetHealthMax	(int32 NewHealthMax)   { m_ActorStats.HealthMax = NewHealthMax; }
+	FORCEINLINE virtual void SetTeamID		(int32 NewTeamID)	   { m_ActorStats.TeamID = NewTeamID; }
 
 	/////////////
 	// Delegates
@@ -93,6 +115,8 @@ public:
 	// Stats
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	FActorStatsStruct m_ActorStats;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	FName m_Name;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	FText m_Description;
@@ -103,6 +127,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int32 m_TeamID;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	bool m_CanBeDamaged = true;
+	bool m_CanBeDamaged = true;*/
 
 };

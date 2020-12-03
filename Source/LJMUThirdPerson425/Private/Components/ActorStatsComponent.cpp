@@ -38,17 +38,17 @@ void UActorStatsComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 void UActorStatsComponent::ModifyHealth(int32 ModifyingValue)
 {
-	if (!this->m_CanBeDamaged && ModifyingValue < 0)
+	if (!this->m_ActorStats.CanBeDamaged && ModifyingValue < 0)
 	{
 		return;
 	}
 
-	int32 OldHealth = this->m_Health;
-	int32 NewHealth = FMath::Clamp(this->m_Health + ModifyingValue, 0, this->m_HealthMax);
+	int32 OldHealth = this->m_ActorStats.Health;
+	int32 NewHealth = FMath::Clamp(this->m_ActorStats.Health + ModifyingValue, 0, this->m_ActorStats.HealthMax);
 
 	int32 Delta = NewHealth - OldHealth;
 
-	this->m_Health = NewHealth;
+	this->m_ActorStats.Health = NewHealth;
 
 	if (Delta != 0)
 	{
@@ -74,15 +74,15 @@ void UActorStatsComponent::ModifyHealth(int32 ModifyingValue)
 
 void UActorStatsComponent::ModifyMaxHealth(int32 ModifyingValue)
 {
-	int32 OldHealthMax = this->m_HealthMax;
-	int32 NewHealthMax = this->m_HealthMax + ModifyingValue;
+	int32 OldHealthMax = this->m_ActorStats.HealthMax;
+	int32 NewHealthMax = this->m_ActorStats.HealthMax + ModifyingValue;
 
-	if (this->m_Health > NewHealthMax)
+	if (this->m_ActorStats.Health > NewHealthMax)
 	{
-		this->m_Health = FMath::Clamp(this->m_Health, 0, NewHealthMax);
+		this->m_ActorStats.Health = FMath::Clamp(this->m_ActorStats.Health, 0, NewHealthMax);
 	}
 
-	this->m_HealthMax = NewHealthMax;
+	this->m_ActorStats.HealthMax = NewHealthMax;
 }
 
 void UActorStatsComponent::TakeDamage(UPARAM(ref) AActor*& InstigatorActor, int32 DamageToApply)
