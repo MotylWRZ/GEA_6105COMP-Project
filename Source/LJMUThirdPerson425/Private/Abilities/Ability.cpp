@@ -19,7 +19,6 @@ AAbility::AAbility()
 	, m_bIsAbilityActive(true)
 	, m_DesiredUpdateInterval(0.1f)
 	, m_CurrentUpdateTime(0.0f)
-	, m_CurrentInterval(0)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -124,14 +123,6 @@ void AAbility::Update(float DeltaTime)
 	}
 
 	this->m_CurrentUpdateTime = 0.0f;
-
-	// Is this ability supposed to restart itslef after certain amount of time ?
-	if (this->m_bUseIntervals)
-	{
-		// If yes, update the interval and restart (ie use) the ability
-		this->UpdateAbilityIntervals(DeltaTime);
-	}
-
 }
 
 // Called every frame
@@ -139,38 +130,31 @@ void AAbility::Tick(float DeltaTime)
 {
 }
 
-void AAbility::SetupAbilityBase(FAbilityStruct& AbilityStruct)
+void AAbility::UpdateAbilityIntervals(FAbilityIntervalStruct& AbilityIntervalStruct, float DeltaTime)
 {
-	 m_bUseIntervals = AbilityStruct.UseIntervals;
-	 m_IntervalDuration = AbilityStruct.IntervalDuration;
-	 m_IntervalsNum = AbilityStruct.IntervalsNum;
+	if (!AbilityIntervalStruct.UseIntervals)
+	{
+		return;
+	}
 
-	 if (this->m_bUseIntervals)
-	 {
-		 this->m_bShouldUpdate = true;
-	 }
-}
-
-void AAbility::UpdateAbilityIntervals(float DeltaTime)
-{
 	// Calculate the Interval time
-	this->m_CurrentIntervalTime += DeltaTime;
+	AbilityIntervalStruct.CurrentIntervalTime += DeltaTime;
 
-	if (this->m_IntervalDuration > this->m_CurrentIntervalTime)
+	if (AbilityIntervalStruct.IntervalDuration > AbilityIntervalStruct.CurrentIntervalTime)
 	{
 		return;
 	}
 
 	// Check if all intervals have been used
-	if (this->m_CurrentInterval <= this->m_IntervalsNum)
+	if (AbilityIntervalStruct.CurrentInterval <= AbilityIntervalStruct.IntervalsNum)
 	{
 		// Restart the Ability
 		this->UseAbility();
-		this->m_CurrentIntervalTime = 0.0f;
-		this->m_CurrentInterval++;
+		AbilityIntervalStruct.CurrentIntervalTime = 0.0f;
+		AbilityIntervalStruct.CurrentInterval++;
 		return;
 	}
 
-	this->m_bUseIntervals = false;
+	AbilityIntervalStruct.UseIntervals = false;
 
 }

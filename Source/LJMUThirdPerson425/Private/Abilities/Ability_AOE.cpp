@@ -12,7 +12,6 @@ AAbility_AOE::AAbility_AOE()
 	// Sphere Collision Component setup
 
 	this->m_SphereCollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere Collision Component"));
-
 	this->m_SphereCollisionComponent->SetupAttachment(this->RootComponent);
 
 	this->m_bShouldUpdate = true;
@@ -28,16 +27,11 @@ void AAbility_AOE::Initialise(AActor* AbilityUser)
 {
 	Super::Initialise(AbilityUser);
 
-	this->m_SphereCollisionComponent->SetSphereRadius(this->m_AOEAbilityStruct.RadiousStart);
-
 	// If Radious won't be changed dynamically, set the end radious equal to the start radious
 	if (!this->m_AOEAbilityStruct.bChangeRadiousDynamically)
 	{
 		this->m_AOEAbilityStruct.RadiousEnd = this->m_AOEAbilityStruct.RadiousStart;
 	}
-
-	// Setup base Class Properties
-	this->SetupAbilityBase(this->m_AOEAbilityStruct);
 }
 
 void AAbility_AOE::UseAbility_Implementation()
@@ -45,6 +39,12 @@ void AAbility_AOE::UseAbility_Implementation()
 	Super::UseAbility_Implementation();
 
 	this->m_bShouldUpdate = true;
+
+
+
+	this->m_SphereCollisionComponent->SetSphereRadius(this->m_AOEAbilityStruct.RadiousStart);
+
+
 
 }
 
@@ -98,11 +98,11 @@ void AAbility_AOE::Update(float DeltaTime)
 	// Destroy the spell once the Collision sphere reaches its End value
 	// Or if it is set to not change the radious dynamically
 	if (this->m_SphereCollisionComponent->GetUnscaledSphereRadius() >= this->m_AOEAbilityStruct.RadiousEnd
-		|| !this->m_AOEAbilityStruct.bChangeRadiousDynamically
-		&& !this->m_bUseIntervals)
+		|| !this->m_AOEAbilityStruct.bChangeRadiousDynamically)
 	{
 		this->SetIsAbilityActive(false);
 	}
+
 
 	UpdateSphereCollision(DeltaTime);
 }

@@ -28,6 +28,7 @@ public:
 
 	void UseAbility();
 	virtual void UseAbility_Implementation() override;
+	virtual void Update(float DeltaTime);
 
 
 	FORCEINLINE virtual const FAbilityStruct* GetAbilityStruct() const override { return &m_AbilityStructSelf; }
@@ -38,7 +39,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UParticleSystemComponent* m_ParticleSystem;
 
-	
+
 protected:
 	FAbilityStruct_Self m_AbilityStructSelf;
 };

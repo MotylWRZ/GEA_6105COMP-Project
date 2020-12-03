@@ -36,7 +36,7 @@ public:
 	USceneComponent* m_RootComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USphereComponent* m_SphereCollisionComponent;
-
+	TArray<USphereComponent*> m_SphereComponents;
 protected:
 	FAbilityStruct_AOE m_AOEAbilityStruct;
 	// Container of affected actors. It can be used to avoid applying the ability

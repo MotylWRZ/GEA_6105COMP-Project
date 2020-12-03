@@ -23,9 +23,6 @@ void AAbility_Self::BeginPlay()
 void AAbility_Self::Initialise(AActor* AbilityUser)
 {
 	AAbility::Initialise(AbilityUser);
-
-	// Setup base Class Properties
-	this->SetupAbilityBase(this->m_AbilityStructSelf);
 }
 
 void AAbility_Self::UseAbility_Implementation()
@@ -35,17 +32,21 @@ void AAbility_Self::UseAbility_Implementation()
 	FTransform tUserTransform = this->m_AbilityUser->GetTransform();
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), this->m_AbilityStructSelf.ParticleSystem, tUserTransform);
-	//// Tests Only // Tests Only // Tests Only// Tests Only// Tests Only
-	//// Check if all have been used and the ability should be destroyed
-	//if (this->m_CurrentInterval < this->m_AbilityStructSelf.IntervalsNum)
-	//{
-	//	this->m_CurrentInterval++;
-	//}
-	//else
-	//{
-	//	this->SetIsAbilityActive(false);
-	//	//this->AutoDestroy();
-	//}
+
+	this->m_bShouldUpdate = true;
+}
+
+void AAbility_Self::Update(float DeltaTime)
+{
+	Super::Update(DeltaTime);
+
+	this->UpdateAbilityIntervals(this->m_AbilityStructSelf.AbilityIntervalStruct, DeltaTime);
+
+	if (this->m_AbilityStructSelf.AbilityIntervalStruct.CurrentInterval >=
+		this->m_AbilityStructSelf.AbilityIntervalStruct.IntervalsNum)
+	{
+		this->SetIsAbilityActive(false);
+	}
 }
 
 

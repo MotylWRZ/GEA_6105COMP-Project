@@ -13,6 +13,23 @@ class AAbility_Self;
 class AAbility_AOE;
 class AAbility;
 
+USTRUCT(Blueprintable)
+struct FAbilityIntervalStruct
+{
+	GENERATED_BODY()
+
+		// Interval setup properties
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool	UseIntervals;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float	IntervalDuration;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32	IntervalsNum;
+
+	// Editable interval values
+	int32	CurrentInterval;
+	float	CurrentIntervalTime;
+};
 
 
 USTRUCT()
@@ -33,18 +50,6 @@ struct FAbilityStruct : public FTableRowBase
 	// Amount of health this ability will add to its targets
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 HealthToAdd;
-
-	// Allow this ability to take effect more than once  (i.e restart itself)?
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool UseIntervals;
-
-	// Duration between the next auto use
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "UseIntervals", EditConditionHides))
-	float IntervalDuration;
-
-	// Number of intervals
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "UseIntervals", EditConditionHides))
-	int32 IntervalsNum;
 };
 
 // Ability Struct - Area Of Effect. It will affect the targets within the given radious.
@@ -77,6 +82,9 @@ struct FAbilityStruct_Self : public FAbilityStruct
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AAbility_Self> AbilitySelfClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FAbilityIntervalStruct AbilityIntervalStruct;
 };
 
 // Ability Struct - Self. The Ablility will directly affect the user of this ability(an Actor).

@@ -26,10 +26,6 @@ void AAbility_Targeted::BeginPlay()
 void AAbility_Targeted::Initialise(AActor* AbilityUser)
 {
 	Super::Initialise(AbilityUser);
-
-	// Setup base Class Properties
-	this->SetupAbilityBase(this->m_AbilityTargetedStruct);
-
 }
 
 void AAbility_Targeted::UseAbility()

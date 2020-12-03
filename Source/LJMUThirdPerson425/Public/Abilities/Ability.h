@@ -79,8 +79,8 @@ public:
 protected:
 	virtual void ApplyDamageToActor(AActor* Actor, int32 DamageToApply);
 	virtual void AddHealthToActor(AActor* Actor, int32 HealthToAdd);
-	virtual void SetupAbilityBase(FAbilityStruct& AbilityStruct);
-	virtual void UpdateAbilityIntervals(float DeltaTime);
+
+	virtual void UpdateAbilityIntervals(FAbilityIntervalStruct& AbilityIntervalStruct, float DeltaTime);
 
 
 
@@ -96,13 +96,6 @@ protected:
 	bool m_bShouldUpdate;
 	bool m_bIsAbilityActive;
 	float m_CurrentUpdateTime;
-
-	// Initial functional Ability properties
-	bool m_bUseIntervals;
-	float m_IntervalDuration;
-	int32 m_IntervalsNum;
-	int32 m_CurrentInterval;
-	float m_CurrentIntervalTime;
 
 private:
 	// Pointer to BaseAbility Struct used for basic Ability class functionality
