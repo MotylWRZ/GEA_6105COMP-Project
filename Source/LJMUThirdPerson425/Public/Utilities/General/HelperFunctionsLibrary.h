@@ -28,4 +28,7 @@ public:
 			return static_cast<T*>(Base);
 	}
 
+	static bool IsActorAttackable(UPARAM(ref)AActor*& Actor);
+	static bool IsActorSelectable(UPARAM(ref)AActor*& Actor);
+
 };

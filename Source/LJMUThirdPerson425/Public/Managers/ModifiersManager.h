@@ -11,19 +11,37 @@
 #include "ModifiersManager.generated.h"
 
 USTRUCT(Blueprintable)
+// Use this struct to Modify any property of the target actor
+struct FStatsFullModifierStruct
+{
+	GENERATED_BODY()
+
+	FCombatStruct CombatModifier;
+	FActorStatsStruct ActorStatsStruct;
+
+};
+
+USTRUCT(Blueprintable)
+// Use this struct to Modify ONLY main properties of the target actor
 struct FStatsModifierStruct
 {
 	GENERATED_BODY()
 
 	FCombatStruct CombatModifier;
+	int32 DamageToApply;
+	int32 HealthToAdd;
 
+	bool CanDamageAllies;
 };
+
 
 UCLASS()
 class LJMUTHIRDPERSON425_API AModifiersManager : public AManagerBase
 {
 	GENERATED_BODY()
 
-	void ModifyActorStats(AActor* ActorToModify, FStatsModifierStruct StatsModifierStruct);
-
+public:
+	AModifiersManager();
+	void ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, FStatsModifierStruct StatsModifierStruct);
+	
 };
