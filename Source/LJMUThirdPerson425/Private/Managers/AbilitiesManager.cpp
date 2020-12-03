@@ -65,6 +65,12 @@ AAbility* AAbilitiesManager::CreateAbility(TSubclassOf<AAbility> AbilityClass, A
 {
 	FTransform tUserTransform = AbilityUser->GetTransform();
 
+	if (!AbilityClass)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot Create Ability, beacause AbilityClass is not set !"));
+		return nullptr;
+	}
+
 	AAbility* tNewAbility = GetWorld()->SpawnActor<AAbility>(AbilityClass, tUserTransform);
 
 	if (tNewAbility)

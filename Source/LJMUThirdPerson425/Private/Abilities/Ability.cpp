@@ -18,6 +18,7 @@ AAbility::AAbility()
 	, m_bIsAbilityActive(true)
 	, m_DesiredUpdateInterval(0.1f)
 	, m_CurrentUpdateInterval(0.0f)
+	, m_CurrentInterval(0)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -51,23 +52,6 @@ void AAbility::Initialise(AActor* AbilityUser)
 
 	// If everyhting has been set properly, set m_bInitialised to TRUE
 	this->m_bInitialised = true;
-
-	//FAbilityStruct_AOE b;
-	//b.Damage = 999;
-
-	//TArray<FAbilityStruct*> arrayAbilities;
-
-	//FAbilityStruct m;
-
-	//arrayAbilities.Add(&b);
-	//arrayAbilities.Add(&m);
-
-	//for (int32 i = 0; i < arrayAbilities.Num(); i++)
-	//{
-	//	FAbilityStruct_AOE a = *UHelperFunctionsLibrary::CastToDerived<FAbilityStruct_AOE>(arrayAbilities[i]);
-	//}
-
-
 }
 
 void AAbility::AutoDestroy()
@@ -129,6 +113,8 @@ void AAbility::Update(float DeltaTime)
 		return;
 	}
 
+	// Ability Update Interval
+
 	this->m_CurrentUpdateInterval += DeltaTime;
 
 	if (this->m_CurrentUpdateInterval < this->m_DesiredUpdateInterval)
@@ -137,6 +123,8 @@ void AAbility::Update(float DeltaTime)
 	}
 
 	this->m_CurrentUpdateInterval = 0.0f;
+
+
 }
 
 // Called every frame

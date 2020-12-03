@@ -9,7 +9,7 @@
 
 
 AAbility_Self::AAbility_Self()
-	: m_CurrentInterval(0)
+	
 {
 	m_ParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle System"));
 

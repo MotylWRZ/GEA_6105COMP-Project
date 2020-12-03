@@ -38,7 +38,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UParticleSystemComponent* m_ParticleSystem;
 
-	int32 m_CurrentInterval;
+	
 protected:
 	FAbilityStruct_Self m_AbilityStructSelf;
 };

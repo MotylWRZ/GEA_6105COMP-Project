@@ -94,4 +94,11 @@ protected:
 	bool m_bIsAbilityActive;
 	float m_CurrentUpdateInterval;
 
+	UParticleSystemComponent* m_ParticleSystemComponent;
+	int32 m_CurrentInterval;
+
+private:
+	// Pointer to BaseAbility Struct used for basic Ability class functionality
+	// Can point to any derived structs in order to access the base struct part without the need do cast
+	const FAbilityStruct* m_AbilityStruct;
 };
