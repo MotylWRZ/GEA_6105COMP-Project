@@ -2,12 +2,16 @@
 
 #pragma once
 
+#include "Managers/ModifiersManager.h"
+//#include "../Modifiers/ModifierStructs.h"
+
+
 
 #include "Engine/DataTable.h"
 #include "CoreMinimal.h"
 #include "AbilityStructs.generated.h"
 
-
+//struct FStatsModifierStruct;
 class AAbility_Targeted;
 class AAbility_Self;
 class AAbility_AOE;
@@ -43,13 +47,16 @@ struct FAbilityStruct : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UParticleSystem* ParticleSystem;
 
-	// Amount of damage this ability will apply to its targets
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Damage;
+	FStatsModifierStruct StatsModifierStruct;
 
-	// Amount of health this ability will add to its targets
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 HealthToAdd;
+	//// Amount of damage this ability will apply to its targets
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//int32 Damage;
+
+	//// Amount of health this ability will add to its targets
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//int32 HealthToAdd;
 };
 
 // Ability Struct - Area Of Effect. It will affect the targets within the given radious.
@@ -107,7 +114,7 @@ UENUM(BlueprintType)enum class EAbilityType : uint8
 	Ability_AOE,
 };
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FAbilityStructCustomised : public FTableRowBase
 {
 	GENERATED_BODY()

@@ -1,11 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Managers/ModifiersManager.h"
 #include "../../LJMUThirdPerson425.h"
 #include "Particles/ParticleSystemComponent.h"
+//#include "Modifiers/ModifierStructs.h"
 
 #include "Utilities/General/HelperFunctionsLibrary.h"
 #include "Components/ActorStatsComponent.h"
 #include "Interfaces/AttackableInterface.h"
+
 
 #include "Abilities/Ability.h"
 
@@ -77,31 +80,9 @@ void AAbility::SetDesiredUpdateInterval(float NewDesiredUpdateInterval)
 	this->m_DesiredUpdateInterval = NewDesiredUpdateInterval;
 }
 
-void AAbility::ApplyDamageToActor(AActor* Actor, int32 DamageToApply)
+void AAbility::ApplyStatsModifierToActor(AActor* ActorToModify, const FStatsModifierStruct& StatsModifierStruct)
 {
-	if (!Actor->GetClass()->ImplementsInterface(UAttackableInterface::StaticClass()))
-	{
-		return;
-	}
-
-	// Apply damage to Actor
-	IAttackableInterface::Execute_ApplyDamage(Actor, this->m_AbilityUser, DamageToApply);
-}
-
-void AAbility::AddHealthToActor(AActor* Actor, int32 HealthToAdd)
-{
-	if (!Actor->GetClass()->ImplementsInterface(UAttackableInterface::StaticClass()))
-	{
-		return;
-	}
-
-	// Try to get a Stats Component from the Actor
-	UActorStatsComponent* tStatsComponent = UActorStatsComponent::GetStatsComponent(Actor);
-
-	if (tStatsComponent)
-	{
-		tStatsComponent->AddHealth(this->m_AbilityUser, HealthToAdd);
-	}
+	AModifiersManager::ModifyActorStats(this->m_AbilityUser, ActorToModify, StatsModifierStruct);
 }
 
 void AAbility::Update(float DeltaTime)

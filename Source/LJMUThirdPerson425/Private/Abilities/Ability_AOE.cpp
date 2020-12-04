@@ -57,31 +57,9 @@ void AAbility_AOE::UpdateSphereCollision(float DeltaTime)
 	this->m_SphereCollisionComponent->SetSphereRadius(tTargetRadious);
 }
 
-void AAbility_AOE::ApplyDamageToActor(AActor* Actor, int32 DamageToApply)
-{
-	// Apply damage and add this actor to the AffectedActors array if it is not in there already
-	if (!this->m_AffectedActors.Contains(Actor))
-	{
-		Super::ApplyDamageToActor(Actor, DamageToApply);
-		this->m_AffectedActors.AddUnique(Actor);
-	}
-}
-
-void AAbility_AOE::AddHealthToActor(AActor* Actor, int32 HealthToAdd)
-{
-	// Add health and add this actor to the AffectedActors array if it is not in there already
-	/*if (!this->m_AffectedActors.Contains(Actor))
-	{
-		Super::AddHealthToActor(Actor, HealthToAdd);
-		this->m_AffectedActors.AddUnique(Actor);
-	}*/
-}
-
 void AAbility_AOE::Update(float DeltaTime)
 {
 	AAbility::Update(DeltaTime);
-
-
 
 	// Check all the overlapping Actors and apply damage to those that are Attackable
 	TArray<AActor*> tActors;
@@ -90,9 +68,15 @@ void AAbility_AOE::Update(float DeltaTime)
 
 	for (auto& tActor : tActors)
 	{
-		// Add Health and apply damage to the actors
-		AddHealthToActor(tActor, this->m_AOEAbilityStruct.HealthToAdd);
-		ApplyDamageToActor(tActor, this->m_AOEAbilityStruct.Damage);
+		if (!this->m_AffectedActors.Contains(tActor))
+		{
+			this->ApplyStatsModifierToActor(tActor, this->m_AOEAbilityStruct.StatsModifierStruct);
+			this->m_AffectedActors.AddUnique(tActor);
+		}
+		else
+		{
+			continue;
+		}
 	}
 
 	// Destroy the spell once the Collision sphere reaches its End value

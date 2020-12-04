@@ -4,12 +4,14 @@
 
 #include "Managers/ModifiersManager.h"
 
+
+
 AModifiersManager::AModifiersManager()
 {
 
 }
 
-void AModifiersManager::ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, FStatsModifierStruct StatsModifierStruct)
+void AModifiersManager::ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, const FStatsModifierStruct& StatsModifierStruct)
 {
 	// Modify Actor Stats
 	UActorStatsComponent* tStatsComponent = UActorStatsComponent::GetStatsComponent(ActorToModify);

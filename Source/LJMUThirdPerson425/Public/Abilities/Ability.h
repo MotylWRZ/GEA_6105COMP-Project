@@ -9,6 +9,7 @@
 
 DECLARE_DELEGATE_OneParam(FOnAbilityDestroyed, AAbility*);
 
+struct FStatsModifierStruct;
 
 UCLASS(Abstract)
 class LJMUTHIRDPERSON425_API AAbility : public AActor
@@ -77,8 +78,7 @@ public:
 	// Protected Member Functions
 	///////////////////////////
 protected:
-	virtual void ApplyDamageToActor(AActor* Actor, int32 DamageToApply);
-	virtual void AddHealthToActor(AActor* Actor, int32 HealthToAdd);
+	virtual void ApplyStatsModifierToActor(AActor* ActorToModify, const FStatsModifierStruct& StatsModifierStruct);
 
 	virtual void UpdateAbilityIntervals(FAbilityIntervalStruct& AbilityIntervalStruct, float DeltaTime);
 
@@ -98,6 +98,4 @@ protected:
 	float m_CurrentUpdateTime;
 
 private:
-	// Pointer to BaseAbility Struct used for basic Ability class functionality
-	// Can point to any derived structs in order to access the base struct part without the need do cast
 };

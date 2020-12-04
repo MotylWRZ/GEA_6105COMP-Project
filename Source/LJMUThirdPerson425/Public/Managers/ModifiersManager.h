@@ -4,20 +4,21 @@
 
 #include "Components/CharacterStatsComponent.h"
 #include "Components/CombatComponent.h"
-#include "Components/SpellBookComponent.h"
 
 #include "CoreMinimal.h"
 #include "Managers/ManagerBase.h"
 #include "ModifiersManager.generated.h"
 
+
+
 USTRUCT(Blueprintable)
-// Use this struct to Modify any property of the target actor
+//Use this struct to Modify any property of the target actor
 struct FStatsFullModifierStruct
 {
 	GENERATED_BODY()
 
-	FCombatStruct CombatModifier;
-	FActorStatsStruct ActorStatsStruct;
+		/*FCombatStruct CombatModifier;
+		FActorStatsStruct ActorStatsStruct;*/
 
 };
 
@@ -27,10 +28,16 @@ struct FStatsModifierStruct
 {
 	GENERATED_BODY()
 
-	FCombatStruct CombatModifier;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//FCombatStruct CombatModifier;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 DamageToApply;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 HealthToAdd;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool CanDamageAllies;
 };
 
@@ -42,6 +49,6 @@ class LJMUTHIRDPERSON425_API AModifiersManager : public AManagerBase
 
 public:
 	AModifiersManager();
-	void ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, FStatsModifierStruct StatsModifierStruct);
-	
+	static void ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, const FStatsModifierStruct& StatsModifierStruct);
+
 };
