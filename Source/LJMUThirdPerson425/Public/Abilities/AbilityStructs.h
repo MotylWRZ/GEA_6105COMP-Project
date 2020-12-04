@@ -115,7 +115,7 @@ UENUM(BlueprintType)enum class EAbilityType : uint8
 };
 
 USTRUCT(BlueprintType)
-struct FAbilityStructCustomised : public FTableRowBase
+struct FAbilityStructCustomised
 {
 	GENERATED_BODY()
 
