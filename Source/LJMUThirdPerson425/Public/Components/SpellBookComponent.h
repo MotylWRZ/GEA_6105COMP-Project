@@ -10,6 +10,7 @@
 #include "Components/ActorComponent.h"
 #include "SpellBookComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnManaModified);
 
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LJMUTHIRDPERSON425_API USpellBookComponent : public UActorComponent
@@ -27,7 +28,6 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
 	virtual void LoadDataTable(UDataTable* DataTable);
 
 	//UFUNCTION(BlueprintCallable)
@@ -52,6 +52,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Spellbook")
 		void TakeMana(int32 ManaToTake);
 
+	UFUNCTION(BlueprintCallable, Category = "Spellbook")
+		void ModifyManaRegenerationAmount(int32 ModifyingValue);
+	UFUNCTION(BlueprintCallable, Category = "Spellbook")
+		void ModifyManaRegenerationInterval(float ModifyingValue);
+
 
 	///////////////////////
 	// Accessors/Mutators
@@ -59,12 +64,23 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Spellbook")
 	int32 const GetMana() const { return m_Mana; }
 
+	UFUNCTION(BlueprintCallable, Category = "Spellbook")
+	int32 const GetManaMax() const { return m_ManaMax; }
+
+	UFUNCTION(BlueprintCallable, Category = "Spellbook")
+	int32 const GetManaRegenerationAmount() const { return m_ManaRegenerationAmount; }
+
+	UFUNCTION(BlueprintCallable, Category = "Spellbook")
+	float GetManaRegenerationInterval() const { return m_ManaRegenerationInterval; }
+	//UFUNCTION()
 	/*UFUNCTION(BlueprintCallable, Category = "Spellbook")
 	void SetMana(int32 NewManaAmount) {};*/
 
+	UPROPERTY(BlueprintAssignable, Category = "Spellbook")
+	FOnManaModified m_OnManaModified;
 
 protected:
-
+	void RegenerateMana();
 
 private:
 	void InitialiseMagicSpheres();
@@ -100,4 +116,11 @@ private:
 	int32 m_Mana;
 	UPROPERTY(EditDefaultsOnly)
 	int32 m_ManaMax;
+	UPROPERTY(EditDefaultsOnly)
+	int32 m_ManaRegenerationAmount;
+	UPROPERTY(EditDefaultsOnly)
+	float m_ManaRegenerationInterval;
+
+	float m_CurrentTime;
+	FTimerHandle m_SpellbookTimerHandle;
 };

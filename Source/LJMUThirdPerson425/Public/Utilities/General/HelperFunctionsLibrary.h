@@ -20,7 +20,7 @@ class LJMUTHIRDPERSON425_API UHelperFunctionsLibrary : public UObject
 public:
 
 	// Cast To Derived class. Useful for structs downcasting.
-	// It will throw an error if T(Target class) is not derived from U(Instance of base class)
+	// It will throw an error if T(Target class) is not derived from U(Base class)
 	template<typename T, typename U>
 	static T* CastToDerived(U* Base)
 	{

@@ -6,6 +6,10 @@
 
 // Sets default values for this component's properties
 USpellBookComponent::USpellBookComponent()
+	: m_Mana(10)
+	, m_ManaMax(20)
+	, m_ManaRegenerationAmount(1)
+	, m_ManaRegenerationInterval(1.0f)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -95,6 +99,10 @@ void USpellBookComponent::BeginPlay()
 	}
 
 	InitialiseMagicSpheres();
+
+
+	// Initialise SpellbookTimer
+	GetWorld()->GetTimerManager().SetTimer(this->m_SpellbookTimerHandle, this, &USpellBookComponent::RegenerateMana, this->m_ManaRegenerationInterval, true);
 }
 
 void USpellBookComponent::LoadDataTable(UDataTable* DataTable)
@@ -148,7 +156,9 @@ void USpellBookComponent::ModifyMana(int32 ModifyingValue)
 
 	if (Delta != 0)
 	{
-		// MulticastHealthChanged
+		// Call the delegate OnManaModified
+		this->m_OnManaModified.Broadcast();
+
 		if (Delta > 0)
 		{
 			// MulticastOnManaAdded
@@ -186,6 +196,35 @@ void USpellBookComponent::AddMana(int32 ManaToAdd)
 void USpellBookComponent::TakeMana(int32 ManaToTake)
 {
 	this->ModifyMana(-ManaToTake);
+}
+
+void USpellBookComponent::ModifyManaRegenerationAmount(int32 ModifyingValue)
+{
+	int32 tNewManaRegenerationAmount = this->m_ManaRegenerationAmount + ModifyingValue;
+
+	if (tNewManaRegenerationAmount <= 0)
+	{
+		tNewManaRegenerationAmount = 0;
+	}
+
+	this->m_ManaRegenerationAmount = tNewManaRegenerationAmount;
+}
+
+void USpellBookComponent::ModifyManaRegenerationInterval(float ModifyingValue)
+{
+	int32 tNewManaRegenerationInterval = this->m_ManaRegenerationInterval + ModifyingValue;
+
+	if (tNewManaRegenerationInterval <= 0.0f)
+	{
+		tNewManaRegenerationInterval = 0.0f;
+	}
+
+	this->m_ManaRegenerationAmount = tNewManaRegenerationInterval;
+}
+
+void USpellBookComponent::RegenerateMana()
+{
+	this->ModifyMana(this->m_ManaRegenerationAmount);
 }
 
 void USpellBookComponent::InitialiseMagicSpheres()
