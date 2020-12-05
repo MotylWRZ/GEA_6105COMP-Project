@@ -6,20 +6,60 @@
 
 #include "Managers/AbilitiesManager.h"
 
-AAbilitiesManager::AAbilitiesManager()
+UAbilitiesManager::UAbilitiesManager()
 {
 }
 
-void AAbilitiesManager::Update()
+
+////void UAbilitiesManager::Tick(float DeltaTime)
+////{
+////	//Super::Tick(DeltaTime);
+////
+////	//for (int32 i = 0; i < this->m_ActiveAbilities.Num(); i++)
+////	//{
+////	//	AAbility* tAbility = this->m_ActiveAbilities[i];
+////
+////	//	tAbility->Update(DeltaTime);
+////
+////	//	if (!tAbility->IsAbilityActive())
+////	//	{
+////	//		this->m_InactiveAbilities.Add(tAbility);
+////	//	}
+////	//}
+////
+////	//// Remove all inactive Ability pointers from the Active array
+////	//m_ActiveAbilities.RemoveAll([](AAbility* Ability)
+////	//	{
+////	//		return !Ability->IsAbilityActive();
+////	//	});
+////
+////
+////	//if (this->ShouldClear())
+////	//{
+////	//	// Clear the the inactive abilitoes array and destroy inactive Ability intances
+////	//	this->Clear();
+////	//}
+////
+////	//if (this->m_ActiveAbilities.Num() == 0 && this->m_InactiveAbilities.Num() == 0)
+////	//{
+////	//	// Stop updating this manager
+////	//	this->SetShouldUpdate(false);
+////
+////	//	// Reset Update interval to Default value
+////	//	this->ResetUpdateInterval();
+////	//}
+////}
+
+void UAbilitiesManager::Update(float DeltaTime)
 {
-	AManagerBase::Update();
-	// Update all spells
+	Super::Update(DeltaTime);
+	 //Update all spells
 
 	for (int32 i = 0; i < this->m_ActiveAbilities.Num(); i++)
 	{
 		AAbility* tAbility = this->m_ActiveAbilities[i];
 
-		tAbility->Update(this->GetWorld()->GetTimerManager().GetTimerElapsed(this->m_ManagerTimerHandle));
+		tAbility->Update(DeltaTime);
 
 		if (!tAbility->IsAbilityActive())
 		{
@@ -50,7 +90,7 @@ void AAbilitiesManager::Update()
 	}
 }
 
-void AAbilitiesManager::Clear()
+void UAbilitiesManager::Clear()
 {
 	Super::Clear();
 
@@ -61,7 +101,7 @@ void AAbilitiesManager::Clear()
 	m_InactiveAbilities.Empty();
 }
 
-AAbility* AAbilitiesManager::CreateAbility(TSubclassOf<AAbility> AbilityClass)
+AAbility* UAbilitiesManager::CreateAbility(TSubclassOf<AAbility> AbilityClass)
 {
 	if (!AbilityClass)
 	{
@@ -88,14 +128,14 @@ AAbility* AAbilitiesManager::CreateAbility(TSubclassOf<AAbility> AbilityClass)
 		UE_LOG(LogTemp, Error, TEXT("Cannot Create Ability !"));
 		return nullptr;
 }
-AAbility* AAbilitiesManager::SpawnAbility(TSubclassOf<AAbility> AbilityClass, AActor* AbilityUser)
+AAbility* UAbilitiesManager::SpawnAbility(TSubclassOf<AAbility> AbilityClass, AActor* AbilityUser)
 {
 	AAbility* tNewAbility = this->CreateAbility(AbilityClass);
 	tNewAbility->Initialise(AbilityUser);
 
 	return tNewAbility;
 }
-AAbility* AAbilitiesManager::SpawnCustomisedAbilityFromStruct(FAbilityStructCustomised* AbilityCustomisedStruct, AActor* AbilityUser)
+AAbility* UAbilitiesManager::SpawnCustomisedAbilityFromStruct(FAbilityStructCustomised* AbilityCustomisedStruct, AActor* AbilityUser)
 {
 	EAbilityType tAbilityType = AbilityCustomisedStruct->AbilityType;
 

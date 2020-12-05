@@ -85,11 +85,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 		virtual bool IsAlive_Implementation() override;
 public:
-
-protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UCharacterCombatComponent* m_CharacterCombatComponent;
+	UPROPERTY(EditDefaultsOnly)
+		USpellBookComponent* m_SpellbookComponent;
 private:
-	UPROPERTY(EditDefaultsOnly)
-	USpellBookComponent* m_SpellbookComponent;
-	UPROPERTY(EditDefaultsOnly)
-	UCharacterCombatComponent* m_CharacterCombatComponent;
+
+
 };

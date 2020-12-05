@@ -43,12 +43,12 @@ struct FStatsModifierStruct
 
 
 UCLASS()
-class LJMUTHIRDPERSON425_API AModifiersManager : public AManagerBase
+class LJMUTHIRDPERSON425_API UModifiersManager : public UManagerBase
 {
 	GENERATED_BODY()
 
 public:
-	AModifiersManager();
+	UModifiersManager();
 	static void ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, const FStatsModifierStruct& StatsModifierStruct);
 
 };

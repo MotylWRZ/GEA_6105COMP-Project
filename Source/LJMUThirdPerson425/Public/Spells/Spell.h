@@ -97,8 +97,12 @@ private:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FSpellStruct m_SpellStruct;
+	UPROPERTY()
 	USceneComponent* m_RootComponent;
+	UPROPERTY()
 	TMap<AAbility*, AAbility*> m_ActiveAbilities;
+	UPROPERTY()
 	AActor* m_Caster;
+	UPROPERTY()
 	bool m_bIsActive;
 };

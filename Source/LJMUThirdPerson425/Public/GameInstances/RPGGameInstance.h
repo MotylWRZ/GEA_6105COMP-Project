@@ -19,24 +19,27 @@ class LJMUTHIRDPERSON425_API URPGGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
-	URPGGameInstance();
+	URPGGameInstance(const FObjectInitializer& ObjectInitializer);
 
 	UFUNCTION(BlueprintPure)
 	static URPGGameInstance* GetRPGGameInstance(const UObject* WorldContextObject);
 
 	UFUNCTION(BlueprintPure)
-	static ASpellsManager* GetSpellsManager (const UObject* WorldContextObject) { return GetRPGGameInstance(WorldContextObject)->m_SpellsManager; }
+	static USpellsManager* GetSpellsManager (const UObject* WorldContextObject) { return GetRPGGameInstance(WorldContextObject)->m_SpellsManager; }
 
 	UFUNCTION(BlueprintPure)
-	static AAbilitiesManager* GetAbilitiesManager(const UObject* WorldContextObject) { return GetRPGGameInstance(WorldContextObject)->m_AbilitiesManager; }
+	static UAbilitiesManager* GetAbilitiesManager(const UObject* WorldContextObject) { return GetRPGGameInstance(WorldContextObject)->m_AbilitiesManager; }
 
 	virtual void Init() override;
 
 public:
 
-
 private:
-	ASpellsManager* m_SpellsManager;
-	AAbilitiesManager* m_AbilitiesManager;
 
+
+	UPROPERTY()
+		USpellsManager* m_SpellsManager;
+
+	UPROPERTY()
+		UAbilitiesManager* m_AbilitiesManager;
 };

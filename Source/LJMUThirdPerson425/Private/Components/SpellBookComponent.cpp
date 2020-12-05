@@ -31,13 +31,19 @@ void USpellBookComponent::CastSpell(int32 SpellID)
 
 	const FSpellStruct& tSpellStruct = this->m_SpellsList[SpellID];
 
-	ASpellsManager& tSpellsManager = *URPGGameInstance::GetSpellsManager(this);
+	USpellsManager* tSpellsManager = URPGGameInstance::GetSpellsManager(this);
 
 	// Check if there is enough mana to cast the spell
 	if (this->m_Mana >= tSpellStruct.ManaCost)
 	{
+		//URPGGameInstance::GetRPGGameInstance(this);
+		if (!tSpellsManager)
+		{
+			return;
+		}
+		//tSpellsManager.Update();
 		// Spawn a new spell using the SpellStruct
-		ASpell* tNewSpell = tSpellsManager.CreateSpellFromStruct(tSpellStruct);
+		ASpell* tNewSpell = tSpellsManager->CreateSpellFromStruct(tSpellStruct);
 
 		// Take required mana to cast the spell
 		this->TakeMana(tSpellStruct.ManaCost);

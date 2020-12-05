@@ -11,6 +11,7 @@
 // Sets default values
 ASpell::ASpell()
 	:m_bIsActive(true)
+	, m_Caster(nullptr)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -45,7 +46,7 @@ void ASpell::BeginPlay()
 
 void ASpell::UseAbilities()
 {
-	AAbilitiesManager* tAbilitiesManager = URPGGameInstance::GetAbilitiesManager(this);
+	UAbilitiesManager* tAbilitiesManager = URPGGameInstance::GetAbilitiesManager(this);
 	AAbility* tNewAbility;
 	for (auto& tAbilityClass : this->m_SpellStruct.Abilities)
 	{

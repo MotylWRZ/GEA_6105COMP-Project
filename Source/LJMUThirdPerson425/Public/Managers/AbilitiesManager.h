@@ -14,12 +14,13 @@
  *
  */
 UCLASS()
-class LJMUTHIRDPERSON425_API AAbilitiesManager : public AManagerBase
+class LJMUTHIRDPERSON425_API UAbilitiesManager : public UManagerBase
 {
 	GENERATED_BODY()
 public:
-	AAbilitiesManager();
-	virtual void Update() override;
+	UAbilitiesManager();
+	//virtual void Tick(float DeltaTime) override;
+	virtual void Update(float DeltaTime) override;
 	virtual void Clear() override;
 
 	UFUNCTION(BlueprintCallable)

@@ -82,7 +82,7 @@ void AAbility::SetDesiredUpdateInterval(float NewDesiredUpdateInterval)
 
 void AAbility::ApplyStatsModifierToActor(AActor* ActorToModify, const FStatsModifierStruct& StatsModifierStruct)
 {
-	AModifiersManager::ModifyActorStats(this->m_AbilityUser, ActorToModify, StatsModifierStruct);
+	UModifiersManager::ModifyActorStats(this->m_AbilityUser, ActorToModify, StatsModifierStruct);
 }
 
 void AAbility::Update(float DeltaTime)

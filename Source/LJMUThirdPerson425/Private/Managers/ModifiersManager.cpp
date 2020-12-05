@@ -6,12 +6,12 @@
 
 
 
-AModifiersManager::AModifiersManager()
+UModifiersManager::UModifiersManager()
 {
 
 }
 
-void AModifiersManager::ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, const FStatsModifierStruct& StatsModifierStruct)
+void UModifiersManager::ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, const FStatsModifierStruct& StatsModifierStruct)
 {
 	// Modify Actor Stats
 	UActorStatsComponent* tStatsComponent = UActorStatsComponent::GetStatsComponent(ActorToModify);

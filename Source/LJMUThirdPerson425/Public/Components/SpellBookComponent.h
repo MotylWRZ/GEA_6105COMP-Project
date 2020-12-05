@@ -121,6 +121,5 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	float m_ManaRegenerationInterval;
 
-	float m_CurrentTime;
 	FTimerHandle m_SpellbookTimerHandle;
 };

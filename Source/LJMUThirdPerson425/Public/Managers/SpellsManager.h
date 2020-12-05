@@ -15,19 +15,20 @@ struct FSpellStruct;
  *
  */
 UCLASS()
-class LJMUTHIRDPERSON425_API ASpellsManager : public AManagerBase
+class LJMUTHIRDPERSON425_API USpellsManager : public UManagerBase
 {
 	GENERATED_BODY()
 
 public:
-	ASpellsManager();
+	USpellsManager();
+	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
 	ASpell* CreateSpell(TSubclassOf<ASpell> SpellClass);
 	UFUNCTION(BlueprintCallable)
 	ASpell* CreateSpellFromStruct(const FSpellStruct& SpellStruct);
 
-	virtual void Update() override;
+	virtual void Update(float DeltaTime) override;
 	virtual void Clear() override;
 
 protected:

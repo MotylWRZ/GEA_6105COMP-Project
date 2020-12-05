@@ -5,12 +5,44 @@
 #include "Managers/SpellsManager.h"
 
 
-ASpellsManager::ASpellsManager()
+USpellsManager::USpellsManager()
 {
 
 }
 
-ASpell* ASpellsManager::CreateSpell(TSubclassOf<ASpell> SpellClass)
+void USpellsManager::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	// Update all spells
+	for (int32 i = this->m_ActiveSpells.Num() - 1; i >= 0; --i)
+	{
+		ASpell* tSpell = m_ActiveSpells[i];
+
+		if (!tSpell->IsSpellActive())
+		{
+			this->m_InactiveSpells.Add(tSpell);
+		}
+	}
+	// Remove all inactive pointers from the Active array
+	m_ActiveSpells.RemoveAll([](ASpell* Spell)
+		{
+			return !Spell->IsSpellActive();
+		});
+
+	if (this->ShouldClear())
+	{
+		this->Clear();
+	}
+
+	if (this->m_ActiveSpells.Num() == 0 && this->m_InactiveSpells.Num() == 0)
+	{
+		// Stop updating this manager
+		this->SetShouldUpdate(false);
+	}
+}
+
+ASpell* USpellsManager::CreateSpell(TSubclassOf<ASpell> SpellClass)
 {
 	ASpell* tNewSpell;
 	tNewSpell = GetWorld()->SpawnActor<ASpell>(SpellClass);
@@ -25,7 +57,7 @@ ASpell* ASpellsManager::CreateSpell(TSubclassOf<ASpell> SpellClass)
 	return tNewSpell;
 }
 
-ASpell* ASpellsManager::CreateSpellFromStruct(const FSpellStruct& SpellStruct)
+ASpell* USpellsManager::CreateSpellFromStruct(const FSpellStruct& SpellStruct)
 {
 	ASpell* tNewSpell;
 
@@ -61,39 +93,39 @@ ASpell* ASpellsManager::CreateSpellFromStruct(const FSpellStruct& SpellStruct)
 
 }
 
-void ASpellsManager::Update()
+void USpellsManager::Update(float DeltaTime)
 {
-	AManagerBase::Update();
+	//USpellsManager::Update();
 
-	// Update all spells
-	for (int32 i = this->m_ActiveSpells.Num() - 1; i >= 0; --i)
-	{
-		ASpell* tSpell = m_ActiveSpells[i];
+	//// Update all spells
+	//for (int32 i = this->m_ActiveSpells.Num() - 1; i >= 0; --i)
+	//{
+	//	ASpell* tSpell = m_ActiveSpells[i];
 
-		if (!tSpell->IsSpellActive())
-		{
-			this->m_InactiveSpells.Add(tSpell);
-		}
-	}
-	// Remove all inactive pointers from the Active array
-	m_ActiveSpells.RemoveAll([](ASpell* Spell)
-		{
-			return !Spell->IsSpellActive();
-		});
+	//	if (!tSpell->IsSpellActive())
+	//	{
+	//		this->m_InactiveSpells.Add(tSpell);
+	//	}
+	//}
+	//// Remove all inactive pointers from the Active array
+	//m_ActiveSpells.RemoveAll([](ASpell* Spell)
+	//	{
+	//		return !Spell->IsSpellActive();
+	//	});
 
-	if (this->ShouldClear())
-	{
-		this->Clear();
-	}
+	//if (this->ShouldClear())
+	//{
+	//	this->Clear();
+	//}
 
-	if (this->m_ActiveSpells.Num() == 0 && this->m_InactiveSpells.Num() == 0)
-	{
-		// Stop updating this manager
-		this->SetShouldUpdate(false);
-	}
+	//if (this->m_ActiveSpells.Num() == 0 && this->m_InactiveSpells.Num() == 0)
+	//{
+	//	// Stop updating this manager
+	//	this->SetShouldUpdate(false);
+	//}
 }
 
-void ASpellsManager::Clear()
+void USpellsManager::Clear()
 {
 	Super::Clear();
 

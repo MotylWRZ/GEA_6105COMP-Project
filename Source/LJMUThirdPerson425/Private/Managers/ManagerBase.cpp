@@ -3,40 +3,46 @@
 
 #include "Managers/ManagerBase.h"
 
-AManagerBase::AManagerBase()
+UManagerBase::UManagerBase()
 	: m_bShouldUpdate(false)
+	, m_CurrentClearInterval(0.0f)
+	, m_CurrentUpdateInterval(0.0f)
 	, m_UpdateInterval(DEFAULT_UPDATE_INTERVAL)
 	, m_ClearInterval(DEFAULT_CLEAR_INTERVAL)
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryActorTick.bCanEverTick = false;
 }
 
-void AManagerBase::BeginPlay()
+
+void UManagerBase::Tick(float DeltaTime)
 {
-	// Setup a timer for this manager
-	GetWorld()->GetTimerManager().SetTimer(this->m_ManagerTimerHandle, this, &AManagerBase::Update, m_UpdateInterval, true);
+	this->m_CurrentClearInterval += DeltaTime;
+	this->m_CurrentUpdateInterval += DeltaTime;
 
-	// Pause a timer
-	GetWorld()->GetTimerManager().PauseTimer(this->m_ManagerTimerHandle);
+	if (this->m_CurrentUpdateInterval < this->m_UpdateInterval)
+	{
+		return;
+	}
+
+	this->Update(this->m_CurrentUpdateInterval);
+	this->m_CurrentUpdateInterval = 0.0f;
 }
 
-void AManagerBase::Tick(float DeltaTime)
+void UManagerBase::Update(float DeltaTime)
 {
+
 }
 
-void AManagerBase::Update()
-{
-	this->m_CurrentClearInterval += GetWorld()->GetTimerManager().GetTimerElapsed(this->m_ManagerTimerHandle);
-}
-
-void AManagerBase::Clear()
+void UManagerBase::Clear()
 {
 	this->m_CurrentClearInterval = 0.0f;
 }
 
-void AManagerBase::SetShouldUpdate(bool ShouldUpdate)
+bool UManagerBase::IsTickable() const
+{
+	return this->m_bShouldUpdate;
+}
+
+void UManagerBase::SetShouldUpdate(bool ShouldUpdate)
 {
 	if (ShouldUpdate)
 	{
@@ -50,9 +56,9 @@ void AManagerBase::SetShouldUpdate(bool ShouldUpdate)
 	this->m_bShouldUpdate = ShouldUpdate;
 }
 
-void AManagerBase::SetUpdateInterval(float NewUpdateInterval)
+void UManagerBase::SetUpdateInterval(float NewUpdateInterval)
 {
-	GetWorld()->GetTimerManager().SetTimer(this->m_ManagerTimerHandle, this, &AManagerBase::Update, NewUpdateInterval, true);
+	//GetWorld()->GetTimerManager().SetTimer(this->m_ManagerTimerHandle, this, &AManagerBase::Update, NewUpdateInterval, true);
 
 	this->m_UpdateInterval = NewUpdateInterval;
 }
