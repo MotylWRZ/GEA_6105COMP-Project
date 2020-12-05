@@ -45,6 +45,25 @@ struct FCombatStruct
 		bool bInstantEffect = true;
 };
 
+USTRUCT(Blueprintable)
+struct FRangedCombatStruct : public FCombatStruct
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool UseProjectiles;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AActor> ProjectileClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ProjectileVelocity = 2000.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ProjectileGravity = 980.0f;
+
+};
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LJMUTHIRDPERSON425_API UCombatComponent : public UActorComponent
 {
@@ -173,7 +192,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ranged Combat")
 		bool m_bIsRangedActive = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ranged Combat", meta = (EditCondition = "m_bIsRangedActive"))
-		FCombatStruct m_RangedCombatStruct;
+		FRangedCombatStruct m_RangedCombatStruct;
 
 private:
 	TEnumAsByte<EAttackMode> m_CurrentAttackMode;
