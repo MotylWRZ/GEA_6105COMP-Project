@@ -17,5 +17,5 @@ class LJMUTHIRDPERSON425_API UPhysicsHelpers : public UObject
 public:
 
 	// Projectile Motion
-	static float GetAngleRequiredToHitCoordinate(FVector SourceLocation, FVector TargetLocation);
+	static float GetAngleRequiredToHitCoordinate(FVector SourceLocation, FVector TargetLocation, float Velocity, float GravityScale = 1.0f);
 };

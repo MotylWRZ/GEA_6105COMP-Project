@@ -89,13 +89,6 @@ public:
 	// Custom Component Update
 	virtual void CustomTickComponent();
 
-	//UFUNCTION(BlueprintCallable, Category = "Combat")
-	//// Start an Attack manually, this will force an attack even if interval (between attacks) is not finished
-	//// This will use current AttackMode
-	//// This will fail if the AutoAttackMode is enabled
-	//// Returns true if succesful and false otherwise
-	//virtual bool Attack();
-
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	// Perform Attack from the current attack mode (Melee/Ranged)
 	// This should be called in the AnimNotiy class in order to correctly intergrate the attack action with animation
@@ -107,6 +100,8 @@ public:
 
 	//Reset the Attack (it will also clear the current target)
 	virtual void ResetAttack();
+
+	virtual void ShootProjectile();
 
 
 	//////////////////////

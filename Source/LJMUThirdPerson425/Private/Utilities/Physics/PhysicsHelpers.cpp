@@ -6,10 +6,10 @@
 //--------Projectile Motion--------------------
 
 // Get rotator required to hit specified coordinate
-float UPhysicsHelpers::GetAngleRequiredToHitCoordinate(FVector SourceLocation, FVector TargetLocation)
+float UPhysicsHelpers::GetAngleRequiredToHitCoordinate(FVector SourceLocation, FVector TargetLocation, float Velocity, float GravityScale)
 {
-	float tGravity = 980.0f;
-	float tVelocity = 2000.0f;
+	float tGravity = 980.0f * GravityScale;
+	float tVelocity = Velocity;
 
 	// Pre-calculate the square roots for Velocity
 	float tVelSqrt = FMath::Sqrt(tVelocity);

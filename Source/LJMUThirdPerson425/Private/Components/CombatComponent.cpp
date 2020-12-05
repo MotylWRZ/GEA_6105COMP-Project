@@ -1,8 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
+
 #include "GameFramework/WorldSettings.h"
 #include "Components/ActorStatsComponent.h"
 #include "Interfaces/AttackableInterface.h"
 #include "Utilities/Animation/AnimationHelpers.h"
+#include "Utilities/Physics/Physicshelpers.h"
+#include "Projectiles/ProjectileBase.h"
 
 #include "Components/CombatComponent.h"
 
@@ -185,6 +188,13 @@ void UCombatComponent::PerformRangedAttack()
 {
 	this->OnAttackRanged.Broadcast();
 
+
+	if (this->m_RangedCombatStruct.UseProjectiles)
+	{
+		this->ShootProjectile();
+		return;
+	}
+
 	if (!this->m_RangedCombatStruct.bInstantEffect || !this->m_TargetActor || !IAttackableInterface::Execute_IsAlive(this->m_TargetActor))
 	{
 		return;
@@ -249,6 +259,21 @@ void UCombatComponent::ResetAttack()
 	GetWorld()->GetTimerManager().PauseTimer(this->m_CombatTimerHandle);
 
 	this->OnReturnToIdle.Broadcast();
+}
+
+void UCombatComponent::ShootProjectile()
+{
+
+	if (!this->m_RangedCombatStruct.ProjectileClass)
+	{
+		return;
+	}
+
+	/*AProjectileBase* tProjectile = GetWorld()->SpawnActor<AProjectileBase>(this->m_RangedCombatStruct.ProjectileClass, this->GetOwner()->GetActorTransform());
+
+
+	tProjectile->SetupProjectileMovement(this->m_RangedCombatStruct.ProjectileVelocity, this->m_RangedCombatStruct.ProjectileVelocity);
+	tProjectile->SetProjectileTarget(this->m_TargetActor, true);*/
 }
 
 bool UCombatComponent::CanAttackRanged()
