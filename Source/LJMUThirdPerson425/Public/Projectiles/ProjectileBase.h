@@ -28,16 +28,17 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	virtual void Initialise(AActor* ProjectileOwner, FStatsModifierStruct* StatsModifierStruct);
+	virtual void Initialise(AActor* ProjectileOwner, FStatsModifierStruct* StatsModifierStruct, int32 HitActorsMax = 1);
 
 
 	virtual void AdjustProjectileVelocityToHitTarget(FVector TargetLocation);
 
 	UFUNCTION()
-		virtual void OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	virtual void OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	virtual void SetIsProjectileActive(bool IsActive);
 protected:
-
+	virtual void UpdateHitActors();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -47,8 +48,14 @@ public:
 protected:
 	UPROPERTY()
 	AActor* m_ProjectileOwner;
+
 	UPROPERTY()
 	FStatsModifierStruct m_StatsModifierStruct;
-private:
 
+	UPROPERTY()
+	int32 m_HitActorsMax;
+
+	bool m_bIsProjectileActive;
+private:
+	int32 m_HitActorsCurrent;
 };

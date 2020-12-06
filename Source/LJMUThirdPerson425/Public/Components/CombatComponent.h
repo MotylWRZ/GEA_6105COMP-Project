@@ -13,6 +13,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAttackRanged);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnReturnToIdle);
 
 class UAnimMontage;
+class AProjectileBase;
 
 UENUM(BlueprintType)
 enum EAttackMode
@@ -54,13 +55,11 @@ struct FRangedCombatStruct : public FCombatStruct
 	bool UseProjectiles;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AActor> ProjectileClass;
+	TSubclassOf<AProjectileBase> ProjectileClass;
 
+	// Define how many actors can be damaged by the projectile
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float ProjectileVelocity = 2000.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float ProjectileGravity = 980.0f;
+	int32 MaxHitActors;
 
 };
 

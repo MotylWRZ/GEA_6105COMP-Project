@@ -11,14 +11,14 @@ UModifiersManager::UModifiersManager()
 
 }
 
-void UModifiersManager::ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, const FStatsModifierStruct& StatsModifierStruct)
+bool UModifiersManager::ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, const FStatsModifierStruct& StatsModifierStruct)
 {
 	// Modify Actor Stats
 	UActorStatsComponent* tStatsComponent = UActorStatsComponent::GetStatsComponent(ActorToModify);
 
 	if (!tStatsComponent || !UHelperFunctionsLibrary::IsActorAttackable(ActorToModify))
 	{
-		return;
+		return false;
 	}
 
 	int32 tActorTeam = tStatsComponent->GetTeamID();
@@ -34,10 +34,12 @@ void UModifiersManager::ModifyActorStats(AActor* InstigatorActor, AActor* ActorT
 		{
 			tStatsComponent->TakeDamage(InstigatorActor, StatsModifierStruct.DamageToApply);
 		}
-		return;
+		return true;
 	}
 
 	// Apply damage to enemy actor
 	tStatsComponent->TakeDamage(InstigatorActor, StatsModifierStruct.DamageToApply);
+
+	return true;
 
 }

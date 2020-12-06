@@ -289,7 +289,7 @@ void UCombatComponent::ShootProjectile()
 	tStatsModifierStruct.DamageToApply = this->m_RangedCombatStruct.AttackDamage;
 
 	// Initialise the Projectile object
-	tProjectile->Initialise(this->GetOwner(), &tStatsModifierStruct);
+	tProjectile->Initialise(this->GetOwner(), &tStatsModifierStruct, this->m_RangedCombatStruct.MaxHitActors);
 
 	// Adjust the projectile velocity, so that it will try to land at the target location
 	tProjectile->AdjustProjectileVelocityToHitTarget(tTargetLocation);

@@ -53,6 +53,6 @@ public:
 	// Checks whether the ActorToModify IsAttackable (has implemented this interface)
 	// Then it will attempt to retrieve the actor stats component
 	// After a check wheter the target actor is an allie or enemiy in realtion to Instigator actor, the stats will be modified
-	static void ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, const FStatsModifierStruct& StatsModifierStruct);
+	static bool ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, const FStatsModifierStruct& StatsModifierStruct);
 
 };
