@@ -1,12 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/WorldSettings.h"
 #include "Components/ActorStatsComponent.h"
 #include "Interfaces/AttackableInterface.h"
 #include "Utilities/Animation/AnimationHelpers.h"
-#include "Utilities/Physics/Physicshelpers.h"
+
 #include "Projectiles/ProjectileBase.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
 #include "Components/CombatComponent.h"
 
@@ -273,17 +275,9 @@ void UCombatComponent::ShootProjectile()
 	FVector tStartLocation = this->GetOwner()->GetActorLocation();
 	FVector tTargetLocation = this->m_TargetActor->GetActorLocation();
 
-	FRotator tLookAtRotation = UKismetMathLibrary::FindLookAtRotation(tStartLocation, tTargetLocation);
+	AProjectileBase* tProjectile = GetWorld()->SpawnActor<AProjectileBase>(this->m_RangedCombatStruct.ProjectileClass, this->GetOwner()->GetActorTransform());
 
-	float tPitch = UPhysicsHelpers::GetAngleRequiredToHitCoordinate(tStartLocation, tTargetLocation, 2000.0f);
-
-	FRotator tRotation = FRotator(tPitch, tLookAtRotation.Yaw, tLookAtRotation.Roll);
-
-	AProjectileBase* tProjectile = GetWorld()->SpawnActor<AProjectileBase>(this->m_RangedCombatStruct.ProjectileClass, tStartLocation, tRotation);
-
-
-	/*tProjectile->SetupProjectileMovement(this->m_RangedCombatStruct.ProjectileVelocity, this->m_RangedCombatStruct.ProjectileVelocity);
-	tProjectile->SetProjectileTarget(this->m_TargetActor, true);*/
+	tProjectile->AdjustProjectileVelocityToHitTarget(tTargetLocation);
 }
 
 bool UCombatComponent::CanAttackRanged()

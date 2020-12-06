@@ -2,8 +2,8 @@
 
 
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-#include "Utilities/Physics/PhysicsHelpers.h"
 
 #include "Projectiles/ProjectileBase.h"
 
@@ -31,37 +31,11 @@ void AProjectileBase::Tick(float DeltaTime)
 
 }
 
-void AProjectileBase::SetProjectileTarget(FVector TargetLocation, bool AdjustTransformToHitTarget)
+void AProjectileBase::AdjustProjectileVelocityToHitTarget(FVector TargetLocation)
 {
-	FVector tProjectileLoc = this->GetActorLocation();
-	float tProjectileSpeed = this->m_ProjectileMovementComponent->InitialSpeed;
+	FVector tTossVelocity;
 
-	float tProjectilePitch = UPhysicsHelpers::GetAngleRequiredToHitCoordinate(tProjectileLoc, TargetLocation, tProjectileSpeed);
+	UGameplayStatics::SuggestProjectileVelocity(GetWorld(), tTossVelocity, this->GetActorLocation(), TargetLocation, this->m_ProjectileMovementComponent->InitialSpeed, false, 0.0f, 0.0f, ESuggestProjVelocityTraceOption::DoNotTrace);
 
-	FRotator tLookAtRotator = UKismetMathLibrary::FindLookAtRotation(tProjectileLoc, TargetLocation);
-
-	FRotator tNewProjectileRotation = tLookAtRotator;// FRotator(tLookAtRotator.Roll, tProjectilePitch, tLookAtRotator.Yaw);
-
-	this->SetActorRotation(tNewProjectileRotation);
-
+	this->m_ProjectileMovementComponent->Velocity = tTossVelocity;
 }
-
-void AProjectileBase::SetProjectileTarget(AActor* TargetActor, bool AdjustTransformToHitTarget)
-{
-	if (!TargetActor)
-	{
-		return;
-	}
-
-	FVector tTargetLocation = TargetActor->GetActorLocation();
-
-	SetProjectileTarget(tTargetLocation, AdjustTransformToHitTarget);
-}
-
-void AProjectileBase::SetupProjectileMovement(float InitialSpeed, float MaxSpeed, float GravityScale)
-{
-	this->m_ProjectileMovementComponent->InitialSpeed = InitialSpeed;
-	this->m_ProjectileMovementComponent->MaxSpeed = MaxSpeed;
-	this->m_ProjectileMovementComponent->ProjectileGravityScale = GravityScale;
-}
-

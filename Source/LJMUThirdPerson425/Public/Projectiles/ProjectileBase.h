@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "ProjectileBase.generated.h"
 
+class USphereComponent;
 class UProjectileMovementComponent;
 
 UCLASS()
@@ -26,16 +27,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void SetProjectileTarget(FVector TargetLocation, bool AdjustTransformToHitTarget);
-	virtual void SetProjectileTarget(AActor* TargetActor, bool AdjustTransformToHitTarget);
-
-	// Setup Projectile base  movement properties
-	// Can be called after spawning
-	virtual void SetupProjectileMovement(float InitialSpeed = 2000.0f, float MaxSpeed = 2000.0f, float GravityScale = 1.0f);
+	virtual void AdjustProjectileVelocityToHitTarget(FVector TargetLocation);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UProjectileMovementComponent* m_ProjectileMovementComponent;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UCollisionSphere* m_CollisionSphereComponent;*/
 protected:
 private:
 
