@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/WorldSettings.h"
 #include "Components/ActorStatsComponent.h"
 #include "Interfaces/AttackableInterface.h"
@@ -269,10 +270,19 @@ void UCombatComponent::ShootProjectile()
 		return;
 	}
 
-	/*AProjectileBase* tProjectile = GetWorld()->SpawnActor<AProjectileBase>(this->m_RangedCombatStruct.ProjectileClass, this->GetOwner()->GetActorTransform());
+	FVector tStartLocation = this->GetOwner()->GetActorLocation();
+	FVector tTargetLocation = this->m_TargetActor->GetActorLocation();
+
+	FRotator tLookAtRotation = UKismetMathLibrary::FindLookAtRotation(tStartLocation, tTargetLocation);
+
+	float tPitch = UPhysicsHelpers::GetAngleRequiredToHitCoordinate(tStartLocation, tTargetLocation, 2000.0f);
+
+	FRotator tRotation = FRotator(tPitch, tLookAtRotation.Yaw, tLookAtRotation.Roll);
+
+	AProjectileBase* tProjectile = GetWorld()->SpawnActor<AProjectileBase>(this->m_RangedCombatStruct.ProjectileClass, tStartLocation, tRotation);
 
 
-	tProjectile->SetupProjectileMovement(this->m_RangedCombatStruct.ProjectileVelocity, this->m_RangedCombatStruct.ProjectileVelocity);
+	/*tProjectile->SetupProjectileMovement(this->m_RangedCombatStruct.ProjectileVelocity, this->m_RangedCombatStruct.ProjectileVelocity);
 	tProjectile->SetProjectileTarget(this->m_TargetActor, true);*/
 }
 
