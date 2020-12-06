@@ -2,12 +2,14 @@
 
 #pragma once
 
+#include "Managers/ModifiersManager.h"
 
+#include "Components/SphereComponent.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ProjectileBase.generated.h"
 
-class USphereComponent;
+//class USphereComponent;
 class UProjectileMovementComponent;
 
 UCLASS()
@@ -26,15 +28,27 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	virtual void Initialise(AActor* ProjectileOwner, FStatsModifierStruct* StatsModifierStruct);
+
 
 	virtual void AdjustProjectileVelocityToHitTarget(FVector TargetLocation);
+
+	UFUNCTION()
+		virtual void OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+protected:
+
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UProjectileMovementComponent* m_ProjectileMovementComponent;
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UCollisionSphere* m_CollisionSphereComponent;*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		USphereComponent* m_CollisionSphereComponent;
 protected:
+	UPROPERTY()
+	AActor* m_ProjectileOwner;
+	UPROPERTY()
+	FStatsModifierStruct m_StatsModifierStruct;
 private:
 
 };

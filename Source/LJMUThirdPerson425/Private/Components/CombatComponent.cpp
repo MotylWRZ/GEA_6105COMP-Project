@@ -3,12 +3,14 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/WorldSettings.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+
 #include "Components/ActorStatsComponent.h"
 #include "Interfaces/AttackableInterface.h"
 #include "Utilities/Animation/AnimationHelpers.h"
-
 #include "Projectiles/ProjectileBase.h"
-#include "GameFramework/ProjectileMovementComponent.h"
+#include "Managers/ModifiersManager.h"
+
 
 #include "Components/CombatComponent.h"
 
@@ -275,8 +277,21 @@ void UCombatComponent::ShootProjectile()
 	FVector tStartLocation = this->GetOwner()->GetActorLocation();
 	FVector tTargetLocation = this->m_TargetActor->GetActorLocation();
 
+	// Spawn projectile object
 	AProjectileBase* tProjectile = GetWorld()->SpawnActor<AProjectileBase>(this->m_RangedCombatStruct.ProjectileClass, this->GetOwner()->GetActorTransform());
 
+
+	// Create a temporary modifier stats struct
+	FStatsModifierStruct tStatsModifierStruct;
+
+	// Setup the struct values
+	tStatsModifierStruct.CanDamageAllies = false;
+	tStatsModifierStruct.DamageToApply = this->m_RangedCombatStruct.AttackDamage;
+
+	// Initialise the Projectile object
+	tProjectile->Initialise(this->GetOwner(), &tStatsModifierStruct);
+
+	// Adjust the projectile velocity, so that it will try to land at the target location
 	tProjectile->AdjustProjectileVelocityToHitTarget(tTargetLocation);
 }
 

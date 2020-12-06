@@ -32,13 +32,13 @@ struct FStatsModifierStruct
 	//FCombatStruct CombatModifier;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 DamageToApply;
+	int32 DamageToApply = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 HealthToAdd;
+	int32 HealthToAdd = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool CanDamageAllies;
+	bool CanDamageAllies = false;
 };
 
 
@@ -49,6 +49,10 @@ class LJMUTHIRDPERSON425_API UModifiersManager : public UManagerBase
 
 public:
 	UModifiersManager();
+
+	// Checks whether the ActorToModify IsAttackable (has implemented this interface)
+	// Then it will attempt to retrieve the actor stats component
+	// After a check wheter the target actor is an allie or enemiy in realtion to Instigator actor, the stats will be modified
 	static void ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, const FStatsModifierStruct& StatsModifierStruct);
 
 };
