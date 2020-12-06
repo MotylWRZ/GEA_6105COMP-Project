@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Particles/ParticleSystemComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -20,9 +21,19 @@ AProjectileBase::AProjectileBase()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
+	this->m_RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+
+	this->RootComponent = m_RootComponent;
+
 	this->m_ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 
 	this->m_CollisionSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionSphereComponent"));
+
+	this->m_CollisionSphereComponent->AttachToComponent(this->RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+
+	this->m_ProjectileHitParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ProjectileHitParticleSystemComponent"));
+
+	this->m_ProjectileHitParticleSystem->bAutoActivate = false;
 }
 
 // Called when the game starts or when spawned
@@ -66,7 +77,12 @@ void AProjectileBase::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedCo
 	if (UModifiersManager::ModifyActorStats(this->m_ProjectileOwner, OtherActor, this->m_StatsModifierStruct))
 	{
 		this->UpdateHitActors();
+
+		this->m_ProjectileHitParticleSystem->SetWorldLocation(this->GetActorLocation());
+		this->m_ProjectileHitParticleSystem->SetActive(true);
 	}
+
+
 }
 
 void AProjectileBase::SetIsProjectileActive(bool IsActive)
@@ -90,3 +106,8 @@ void AProjectileBase::UpdateHitActors()
 		this->SetIsProjectileActive(false);
 	}
 }
+//
+//void AProjectileBase::OnProjectileHit()
+//{
+//
+//}

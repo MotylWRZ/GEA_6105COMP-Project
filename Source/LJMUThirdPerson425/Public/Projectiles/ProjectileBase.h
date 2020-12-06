@@ -4,13 +4,16 @@
 
 #include "Managers/ModifiersManager.h"
 
-#include "Components/SphereComponent.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ProjectileBase.generated.h"
 
-//class USphereComponent;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnProjectileHit);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnProjectileDestroyed);
+
+class USphereComponent;
 class UProjectileMovementComponent;
+class UParticleSystemComponent;
 
 UCLASS()
 class LJMUTHIRDPERSON425_API AProjectileBase : public AActor
@@ -29,22 +32,33 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	virtual void Initialise(AActor* ProjectileOwner, FStatsModifierStruct* StatsModifierStruct, int32 HitActorsMax = 1);
-
-
 	virtual void AdjustProjectileVelocityToHitTarget(FVector TargetLocation);
 
 	UFUNCTION()
 	virtual void OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	virtual void SetIsProjectileActive(bool IsActive);
+
+
+//////////////
+// DELEGATES
+//////////////
+	FOnProjectileHit OnProjectileHit;
+	FOnProjectileDestroyed OnProjectileDestroyed;
+
 protected:
 	virtual void UpdateHitActors();
+	//virtual void OnProjectileHit();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UProjectileMovementComponent* m_ProjectileMovementComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		USphereComponent* m_CollisionSphereComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UParticleSystemComponent* m_ProjectileHitParticleSystem;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		USceneComponent* m_RootComponent;
 protected:
 	UPROPERTY()
 	AActor* m_ProjectileOwner;
