@@ -14,8 +14,11 @@ AAbility_AOE::AAbility_AOE()
 	this->m_SphereCollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere Collision Component"));
 	this->m_SphereCollisionComponent->SetupAttachment(this->RootComponent);
 
+	/*this->m_SphereCollisionComponent->SetVisibility(true);
+	this->m_SphereCollisionComponent->SetHiddenInGame(false);*/
+
 	this->m_bShouldUpdate = true;
-	this->m_DesiredUpdateInterval = 1.1f;
+	this->m_DesiredUpdateInterval = 0.1f;
 }
 
 void AAbility_AOE::BeginPlay()
@@ -44,22 +47,36 @@ void AAbility_AOE::UseAbility_Implementation()
 
 	this->m_SphereCollisionComponent->SetSphereRadius(this->m_AOEAbilityStruct.RadiousStart);
 
-
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), this->m_AOEAbilityStruct.ParticleSystem, this->m_AbilityUser->GetActorTransform());
 
 }
 
 void AAbility_AOE::UpdateSphereCollision(float DeltaTime)
 {
-	float tStep = (this->m_AOEAbilityStruct.RadiousEnd - this->m_AOEAbilityStruct.RadiousStart) / this->m_AOEAbilityStruct.ChangeDuration * DeltaTime;
+	float tStep = ((this->m_AOEAbilityStruct.RadiousEnd - this->m_AOEAbilityStruct.RadiousStart) / this->m_AOEAbilityStruct.ChangeDuration) * DeltaTime;
 
 	float tTargetRadious = this->m_SphereCollisionComponent->GetUnscaledSphereRadius() + tStep;
 
 	this->m_SphereCollisionComponent->SetSphereRadius(tTargetRadious);
+
+
 }
 
 void AAbility_AOE::Update(float DeltaTime)
 {
 	AAbility::Update(DeltaTime);
+
+
+	// Destroy the spell once the Collision sphere reaches its End value
+	// Or if it is set to not change the radious dynamically
+	if (this->m_SphereCollisionComponent->GetUnscaledSphereRadius() >= this->m_AOEAbilityStruct.RadiousEnd
+		|| !this->m_AOEAbilityStruct.bChangeRadiousDynamically)
+	{
+		this->m_SphereCollisionComponent->SetSphereRadius(this->m_AOEAbilityStruct.RadiousEnd);
+		this->SetIsAbilityActive(false);
+		this->m_bShouldUpdate = false;
+	}
+
 
 	// Check all the overlapping Actors and apply damage to those that are Attackable
 	TArray<AActor*> tActors;
@@ -79,14 +96,8 @@ void AAbility_AOE::Update(float DeltaTime)
 		}
 	}
 
-	// Destroy the spell once the Collision sphere reaches its End value
-	// Or if it is set to not change the radious dynamically
-	if (this->m_SphereCollisionComponent->GetUnscaledSphereRadius() >= this->m_AOEAbilityStruct.RadiousEnd
-		|| !this->m_AOEAbilityStruct.bChangeRadiousDynamically)
+	if (this->m_bIsAbilityActive)
 	{
-		this->SetIsAbilityActive(false);
+		UpdateSphereCollision(DeltaTime);
 	}
-
-
-	UpdateSphereCollision(DeltaTime);
 }
