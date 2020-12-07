@@ -4,7 +4,7 @@
 #include "Managers/ModifiersManager.h"
 #include "../../LJMUThirdPerson425.h"
 #include "Particles/ParticleSystemComponent.h"
-//#include "Modifiers/ModifierStructs.h"
+#include "GameInstances/RPGGameInstance.h"
 
 #include "Utilities/General/HelperFunctionsLibrary.h"
 #include "Components/ActorStatsComponent.h"
@@ -41,6 +41,7 @@ void AAbility::UseAbility_Implementation()
 		return;
 	}
 	this->SetActorTransform(this->m_AbilityUser->GetTransform());
+
 
 
 }
@@ -141,4 +142,18 @@ void AAbility::UpdateAbilityIntervals(FAbilityIntervalStruct& AbilityIntervalStr
 
 	AbilityIntervalStruct.UseIntervals = false;
 
+}
+
+void AAbility::ApplyEffectOnActor(AActor* AffectedActor, const FEffectStruct& EffectStruct)
+{
+	UEffectsManager* tEffectsManager = URPGGameInstance::GetEffectsManager(this);
+
+	tEffectsManager->AddEffectToActor(this->m_AbilityUser, AffectedActor, EffectStruct);
+}
+
+void AAbility::ApplyEffectsonActor(AActor* AffectedActor, const TArray<FEffectStruct>& EffectsStructs)
+{
+	UEffectsManager* tEffectsManager = URPGGameInstance::GetEffectsManager(this);
+
+	tEffectsManager->AddEffectsToActor(this->m_AbilityUser, AffectedActor, EffectsStructs);
 }

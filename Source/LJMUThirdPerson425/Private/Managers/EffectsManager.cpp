@@ -3,7 +3,7 @@
 
 #include "Managers/EffectsManager.h"
 
-void UEffectsManager::AddEffectToActor(AActor* InstigatorActor, AActor* AffectedActor, FEffectStruct& EffectStruct)
+void UEffectsManager::AddEffectToActor(AActor* InstigatorActor, AActor* AffectedActor, const FEffectStruct& EffectStruct)
 {
 	FEffectStruct tEffectStruct = EffectStruct;
 
@@ -22,6 +22,14 @@ void UEffectsManager::AddEffectToActor(AActor* InstigatorActor, AActor* Affected
 	}
 
 
+}
+
+void UEffectsManager::AddEffectsToActor(AActor* InstigatorActor, AActor* AffectedActor, const TArray<FEffectStruct>& EffectsStructs)
+{
+	for (auto tEffectStruct : EffectsStructs)
+	{
+		this->AddEffectToActor(InstigatorActor, AffectedActor, tEffectStruct);
+	}
 }
 
 bool UEffectsManager::IsActorAffected(AActor* Actor)

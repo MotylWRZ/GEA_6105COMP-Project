@@ -41,9 +41,7 @@ public:
 		void UseAbility();
 	// Override this function in child classes
 	virtual void UseAbility_Implementation();
-
 	virtual void Initialise(AActor* AbilityUser);
-
 	virtual void Update(float DeltaTime);
 
 	UFUNCTION(BlueprintCallable)
@@ -79,7 +77,8 @@ public:
 	///////////////////////////
 protected:
 	virtual void ApplyStatsModifierToActor(AActor* ActorToModify, const FStatsModifierStruct& StatsModifierStruct);
-
+	virtual void ApplyEffectOnActor(AActor* AffectedActor, const FEffectStruct& EffectStruct);
+	virtual void ApplyEffectsonActor(AActor* AffectedActor, const TArray<FEffectStruct>& EffectsStructs);
 	virtual void UpdateAbilityIntervals(FAbilityIntervalStruct& AbilityIntervalStruct, float DeltaTime);
 
 

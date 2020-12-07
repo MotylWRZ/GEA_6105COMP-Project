@@ -88,6 +88,7 @@ void AAbility_AOE::Update(float DeltaTime)
 		if (!this->m_AffectedActors.Contains(tActor))
 		{
 			this->ApplyStatsModifierToActor(tActor, this->m_AOEAbilityStruct.StatsModifierStruct);
+			this->ApplyEffectsonActor(tActor, this->m_AOEAbilityStruct.Effects);
 			this->m_AffectedActors.AddUnique(tActor);
 		}
 		else

@@ -14,9 +14,12 @@ class LJMUTHIRDPERSON425_API UEffectsManager : public UManagerBase
 {
 	GENERATED_BODY()
 
+public:
 
-	virtual void AddEffectToActor(AActor* InstigatorActor, AActor* AffectedActor, FEffectStruct& EffectStruct);
+	virtual void AddEffectToActor(AActor* InstigatorActor, AActor* AffectedActor, const FEffectStruct& EffectStruct);
+	virtual void AddEffectsToActor(AActor* InstigatorActor, AActor* AffectedActor, const TArray<FEffectStruct>& EffectsStructs);
 
+protected:
 	virtual bool IsActorAffected(AActor* Actor);
 
 private:
