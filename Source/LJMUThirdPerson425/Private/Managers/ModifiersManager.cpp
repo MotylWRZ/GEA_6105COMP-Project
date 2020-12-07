@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Utilities/General/HelperFunctionsLibrary.h"
+#include "Interfaces/AttackableInterface.h"
 
 #include "Managers/ModifiersManager.h"
 
@@ -21,8 +22,6 @@ bool UModifiersManager::ModifyActorStats(AActor* InstigatorActor, AActor* ActorT
 		return false;
 	}
 
-	int32 tActorTeam = tStatsComponent->GetTeamID();
-
 	// Check if these actors are enemies for each other
 	if (!UActorStatsComponent::IsEnemyByActor(InstigatorActor, ActorToModify))
 	{
@@ -32,14 +31,44 @@ bool UModifiersManager::ModifyActorStats(AActor* InstigatorActor, AActor* ActorT
 		// Apply damage to ally only if it is allowed
 		if (StatsModifierStruct.CanDamageAllies)
 		{
-			tStatsComponent->TakeDamage(InstigatorActor, StatsModifierStruct.DamageToApply);
+			IAttackableInterface::Execute_ApplyDamage(ActorToModify, InstigatorActor, StatsModifierStruct.DamageToApply);
 		}
 		return true;
 	}
 
 	// Apply damage to enemy actor
-	tStatsComponent->TakeDamage(InstigatorActor, StatsModifierStruct.DamageToApply);
+	IAttackableInterface::Execute_ApplyDamage(ActorToModify, InstigatorActor, StatsModifierStruct.DamageToApply);
 
 	return true;
 
+}
+
+bool UModifiersManager::ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, int32 DamageToApply, int32 HealthToAdd, bool CanDamageAllies)
+{
+	// Modify Actor Stats
+	UActorStatsComponent* tStatsComponent = UActorStatsComponent::GetStatsComponent(ActorToModify);
+
+	if (!tStatsComponent || !UHelperFunctionsLibrary::IsActorAttackable(ActorToModify))
+	{
+		return false;
+	}
+
+	// Check if these actors are enemies for each other
+	if (!UActorStatsComponent::IsEnemyByActor(InstigatorActor, ActorToModify))
+	{
+		// If they are allies add health
+		tStatsComponent->AddHealth(InstigatorActor, HealthToAdd);
+
+		// Apply damage to ally only if it is allowed
+		if (CanDamageAllies)
+		{
+			IAttackableInterface::Execute_ApplyDamage(ActorToModify, InstigatorActor, DamageToApply);
+		}
+		return true;
+	}
+
+	// Apply damage to enemy actor
+	IAttackableInterface::Execute_ApplyDamage(ActorToModify, InstigatorActor, DamageToApply);
+
+	return true;
 }

@@ -52,7 +52,13 @@ public:
 
 	// Checks whether the ActorToModify IsAttackable (has implemented this interface)
 	// Then it will attempt to retrieve the actor stats component
-	// After a check wheter the target actor is an allie or enemiy in realtion to Instigator actor, the stats will be modified
+	// After a check wheter the target actor is an ally or enemiy in realtion to Instigator actor, the stats will be modified
 	static bool ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, const FStatsModifierStruct& StatsModifierStruct);
+
+	// Checks whether the ActorToModify IsAttackable (has implemented this interface)
+	// Then it will attempt to retrieve the actor stats component
+	// After a check wheter the target actor is an ally or enemy in relation to Instigator actor, the stats will be modified
+	// Only basic stats can be modified using this function and they have to be explicitly specified
+	static bool ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, int32 DamageToApply = 0, int32 HealthToAdd = 0, bool CanDamageAllies = false);
 
 };

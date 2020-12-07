@@ -9,6 +9,7 @@
 #include "ProjectileBase.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnProjectileHit);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnProjectileMiss);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnProjectileDestroyed);
 
 class USphereComponent;
@@ -43,7 +44,11 @@ public:
 //////////////
 // DELEGATES
 //////////////
+	UPROPERTY(BlueprintAssignable, Category = "Projectile")
 	FOnProjectileHit OnProjectileHit;
+	UPROPERTY(BlueprintAssignable, Category = "Projectile")
+	FOnProjectileHit OnProjectileMiss;
+	UPROPERTY(BlueprintAssignable, Category = "Projectile")
 	FOnProjectileDestroyed OnProjectileDestroyed;
 
 protected:

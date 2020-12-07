@@ -21,15 +21,12 @@ AProjectileBase::AProjectileBase()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	this->m_RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
-
-	this->RootComponent = m_RootComponent;
 
 	this->m_ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 
 	this->m_CollisionSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionSphereComponent"));
 
-	this->m_CollisionSphereComponent->AttachToComponent(this->RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	this->RootComponent = this->m_CollisionSphereComponent;
 
 	this->m_ProjectileHitParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ProjectileHitParticleSystemComponent"));
 
@@ -80,6 +77,12 @@ void AProjectileBase::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedCo
 
 		this->m_ProjectileHitParticleSystem->SetWorldLocation(this->GetActorLocation());
 		this->m_ProjectileHitParticleSystem->SetActive(true);
+
+		this->OnProjectileHit.Broadcast();
+	}
+	else
+	{
+		this->OnProjectileMiss.Broadcast();
 	}
 
 
@@ -106,8 +109,3 @@ void AProjectileBase::UpdateHitActors()
 		this->SetIsProjectileActive(false);
 	}
 }
-//
-//void AProjectileBase::OnProjectileHit()
-//{
-//
-//}
