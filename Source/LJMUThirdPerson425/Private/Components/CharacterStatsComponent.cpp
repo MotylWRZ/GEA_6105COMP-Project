@@ -32,16 +32,6 @@ void UCharacterStatsComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	// ...
 }
 
-//void UCharacterStatsComponent::ModifyMeleeAttack(int32 ModifyingValue)
-//{
-//	this->m_MeleeAttack += ModifyingValue;
-//
-//	if (this->m_MeleeAttack < 0)
-//	{
-//		this->m_MeleeAttack = 0;
-//	}
-//}
-
 void UCharacterStatsComponent::ModifySpeed(int32 ModifyingValue)
 {
 	this->m_MovementSpeed += ModifyingValue;
