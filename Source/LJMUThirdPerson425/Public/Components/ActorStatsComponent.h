@@ -54,16 +54,16 @@ public:
 	/// Stats Modifying functions
 	/////////////////////////////
 	UFUNCTION(BlueprintCallable, Category = "Stats")
-	void ModifyHealth(int32 ModifyingValue);
+	virtual void ModifyHealth(int32 ModifyingValue);
 	UFUNCTION(BlueprintCallable, Category = "Stats")
-	void ModifyMaxHealth(int32 ModifyingValue);
+	virtual void ModifyMaxHealth(int32 ModifyingValue);
 
 	// Apply Damage on this Stats Component
 	UFUNCTION(BlueprintCallable, Category = "Stats")
-		void TakeDamage(UPARAM(ref) AActor*& InstigatorActor, int32 DamageToApply); //{ ModifyHealth(-DamageToApply); }
+		virtual void TakeDamage(UPARAM(ref) AActor*& InstigatorActor, int32 DamageToApply);
 	// Add Health for this Stats Component. The final value will be clamped by the MaxHealth value
 	UFUNCTION(BlueprintCallable, Category = "Stats")
-		void AddHealth(UPARAM(ref) AActor*& InstigatorActor, int32 HealthToAdd); //{ ModifyHealth(HealthToAdd); }
+		virtual void AddHealth(UPARAM(ref) AActor*& InstigatorActor, int32 HealthToAdd);
 
 
 

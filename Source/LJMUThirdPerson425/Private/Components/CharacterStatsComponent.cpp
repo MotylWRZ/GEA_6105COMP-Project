@@ -44,21 +44,24 @@ void UCharacterStatsComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 
 void UCharacterStatsComponent::ModifySpeed(int32 ModifyingValue)
 {
-	this->m_Speed += ModifyingValue;
+	this->m_MovementSpeed += ModifyingValue;
 
-	if (this->m_Speed < 0)
+	if (this->m_MovementSpeed < 0)
 	{
-		this->m_Speed = 0;
+		this->m_MovementSpeed = 0;
 	}
 }
 
-void UCharacterStatsComponent::ModifyMana(int32 ModifyingValue)
+void UCharacterStatsComponent::TakeDamage(UPARAM(ref)AActor*& InstigatorActor, int32 DamageToApply)
 {
-	this->m_Mana += ModifyingValue;
+	// Calculate the final damage with armor taken into account
+	int32 tFinalDamage = DamageToApply - this->m_Armor;
 
-	if (this->m_Mana < 0)
+	if (tFinalDamage < 0)
 	{
-		this->m_Mana = 0;
+		tFinalDamage = 0;
 	}
+
+	Super::TakeDamage(InstigatorActor, tFinalDamage);
 }
 
