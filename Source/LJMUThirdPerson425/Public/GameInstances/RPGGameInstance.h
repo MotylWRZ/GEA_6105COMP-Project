@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Managers/EffectsManager.h"
 #include "Managers/SpellsManager.h"
 #include "Managers/AbilitiesManager.h"
 
@@ -30,6 +31,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	static UAbilitiesManager* GetAbilitiesManager(const UObject* WorldContextObject) { return GetRPGGameInstance(WorldContextObject)->m_AbilitiesManager; }
 
+	UFUNCTION(BlueprintPure)
+	static UEffectsManager* GetEffectsManager(const UObject* WorldContextObject) { return GetRPGGameInstance(WorldContextObject)->m_EffectsManager; }
+
 	virtual void Init() override;
 
 public:
@@ -42,4 +46,7 @@ private:
 
 	UPROPERTY()
 		UAbilitiesManager* m_AbilitiesManager;
+
+	UPROPERTY()
+		UEffectsManager* m_EffectsManager;
 };

@@ -9,6 +9,7 @@ URPGGameInstance::URPGGameInstance(const FObjectInitializer& ObjectInitializer)
 {
 	this->m_SpellsManager = ObjectInitializer.CreateDefaultSubobject<USpellsManager>(this, TEXT("SpellsManager"));
 	this->m_AbilitiesManager = ObjectInitializer.CreateDefaultSubobject<UAbilitiesManager>(this, TEXT("AbilitiesManager"));
+	this->m_EffectsManager = ObjectInitializer.CreateDefaultSubobject<UEffectsManager>(this, TEXT("EffectsManager"));
 }
 
 URPGGameInstance* URPGGameInstance::GetRPGGameInstance(const UObject* WorldContextObject)
@@ -25,9 +26,4 @@ URPGGameInstance* URPGGameInstance::GetRPGGameInstance(const UObject* WorldConte
 
 void URPGGameInstance::Init()
 {
-	//// Create an instance of SpellsManager
-	//this->m_SpellsManager = GetWorld()->SpawnActor<USpellsManager>(USpellsManager::StaticClass());
-
-	//// Create an instance of AbilitiesManager
-	//this->m_AbilitiesManager = GetWorld()->SpawnActor<UAbilitiesManager>(UAbilitiesManager::StaticClass());
 }

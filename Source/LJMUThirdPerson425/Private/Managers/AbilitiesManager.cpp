@@ -10,46 +10,6 @@ UAbilitiesManager::UAbilitiesManager()
 {
 }
 
-
-////void UAbilitiesManager::Tick(float DeltaTime)
-////{
-////	//Super::Tick(DeltaTime);
-////
-////	//for (int32 i = 0; i < this->m_ActiveAbilities.Num(); i++)
-////	//{
-////	//	AAbility* tAbility = this->m_ActiveAbilities[i];
-////
-////	//	tAbility->Update(DeltaTime);
-////
-////	//	if (!tAbility->IsAbilityActive())
-////	//	{
-////	//		this->m_InactiveAbilities.Add(tAbility);
-////	//	}
-////	//}
-////
-////	//// Remove all inactive Ability pointers from the Active array
-////	//m_ActiveAbilities.RemoveAll([](AAbility* Ability)
-////	//	{
-////	//		return !Ability->IsAbilityActive();
-////	//	});
-////
-////
-////	//if (this->ShouldClear())
-////	//{
-////	//	// Clear the the inactive abilitoes array and destroy inactive Ability intances
-////	//	this->Clear();
-////	//}
-////
-////	//if (this->m_ActiveAbilities.Num() == 0 && this->m_InactiveAbilities.Num() == 0)
-////	//{
-////	//	// Stop updating this manager
-////	//	this->SetShouldUpdate(false);
-////
-////	//	// Reset Update interval to Default value
-////	//	this->ResetUpdateInterval();
-////	//}
-////}
-
 void UAbilitiesManager::Update(float DeltaTime)
 {
 	Super::Update(DeltaTime);

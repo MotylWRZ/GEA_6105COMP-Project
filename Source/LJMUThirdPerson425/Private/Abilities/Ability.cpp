@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Managers/EffectsManager.h"
 #include "Managers/ModifiersManager.h"
 #include "../../LJMUThirdPerson425.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -40,6 +41,8 @@ void AAbility::UseAbility_Implementation()
 		return;
 	}
 	this->SetActorTransform(this->m_AbilityUser->GetTransform());
+
+
 }
 
 void AAbility::Initialise(AActor* AbilityUser)

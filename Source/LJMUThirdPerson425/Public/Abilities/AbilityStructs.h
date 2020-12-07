@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Managers/ModifiersManager.h"
-//#include "../Modifiers/ModifierStructs.h"
+#include "Effects/EffectsStructs.h"
 
 
 
@@ -11,7 +11,6 @@
 #include "CoreMinimal.h"
 #include "AbilityStructs.generated.h"
 
-//struct FStatsModifierStruct;
 class AAbility_Targeted;
 class AAbility_Self;
 class AAbility_AOE;
@@ -50,13 +49,8 @@ struct FAbilityStruct : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FStatsModifierStruct StatsModifierStruct;
 
-	//// Amount of damage this ability will apply to its targets
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	//int32 Damage;
-
-	//// Amount of health this ability will add to its targets
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	//int32 HealthToAdd;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FEffectStruct> Effects;
 };
 
 // Ability Struct - Area Of Effect. It will affect the targets within the given radious.
