@@ -58,7 +58,5 @@ void UManagerBase::SetShouldUpdate(bool ShouldUpdate)
 
 void UManagerBase::SetUpdateInterval(float NewUpdateInterval)
 {
-	//GetWorld()->GetTimerManager().SetTimer(this->m_ManagerTimerHandle, this, &AManagerBase::Update, NewUpdateInterval, true);
-
 	this->m_UpdateInterval = NewUpdateInterval;
 }

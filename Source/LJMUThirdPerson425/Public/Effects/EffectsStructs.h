@@ -44,30 +44,9 @@ struct FEffectStruct : public FTableRowBase
 		float Duration = 1.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool AllowIntervals = false;
+		bool AllowMultiHit = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 IntervalsNum = 1;
-
+		int32 HitsNum = 1;
 
 };
-
-//USTRUCT()
-//struct FEffectConstructionStruct
-//{
-//	GENERATED_BODY()
-//
-//		UPROPERTY(EditAnywhere, BlueprintReadWrite)
-//		FStatsModifierStruct StatsModifierStruct;
-//
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-//		float Duration = 1.0f;
-//
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-//		bool AllowIntervals = false;
-//
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-//		int32 IntervalsNum = 1;
-//
-//
-//};
