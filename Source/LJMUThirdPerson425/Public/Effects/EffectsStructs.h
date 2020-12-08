@@ -3,6 +3,7 @@
 #pragma once
 #include "Managers/ModifiersManager.h"
 
+#include "Engine/Texture2D.h"
 #include "Engine/DataTable.h"
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -39,6 +40,9 @@ struct FEffectStruct : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FString EffectDescription;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UTexture2D* EffectIcon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float Duration = 1.0f;

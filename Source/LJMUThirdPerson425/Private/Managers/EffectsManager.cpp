@@ -56,7 +56,7 @@ void UEffectsManager::Clear()
 	// Sort map elements based on the values(arrays) sizes
 	this->m_EffectsMap.ValueSort([](TArray<UEffect*> tEffectsArrA, TArray<UEffect*> tEffectsArrB)
 		{
-			return tEffectsArrA.Num() < tEffectsArrB.Num();
+			return tEffectsArrA.Num() > tEffectsArrB.Num();
 		});
 
 	for (TMap<AActor*, TArray<UEffect*>>::TIterator it = this->m_EffectsMap.CreateIterator(); it; ++it)

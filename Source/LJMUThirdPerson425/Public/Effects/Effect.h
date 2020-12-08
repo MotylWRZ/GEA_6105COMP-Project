@@ -8,10 +8,14 @@
 #include "UObject/NoExportTypes.h"
 #include "Effect.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEffectAdded, UEffect*, EffectPtr);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEffectApplied, UEffect*, EffectPtr);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEffectRemoved, UEffect*, EffectPtr);
+
 /**
  *
  */
-UCLASS()
+UCLASS(Blueprintable)
 class LJMUTHIRDPERSON425_API UEffect : public UObject
 {
 	GENERATED_BODY()
@@ -25,14 +29,30 @@ public:
 	///////////////////////
 	// Accessors/Mutators
 	///////////////////////
-	FORCEINLINE bool const IsActive() const { return m_IsActive; }
-	FORCEINLINE float const GetHitInterval() const { return m_HitInterval; }
-	FORCEINLINE float const GetCurrentDuration() const { return m_CurrentDuration; }
-	FORCEINLINE float const GetDurationLeft() const { return m_EffectStruct.Duration - m_CurrentDuration; }
+	UFUNCTION(BlueprintCallable, Category = "Effect")
+	bool const IsActive() const { return m_IsActive; }
+
+	UFUNCTION(BlueprintCallable, Category = "Effect")
+	float const GetHitInterval() const { return m_HitInterval; }
+
+	UFUNCTION(BlueprintCallable, Category = "Effect")
+	float const GetCurrentDuration() const { return m_CurrentDuration; }
+
+	UFUNCTION(BlueprintCallable, Category = "Effect")
+	float const GetDurationLeft() const { return m_EffectStruct.Duration - m_CurrentDuration; }
+
+	UFUNCTION(BlueprintCallable, Category = "Effect")
+	FEffectStruct GetEffectStruct() { return m_EffectStruct; }
 
 	FORCEINLINE void SetIsActive(bool IsActive) { m_IsActive = IsActive; }
 	FORCEINLINE void SetHitInterval(float HitInterval) { m_HitInterval = HitInterval; }
 
+	UPROPERTY(BlueprintAssignable, Category = "Effect Delegates")
+	FOnEffectAdded OnEffectAdded;
+	UPROPERTY(BlueprintAssignable, Category = "Effect Delegates")
+	FOnEffectApplied OnEffectApplied;
+	UPROPERTY(BlueprintAssignable, Category = "Effect Delegates")
+	FOnEffectRemoved OnEffectRemoved;
 private:
 	// This should be changed to false if the effect Duration <= 0.0f
 	bool m_IsActive = true;
