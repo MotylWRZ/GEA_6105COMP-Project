@@ -55,10 +55,6 @@ void UEffect::Update(float DeltaTime)
 	{
 		this->ApplyEffect();
 	}
-	else
-	{
-		this->SetIsActive(false);
-	}
 }
 
 void UEffect::ApplyEffect()

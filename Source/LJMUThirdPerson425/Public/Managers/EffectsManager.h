@@ -26,9 +26,11 @@ public:
 	void AddEffectsToActor(AActor* InstigatorActor, AActor* AffectedActor, const TArray<FEffectStruct>& EffectsStructs);
 
 	UFUNCTION(BlueprintCallable)
-	void FindEffectsByActor(AActor* AffectedActor, TArray<UEffect*>& EffectsArray, bool IsArrayFound);
+	void FindEffectsByActor(AActor* AffectedActor, TArray<UEffect*>& EffectsArray, bool& IsArrayFound);
 
-	const TArray<UEffect*>& GetEffectsByActor(AActor* AffectedActor) const;
+	// Get EffectsArray by actor's memory address
+	// Can return nullptr if there is no value associated with specified actor (i.e there is no key or no valid value)
+	const TArray<UEffect*>* GetEffectsByActor(AActor* AffectedActor) const;
 
 protected:
 	bool IsActorAffected(AActor* Actor);

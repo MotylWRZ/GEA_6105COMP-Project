@@ -107,14 +107,25 @@ void UEffectsManager::AddEffectsToActor(AActor* InstigatorActor, AActor* Affecte
 	}
 }
 
-void UEffectsManager::FindEffectsByActor(AActor* AffectedActor, TArray<UEffect*>& EffectsArray, bool IsArrayFound)
+void UEffectsManager::FindEffectsByActor(AActor* AffectedActor, TArray<UEffect*>& EffectsArray, bool& IsArrayFound)
 {
+	TArray<UEffect*>* tEffectsArray = this->m_EffectsMap.Find(AffectedActor);
+
+	if (!tEffectsArray)
+	{
+		IsArrayFound = false;
+		return;
+	}
+
+	EffectsArray = *tEffectsArray;
+	IsArrayFound = true;
+
 }
 
-const TArray<UEffect*>& UEffectsManager::GetEffectsByActor(AActor* AffectedActor) const
+const TArray<UEffect*>* UEffectsManager::GetEffectsByActor(AActor* AffectedActor) const
 {
 	// Returns nullptr if the key can't be found
-	 return *this->m_EffectsMap.Find(AffectedActor);
+	 return this->m_EffectsMap.Find(AffectedActor);
 
 }
 
