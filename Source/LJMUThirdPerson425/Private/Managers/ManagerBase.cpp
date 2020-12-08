@@ -24,12 +24,12 @@ void UManagerBase::Tick(float DeltaTime)
 	}
 
 	this->Update(this->m_CurrentUpdateInterval);
-	this->m_CurrentUpdateInterval = 0.0f;
+
 }
 
 void UManagerBase::Update(float DeltaTime)
 {
-
+	this->m_CurrentUpdateInterval = 0.0f;
 }
 
 void UManagerBase::Clear()

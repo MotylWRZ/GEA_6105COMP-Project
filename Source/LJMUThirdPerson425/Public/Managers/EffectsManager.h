@@ -16,15 +16,25 @@ class LJMUTHIRDPERSON425_API UEffectsManager : public UManagerBase
 
 public:
 	UEffectsManager();
-	virtual void Update(float DeltaTime) override;
-	virtual void Clear() override;
+	void Update(float DeltaTime) override;
+	void Clear() override;
 
-	virtual void AddEffectToActor(AActor* InstigatorActor, AActor* AffectedActor, const FEffectStruct& EffectStruct);
-	virtual void AddEffectsToActor(AActor* InstigatorActor, AActor* AffectedActor, const TArray<FEffectStruct>& EffectsStructs);
+	UFUNCTION(BlueprintCallable)
+	void AddEffectToActor(AActor* InstigatorActor, AActor* AffectedActor, const FEffectStruct& EffectStruct);
+
+	UFUNCTION(BlueprintCallable)
+	void AddEffectsToActor(AActor* InstigatorActor, AActor* AffectedActor, const TArray<FEffectStruct>& EffectsStructs);
+
+	UFUNCTION(BlueprintCallable)
+	void FindEffectsByActor(AActor* AffectedActor, TArray<UEffect*>& EffectsArray, bool IsArrayFound);
+
+	const TArray<UEffect*>& GetEffectsByActor(AActor* AffectedActor) const;
 
 protected:
-	virtual bool IsActorAffected(AActor* Actor);
+	bool IsActorAffected(AActor* Actor);
 
 private:
 	TMap<AActor*, TArray<UEffect*>> m_EffectsMap;
+
+	int32 UpdateNum;
 };

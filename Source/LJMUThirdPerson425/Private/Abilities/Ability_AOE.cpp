@@ -66,7 +66,6 @@ void AAbility_AOE::Update(float DeltaTime)
 {
 	AAbility::Update(DeltaTime);
 
-
 	// Destroy the spell once the Collision sphere reaches its End value
 	// Or if it is set to not change the radious dynamically
 	if (this->m_SphereCollisionComponent->GetUnscaledSphereRadius() >= this->m_AOEAbilityStruct.RadiousEnd

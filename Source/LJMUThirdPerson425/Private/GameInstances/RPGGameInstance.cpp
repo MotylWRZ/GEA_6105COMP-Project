@@ -7,9 +7,12 @@
 URPGGameInstance::URPGGameInstance(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	this->m_SpellsManager = ObjectInitializer.CreateDefaultSubobject<USpellsManager>(this, TEXT("SpellsManager"));
-	this->m_AbilitiesManager = ObjectInitializer.CreateDefaultSubobject<UAbilitiesManager>(this, TEXT("AbilitiesManager"));
-	this->m_EffectsManager = ObjectInitializer.CreateDefaultSubobject<UEffectsManager>(this, TEXT("EffectsManager"));
+	if (!HasAnyFlags(RF_ClassDefaultObject | RF_ArchetypeObject))
+	{
+		this->m_SpellsManager = ObjectInitializer.CreateDefaultSubobject<USpellsManager>(this, TEXT("SpellsManager"));
+		this->m_AbilitiesManager = ObjectInitializer.CreateDefaultSubobject<UAbilitiesManager>(this, TEXT("AbilitiesManager"));
+		this->m_EffectsManager = ObjectInitializer.CreateDefaultSubobject<UEffectsManager>(this, TEXT("EffectsManager"));
+	}
 }
 
 URPGGameInstance* URPGGameInstance::GetRPGGameInstance(const UObject* WorldContextObject)
@@ -26,4 +29,11 @@ URPGGameInstance* URPGGameInstance::GetRPGGameInstance(const UObject* WorldConte
 
 void URPGGameInstance::Init()
 {
+}
+
+void URPGGameInstance::Shutdown()
+{
+	/*this->m_SpellsManager = nullptr;
+	this->m_AbilitiesManager = nullptr;
+	this->m_EffectsManager = nullptr;*/
 }

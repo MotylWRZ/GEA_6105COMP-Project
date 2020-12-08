@@ -29,6 +29,7 @@ public:
 protected:
 	void SetShouldUpdate(bool ShouldUpdate);
 	void SetUpdateInterval(float NewUpdateInterval);
+	FORCEINLINE void SetClearInterval(float NewClearInterval) { m_ClearInterval = NewClearInterval; }
 
 	FORCEINLINE bool ShouldUpdate() { return m_bShouldUpdate; }
 	FORCEINLINE float GetUpdateInterval() { return m_UpdateInterval; }

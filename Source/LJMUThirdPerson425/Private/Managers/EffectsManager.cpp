@@ -5,11 +5,18 @@
 UEffectsManager::UEffectsManager()
 {
 	this->SetShouldUpdate(true);
+	this->SetClearInterval(10.0f);
+	this->SetUpdateInterval(0.1f);
+
 }
 
 void UEffectsManager::Update(float DeltaTime)
 {
 	Super::Update(DeltaTime);
+
+
+
+	UE_LOG(LogTemp, Error, TEXT("%i"), this->m_EffectsMap.Num());
 
 	for (auto& tPair : this->m_EffectsMap)
 	{
@@ -35,6 +42,11 @@ void UEffectsManager::Update(float DeltaTime)
 	{
 		this->Clear();
 	}
+
+	if (this->m_EffectsMap.Num() == 0)
+	{
+		this->SetShouldUpdate(false);
+	}
 }
 
 void UEffectsManager::Clear()
@@ -55,6 +67,11 @@ void UEffectsManager::Clear()
 			it.RemoveCurrent();
 		}
 	}
+	// Gropud invalid elements together in order to prepare them for removal
+	this->m_EffectsMap.Compact();
+	// Remove invalid elements
+	this->m_EffectsMap.Shrink();
+
 }
 
 
@@ -63,6 +80,7 @@ void UEffectsManager::AddEffectToActor(AActor* InstigatorActor, AActor* Affected
 	// Create a new instance of tEffect locally
 	UEffect* tEffect = NewObject<UEffect>();
 	tEffect->InitialiseEffect(InstigatorActor, AffectedActor, EffectStruct);
+	this->SetShouldUpdate(true);
 
 	if (this->IsActorAffected(AffectedActor))
 	{
@@ -87,6 +105,17 @@ void UEffectsManager::AddEffectsToActor(AActor* InstigatorActor, AActor* Affecte
 	{
 		this->AddEffectToActor(InstigatorActor, AffectedActor, tEffectStruct);
 	}
+}
+
+void UEffectsManager::FindEffectsByActor(AActor* AffectedActor, TArray<UEffect*>& EffectsArray, bool IsArrayFound)
+{
+}
+
+const TArray<UEffect*>& UEffectsManager::GetEffectsByActor(AActor* AffectedActor) const
+{
+	// Returns nullptr if the key can't be found
+	 return *this->m_EffectsMap.Find(AffectedActor);
+
 }
 
 bool UEffectsManager::IsActorAffected(AActor* Actor)

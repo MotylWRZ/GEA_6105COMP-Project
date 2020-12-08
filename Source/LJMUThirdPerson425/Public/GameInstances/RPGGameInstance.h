@@ -35,6 +35,7 @@ public:
 	static UEffectsManager* GetEffectsManager(const UObject* WorldContextObject) { return GetRPGGameInstance(WorldContextObject)->m_EffectsManager; }
 
 	virtual void Init() override;
+	virtual void Shutdown() override;
 
 public:
 
