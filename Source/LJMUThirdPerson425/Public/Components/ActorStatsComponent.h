@@ -80,6 +80,7 @@ public:
 	FORCEINLINE const virtual int32& GetHealth() const		{ return m_ActorStats.Health; }
 	FORCEINLINE const virtual int32& GetHealthMax() const	{ return m_ActorStats.HealthMax; }
 	FORCEINLINE const virtual int32& GetTeamID() const		{ return m_ActorStats.TeamID; }
+	FORCEINLINE const virtual FActorStatsStruct& GetActorStatsStruct() { return m_ActorStats; }
 
 	UFUNCTION(BlueprintPure, Category = "Stats")
 	FORCEINLINE bool IsAlive()   { return m_ActorStats.Health > 0; }
@@ -89,7 +90,10 @@ public:
 	static bool IsEnemyByActor(AActor* Actor1, AActor* Actor2);
 	// Check if two stats component should refers to each other as enemies or allies
 		UFUNCTION(BlueprintPure, Category = "Stats")
-	static bool IsEnemyByComponent(UActorStatsComponent* StatsComponent1, UActorStatsComponent* StatsComponent2);
+	static bool IsEnemyByComponent(UActorStatsComponent* StatsComponentA, UActorStatsComponent* StatsComponentB);
+	// Compare two StatsStruct in order to determine if their owners should refer to each other as enemies
+		UFUNCTION(BlueprintPure, Category = "Stats")
+	static bool IsEnemyByStatsStruct(const FActorStatsStruct& StatsStructA, const FActorStatsStruct& StatsStructB);
 
 	FORCEINLINE virtual void SetName		(FName NewName)		   { m_ActorStats.Name = NewName; }
 	FORCEINLINE virtual void SetDescription (FText NewDescription) { m_ActorStats.Description = NewDescription; }

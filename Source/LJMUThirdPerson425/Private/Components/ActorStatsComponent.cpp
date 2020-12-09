@@ -129,9 +129,18 @@ bool UActorStatsComponent::IsEnemyByActor(AActor* Actor1, AActor* Actor2)
 	return UActorStatsComponent::IsEnemyByComponent(tActor1Stats, tActor2Stats);
 }
 
-bool UActorStatsComponent::IsEnemyByComponent(UActorStatsComponent* StatsComponent1, UActorStatsComponent* StatsComponent2)
+bool UActorStatsComponent::IsEnemyByComponent(UActorStatsComponent* StatsComponentA, UActorStatsComponent* StatsComponentB)
 {
-	if (!StatsComponent1 || !StatsComponent2 || StatsComponent1->GetTeamID() == StatsComponent2->GetTeamID())
+	if (!StatsComponentA || !StatsComponentB || StatsComponentA->GetTeamID() == StatsComponentB->GetTeamID())
+	{
+		return false;
+	}
+	return true;
+}
+
+bool UActorStatsComponent::IsEnemyByStatsStruct(const FActorStatsStruct& StatsStructA, const FActorStatsStruct& StatsStructB)
+{
+	if (StatsStructA.TeamID == StatsStructB.TeamID)
 	{
 		return false;
 	}

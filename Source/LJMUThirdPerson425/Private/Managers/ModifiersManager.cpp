@@ -14,6 +14,11 @@ UModifiersManager::UModifiersManager()
 
 bool UModifiersManager::ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, const FStatsModifierStruct& StatsModifierStruct)
 {
+	if (!InstigatorActor || !ActorToModify)
+	{
+		return false;
+	}
+
 	// Modify Actor Stats
 	UActorStatsComponent* tStatsComponent = UActorStatsComponent::GetStatsComponent(ActorToModify);
 
@@ -43,8 +48,26 @@ bool UModifiersManager::ModifyActorStats(AActor* InstigatorActor, AActor* ActorT
 
 }
 
+bool UModifiersManager::ModifyActorStats(const FActorStatsStruct& InstigatorActorStats, AActor* ActorToModify, const FStatsModifierStruct& StatsModifierStruct)
+{
+	// Modify Actor Stats
+	UActorStatsComponent* tStatsComponent = UActorStatsComponent::GetStatsComponent(ActorToModify);
+
+	if (!tStatsComponent || !UHelperFunctionsLibrary::IsActorAttackable(ActorToModify))
+	{
+		return false;
+	}
+
+	return false;
+}
+
 bool UModifiersManager::ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, int32 DamageToApply, int32 HealthToAdd, bool CanDamageAllies)
 {
+	if (!InstigatorActor || !ActorToModify)
+	{
+		return false;
+	}
+
 	// Modify Actor Stats
 	UActorStatsComponent* tStatsComponent = UActorStatsComponent::GetStatsComponent(ActorToModify);
 

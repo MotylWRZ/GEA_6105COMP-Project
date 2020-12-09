@@ -21,7 +21,7 @@ class LJMUTHIRDPERSON425_API UEffect : public UObject
 	GENERATED_BODY()
 
 public:
-	UEffect(const FObjectInitializer& ObjectInitializer);
+	UEffect();
 	void InitialiseEffect(AActor* InstigatorActor, AActor* AffectedActor, const FEffectStruct& EffectStruct);
 	void Update(float DeltaTime);
 	void ApplyEffect();
@@ -67,6 +67,9 @@ private:
 
 	AActor* m_InstigatorActor;
 	AActor* m_AffectedActor;
+
+	bool m_bCanUseInstigatorStats;
+	FActorStatsStruct m_InstigatorActorStats;
 
 	FEffectStruct m_EffectStruct;
 };
