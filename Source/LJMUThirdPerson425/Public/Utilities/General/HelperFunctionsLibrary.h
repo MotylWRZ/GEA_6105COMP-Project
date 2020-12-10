@@ -30,5 +30,6 @@ public:
 
 	static bool IsActorAttackable(UPARAM(ref)AActor*& Actor);
 	static bool IsActorSelectable(UPARAM(ref)AActor*& Actor);
+	static bool CanActorHasEffects(UPARAM(ref)AActor*& Actor);
 
 };

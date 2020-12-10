@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Interfaces/CanHasEffectsInterface.h"
 #include "Interfaces/AttackableInterface.h"
 #include "Characters/CharacterBase.h"
 
@@ -13,7 +14,7 @@ class USpellBookComponent;
 class UCharacterCombatComponent;
 
 UCLASS()
-class LJMUTHIRDPERSON425_API AHero : public ACharacterBase, public IAttackableInterface
+class LJMUTHIRDPERSON425_API AHero : public ACharacterBase, public IAttackableInterface, public ICanHasEffectsInterface
 {
 	GENERATED_BODY()
 
@@ -84,6 +85,10 @@ public:
 		virtual void ApplyDamage_Implementation(AActor* InstigatorActor, int32 DamageToApply) override;
 	UFUNCTION(BlueprintCallable)
 		virtual bool IsAlive_Implementation() override;
+
+	// ICanHasEffectsInterface implementation
+	UFUNCTION(BlueprintCallable)
+	virtual bool CanEffectBeApplied_Implementation(EEffectType EffectType);
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UCharacterCombatComponent* m_CharacterCombatComponent;

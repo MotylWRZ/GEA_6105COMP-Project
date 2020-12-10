@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Interfaces/CanHasEffectsInterface.h"
 #include "Interfaces/AttackableInterface.h"
 #include "Interfaces/SelectableInterface.h"
 
@@ -13,4 +14,9 @@ bool UHelperFunctionsLibrary::IsActorAttackable(UPARAM(ref)AActor*& Actor)
 bool UHelperFunctionsLibrary::IsActorSelectable(UPARAM(ref)AActor*& Actor)
 {
     return Actor->GetClass()->ImplementsInterface(USelectableInterface::StaticClass());
+}
+
+bool UHelperFunctionsLibrary::CanActorHasEffects(UPARAM(ref)AActor*& Actor)
+{
+    return Actor->GetClass()->ImplementsInterface(UCanHasEffectsInterface::StaticClass());
 }

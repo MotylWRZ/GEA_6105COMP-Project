@@ -1,5 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Interfaces/CanHasEffectsInterface.h"
+#include "Utilities/General/HelperFunctionsLibrary.h"
+
 #include "Managers/EffectsManager.h"
 
 UEffectsManager::UEffectsManager()
@@ -99,10 +102,17 @@ void UEffectsManager::Clear()
 
 void UEffectsManager::AddEffectToActor(AActor* InstigatorActor, AActor* AffectedActor, const FEffectStruct& EffectStruct)
 {
-	if (!IsValid(InstigatorActor) || !IsValid(AffectedActor))
+	if (!IsValid(InstigatorActor) || !IsValid(AffectedActor) || !UHelperFunctionsLibrary::CanActorHasEffects(AffectedActor))
 	{
 		return;
 	}
+
+	// Return if the AffectedActor cannot take the effect of the current type
+	if (!ICanHasEffectsInterface::Execute_CanEffectBeApplied(AffectedActor, EffectStruct.EffectType))
+	{
+		return;
+	}
+
 
 	// Create a new instance of tEffect locally
 	UEffect* tEffect = NewObject<UEffect>();

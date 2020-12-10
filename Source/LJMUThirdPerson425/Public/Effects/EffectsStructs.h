@@ -16,10 +16,6 @@ UENUM(BlueprintType)enum class EEffectType : uint8
 	Effect_Poison,
 	Effect_Burning,
 	Effect_Freezing,
-	Effect_SpeedBuff,
-	Effect_SpeedDebuff,
-	Effect_AttackBuff,
-	Effect_AttackDebuff,
 	Effect_ArmorBuff,
 	Effect_ArmorDebuff
 };

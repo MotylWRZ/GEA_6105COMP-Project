@@ -128,6 +128,38 @@ bool AHero::IsAlive_Implementation()
 	return this->m_CharaterStatsComponent->IsAlive();
 }
 
+bool AHero::CanEffectBeApplied_Implementation(EEffectType EffectType)
+{
+	switch (EffectType)
+	{
+	case EEffectType::Effect_ArmorBuff:
+	{
+		return true;
+	}
+	case EEffectType::Effect_ArmorDebuff:
+	{
+		return true;
+	}
+	case EEffectType::Effect_Burning:
+	{
+		return true;
+	}
+	case EEffectType::Effect_Freezing:
+	{
+		return true;
+	}
+	case EEffectType::Effect_Healing:
+	{
+		return true;
+	}
+	case EEffectType::Effect_Poison:
+	{
+		return false;
+	}
+	}
+	return true;
+}
+
 // Called to bind functionality to input
 void AHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
