@@ -10,8 +10,9 @@ UEffect::UEffect()
 	, m_CurrentHitNum(0)
 	, m_CurrentDuration(0.0f)
 	, m_HitInterval(0.0f)
-	, m_IsActive(false)
+	, m_bIsActive(false)
 	, m_bCanUseInstigatorStats(false)
+	, m_CurrentHitInterval(0.0f)
 {
 
 }
@@ -46,30 +47,41 @@ bool UEffect::InitialiseEffect(AActor* InstigatorActor, AActor* AffectedActor, c
 
 void UEffect::Update(float DeltaTime)
 {
-	if (!this->m_IsActive)
+	if (!this->m_bIsActive)
 	{
 		return;
 	}
 
 	// Calculate current duration
 	this->m_CurrentDuration += DeltaTime;
+	this->m_CurrentHitInterval += DeltaTime;
+
+
 
 	if (this->m_CurrentDuration >= m_EffectStruct.Duration)
 	{
 		this->SetIsActive(false);
-		//OnEffectRemoved.Broadcast();
 		this->m_CurrentDuration = 0.0f;
 		return;
 	}
 
 	if (!m_EffectStruct.AllowMultiHit)
 	{
-		this->ApplyEffect();
-		//this->SetIsActive(false);
+		if (!this->m_bFirstEffectApplied)
+		{
+			this->ApplyEffect();
+			this->m_bFirstEffectApplied = true;
+		}
+		return;
+	}
+
+	if (this->m_CurrentHitInterval < this->m_HitInterval)
+	{
 		return;
 	}
 
 	this->m_CurrentHitNum++;
+	this->m_CurrentHitInterval = 0.0f;
 
 	if (this->m_CurrentHitNum <= this->m_EffectStruct.HitsNum)
 	{

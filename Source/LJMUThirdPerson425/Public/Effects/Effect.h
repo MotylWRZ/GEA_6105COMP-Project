@@ -27,7 +27,7 @@ public:
 	// Accessors/Mutators
 	///////////////////////
 	UFUNCTION(BlueprintCallable, Category = "Effect")
-	bool const IsActive() const { return m_IsActive; }
+	bool const IsActive() const { return m_bIsActive; }
 
 	UFUNCTION(BlueprintCallable, Category = "Effect")
 	float const GetHitInterval() const { return m_HitInterval; }
@@ -45,7 +45,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Effect")
 	float GetEffectStatsScore();
 
-	FORCEINLINE void SetIsActive(bool IsActive) { m_IsActive = IsActive; if (!IsActive) { OnEffectRemoved.Broadcast(); }; }
+	FORCEINLINE void SetIsActive(bool IsActive) { m_bIsActive = IsActive; if (!IsActive) { OnEffectRemoved.Broadcast(); }; }
 	FORCEINLINE void SetHitInterval(float HitInterval) { m_HitInterval = HitInterval; }
 
 
@@ -58,12 +58,14 @@ public:
 	FOnEffectRemoved OnEffectRemoved;
 private:
 	// This should be changed to false if the effect Duration <= 0.0f
-	bool m_IsActive = true;
+	bool m_bIsActive = true;
+	bool m_bFirstEffectApplied;
 
 	// HitInterval should be based on the number of hits (HitsNum) and Duration of effect
 	// Example equation can be: Duration/HitsNum = HitInterval
 	// Examle: 1.0f/3 = 0.333f
 	float m_HitInterval = 0.0f;
+	float m_CurrentHitInterval;
 
 	float m_CurrentDuration;
 	int32 m_CurrentHitNum;
