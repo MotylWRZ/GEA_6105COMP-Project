@@ -102,24 +102,37 @@ void USelectableActorComponent::ToggleIsSelected(bool IsSelected)
 	this->m_bIsSelected = IsSelected;
 }
 
+USelectableActorComponent* USelectableActorComponent::GetSelectableActorComponent(AActor* FromActor)
+{
+	if (FromActor)
+	{
+		return Cast<USelectableActorComponent>(FromActor->GetComponentByClass(USelectableActorComponent::StaticClass()));
+	}
+	return nullptr;
+}
+
 void USelectableActorComponent::OnHovered()
 {
-		this->m_OwnerHoverDecalComponent->SetVisibility(true);
+	this->m_OwnerHoverDecalComponent->SetVisibility(true);
+	this->OnActorHovered.Broadcast();
 }
 
 void USelectableActorComponent::OnUnhovered()
 {
 	this->m_OwnerHoverDecalComponent->SetVisibility(false);
+	this->OnActorunhovered.Broadcast();
 }
 
 void USelectableActorComponent::OnSelected()
 {
 	this->m_OwnerSelectDecalComponent->SetVisibility(true);
+	this->OnActorSelected.Broadcast();
 }
 
 void USelectableActorComponent::OnUnselected()
 {
 	this->m_OwnerSelectDecalComponent->SetVisibility(false);
+	this->OnActorUnselected.Broadcast();
 }
 
 

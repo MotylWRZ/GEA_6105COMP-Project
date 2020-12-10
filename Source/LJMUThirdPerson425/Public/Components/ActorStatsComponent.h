@@ -120,17 +120,4 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	FActorStatsStruct m_ActorStats;
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	FName m_Name;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	FText m_Description;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0"))
-	int32 m_Health;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0"))
-	int32 m_HealthMax;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	int32 m_TeamID;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	bool m_CanBeDamaged = true;*/
-
 };

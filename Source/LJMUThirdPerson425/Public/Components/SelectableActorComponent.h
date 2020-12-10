@@ -8,6 +8,11 @@
 
 class UDecalComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActorHovered);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActorUnhovered);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActorSelected);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActorUnselected);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LJMUTHIRDPERSON425_API USelectableActorComponent : public UActorComponent
 {
@@ -42,6 +47,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool IsActorSelected() { return this->m_bIsSelected; }
 
+	UFUNCTION(BlueprintCallable, Category = "SelectableComponent")
+	static USelectableActorComponent* GetSelectableActorComponent(AActor* FromActor);
+
 	UFUNCTION(BlueprintCallable)
 	void OnHovered();
 	UFUNCTION(BlueprintCallable)
@@ -50,6 +58,18 @@ public:
 	void OnSelected();
 	UFUNCTION(BlueprintCallable)
 	void OnUnselected();
+
+	//////////////////
+	// Delegates
+	//////////////////
+	UPROPERTY(BlueprintAssignable, Category = "SelectableActorComponent")
+	FOnActorHovered OnActorHovered;
+	UPROPERTY(BlueprintAssignable, Category = "SelectableActorComponent")
+	FOnActorUnhovered OnActorunhovered;
+	UPROPERTY(BlueprintAssignable, Category = "SelectableActorComponent")
+	FOnActorSelected OnActorSelected;
+	UPROPERTY(BlueprintAssignable, Category = "SelectableActorComponent")
+	FOnActorUnselected OnActorUnselected;
 
 	//////////////////
 	// Private Functions
