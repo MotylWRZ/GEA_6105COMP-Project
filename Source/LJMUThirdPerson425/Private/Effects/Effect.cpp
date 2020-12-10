@@ -57,7 +57,7 @@ void UEffect::Update(float DeltaTime)
 	if (this->m_CurrentDuration >= m_EffectStruct.Duration)
 	{
 		this->SetIsActive(false);
-		this->OnEffectRemoved.Broadcast();
+		//OnEffectRemoved.Broadcast();
 		this->m_CurrentDuration = 0.0f;
 		return;
 	}
@@ -65,7 +65,7 @@ void UEffect::Update(float DeltaTime)
 	if (!m_EffectStruct.AllowMultiHit)
 	{
 		this->ApplyEffect();
-		this->SetIsActive(false);
+		//this->SetIsActive(false);
 		return;
 	}
 
@@ -109,4 +109,16 @@ void UEffect::ApplyEffect()
 	{
 		this->OnEffectApplied.Broadcast(this);
 	}
+}
+
+float UEffect::GetEffectStatsScore()
+{
+	int32 tHitsLeft = this->m_EffectStruct.HitsNum - this->m_CurrentHitNum;
+	float tDurationLeft = this->GetDurationLeft();
+	int32 tDamage = this->m_EffectStruct.StatsModifierStruct.DamageToApply;
+	int32 tHealth = this->m_EffectStruct.StatsModifierStruct.HealthToAdd;
+
+	float tResult = static_cast<float>(tHitsLeft) + tDurationLeft + static_cast<float>(tDamage) + static_cast<float>(tHealth);
+
+	return tResult;
 }

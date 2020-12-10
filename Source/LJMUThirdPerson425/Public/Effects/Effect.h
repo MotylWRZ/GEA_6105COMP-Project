@@ -41,8 +41,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Effect")
 	FEffectStruct GetEffectStruct() { return m_EffectStruct; }
 
-	FORCEINLINE void SetIsActive(bool IsActive) { m_IsActive = IsActive; }
+	// Get the Effect stats score (all stats summed up)
+	UFUNCTION(BlueprintCallable, Category = "Effect")
+	float GetEffectStatsScore();
+
+	FORCEINLINE void SetIsActive(bool IsActive) { m_IsActive = IsActive; if (!IsActive) { OnEffectRemoved.Broadcast(); }; }
 	FORCEINLINE void SetHitInterval(float HitInterval) { m_HitInterval = HitInterval; }
+
+
 
 	UPROPERTY(BlueprintAssignable, Category = "Effect Delegates")
 	FOnEffectAdded OnEffectAdded;

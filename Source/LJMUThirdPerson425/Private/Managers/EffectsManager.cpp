@@ -113,9 +113,18 @@ void UEffectsManager::AddEffectToActor(AActor* InstigatorActor, AActor* Affected
 	}
 	this->SetShouldUpdate(true);
 
+
+
 	if (this->IsActorAffected(AffectedActor))
 	{
-		 //If this actor is already affected, add the effect to the actor effects list
+		// Try to find and replace the active effect with the same type
+		if (this->AddAndReplaceEffect(tEffect, AffectedActor))
+		{
+			// If found and replaced, do not continue
+			return;
+		}
+
+		//If this actor is already affected, add the effect to the actor effects list
 		this->m_EffectsMap.Find(AffectedActor)->EffectsArray.Add(tEffect);
 	}
 	else
@@ -130,7 +139,6 @@ void UEffectsManager::AddEffectToActor(AActor* InstigatorActor, AActor* Affected
 		this->m_EffectsMap.Add(AffectedActor, tArrayStruct);
 		//this->m_EffectsMap.Add(AffectedActor, tEffectsArray);
 	}
-
 
 }
 
@@ -164,8 +172,80 @@ const TArray<UEffect*>* UEffectsManager::GetEffectsByActor(AActor* AffectedActor
 
 }
 
+bool UEffectsManager::AddAndReplaceEffect(UEffect* EffectToAdd, AActor* AffectedActor)
+{
+	UEffect* tEffectCurrent;
+
+	tEffectCurrent = this->GetEffectAlreadyAppliedByType(EffectToAdd->GetEffectStruct().EffectType, AffectedActor);
+
+	// Return false if tEffectCurrent is null
+	// This means that it cannot be found in the effects array
+	if (!tEffectCurrent)
+	{
+		return false;
+	}
+
+	// Compare the StatsScore of these two effects
+	UEffect* tHigherScoreEffect = this->GetEffectWithHigherStatsScore(tEffectCurrent, EffectToAdd);
+
+	if (tHigherScoreEffect == EffectToAdd || !tEffectCurrent->IsActive())
+	{
+		// Remove Current Effect
+		// Set this effect to inactive so that it will be removed from the array
+		tEffectCurrent->SetIsActive(false);
+		this->m_EffectsMap.Find(AffectedActor)->EffectsArray.Remove(tEffectCurrent);
+
+		// Add EffectToAdd as it has better score
+		this->m_EffectsMap.Find(AffectedActor)->EffectsArray.Add(tHigherScoreEffect);
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+
+}
+
+UEffect* UEffectsManager::GetEffectWithHigherStatsScore(UEffect* EffectA, UEffect* EffectB)
+{
+
+	if (!EffectA || !EffectB)
+	{
+		return nullptr;
+	}
+
+	//Check the StatsScore
+	float tScoreA = EffectA->GetEffectStatsScore();
+	float tScoreB = EffectB->GetEffectStatsScore();
+
+	if (tScoreA >= tScoreB)
+	{
+		return EffectA;
+	}
+	else
+	{
+		return EffectB;
+	}
+}
+
+UEffect* UEffectsManager::GetEffectAlreadyAppliedByType(EEffectType EffectType, AActor* AffectedActor)
+{
+	// try to find the effect with same type as EffectToAdd
+	for (auto& tEffect : *this->GetEffectsByActor(AffectedActor))
+	{
+		if (tEffect->GetEffectStruct().EffectType == EffectType)
+		{
+			return tEffect;
+		}
+	}
+
+	return nullptr;
+}
+
 bool UEffectsManager::IsActorAffected(AActor* Actor)
 {
+
 	// Check if actor's memory address is stored as a key in the EffectsMap
 	// If it is, it means that actor has at least one effect active
 	return this->m_EffectsMap.Contains(Actor);
