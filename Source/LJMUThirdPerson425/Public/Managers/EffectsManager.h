@@ -9,6 +9,15 @@
 #include "Managers/ManagerBase.h"
 #include "EffectsManager.generated.h"
 
+USTRUCT()
+struct FEffectsArray
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+		TArray<UEffect*> EffectsArray;
+};
+
 UCLASS()
 class LJMUTHIRDPERSON425_API UEffectsManager : public UManagerBase
 {
@@ -36,7 +45,7 @@ protected:
 	bool IsActorAffected(AActor* Actor);
 
 private:
-	TMap<AActor*, TArray<UEffect*>> m_EffectsMap;
+	TMap<AActor*, FEffectsArray> m_EffectsMap;
 
 	int32 UpdateNum;
 };

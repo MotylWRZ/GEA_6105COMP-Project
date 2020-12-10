@@ -14,25 +14,25 @@ void UEffectsManager::Update(float DeltaTime)
 {
 	Super::Update(DeltaTime);
 
-
-
-	UE_LOG(LogTemp, Error, TEXT("%i"), this->m_EffectsMap.Num());
-
 	for (auto& tPair : this->m_EffectsMap)
 	{
 		// Go to the next iteration if the array is empty
-		if (tPair.Value.Num() == 0)
+		if (tPair.Value.EffectsArray.Num() == 0)
 		{
 			continue;
 		}
 
-		for (auto& tEffect : tPair.Value)
+		// Update all the effects from the current pair
+		for (auto& tEffect : tPair.Value.EffectsArray)
 		{
-			tEffect->Update(DeltaTime);
+			if (tEffect)
+			{
+				tEffect->Update(DeltaTime);
+			}
 		}
 
 		// Remove all inactive Effects pointers from the Active array by predicate
-		tPair.Value.RemoveAll([](UEffect* Effect)
+		tPair.Value.EffectsArray.RemoveAll([](UEffect* Effect)
 		{
 				return !Effect->IsActive();
 		});
@@ -45,6 +45,7 @@ void UEffectsManager::Update(float DeltaTime)
 
 	if (this->m_EffectsMap.Num() == 0)
 	{
+		this->m_EffectsMap.Empty(0);
 		this->SetShouldUpdate(false);
 	}
 }
@@ -53,20 +54,41 @@ void UEffectsManager::Clear()
 {
 	Super::Clear();
 
+	// Do not attempt to clear the map if it is empty
+	if (this->m_EffectsMap.Num() == 0)
+	{
+		return;
+	}
+
 	// Sort map elements based on the values(arrays) sizes
-	this->m_EffectsMap.ValueSort([](TArray<UEffect*> tEffectsArrA, TArray<UEffect*> tEffectsArrB)
+	// Elements with empty arrays will be at the beginning of the structure
+	this->m_EffectsMap.ValueSort([](FEffectsArray tEffectsArrA, FEffectsArray tEffectsArrB)
 		{
-			return tEffectsArrA.Num() > tEffectsArrB.Num();
+			return tEffectsArrA.EffectsArray.Num() < tEffectsArrB.EffectsArray.Num();
 		});
 
-	for (TMap<AActor*, TArray<UEffect*>>::TIterator it = this->m_EffectsMap.CreateIterator(); it; ++it)
+	// Temporary arry to store keys of inactive pairs (incative pair will be if the effects array is empty)
+	TArray<AActor*> tInactiveElemKeys;
+
+	for (TMap<AActor*, FEffectsArray>::TIterator it = this->m_EffectsMap.CreateIterator(); it; ++it)
 	{
-		// If array if effects is empty, remove the element from the map
-		if (it.Value().Num() == 0)
+		// End the loop if value (array) is not empty. That means we reached the part of the map with filled Effect arrays
+		if (it.Value().EffectsArray.Num() > 0)
 		{
-			it.RemoveCurrent();
+			break;
 		}
+
+		// Add the key of the element wit empty effects array
+		tInactiveElemKeys.Add(it.Key());
+
 	}
+
+	// Clear the map from the elements with empty arrays
+	for (int32 i = 0; i < tInactiveElemKeys.Num(); ++i)
+	{
+		this->m_EffectsMap.Remove(tInactiveElemKeys[i]);
+	}
+
 	// Gropud invalid elements together in order to prepare them for removal
 	this->m_EffectsMap.Compact();
 	// Remove invalid elements
@@ -77,15 +99,24 @@ void UEffectsManager::Clear()
 
 void UEffectsManager::AddEffectToActor(AActor* InstigatorActor, AActor* AffectedActor, const FEffectStruct& EffectStruct)
 {
+	if (!IsValid(InstigatorActor) || !IsValid(AffectedActor))
+	{
+		return;
+	}
+
 	// Create a new instance of tEffect locally
 	UEffect* tEffect = NewObject<UEffect>();
-	tEffect->InitialiseEffect(InstigatorActor, AffectedActor, EffectStruct);
+	if (!tEffect->InitialiseEffect(InstigatorActor, AffectedActor, EffectStruct))
+	{
+		// Effect initialisation failed
+		return;
+	}
 	this->SetShouldUpdate(true);
 
 	if (this->IsActorAffected(AffectedActor))
 	{
-		// If this actor is already affected, add the effect to the actor effects list
-		this->m_EffectsMap.Find(AffectedActor)->Add(tEffect);
+		 //If this actor is already affected, add the effect to the actor effects list
+		this->m_EffectsMap.Find(AffectedActor)->EffectsArray.Add(tEffect);
 	}
 	else
 	{
@@ -93,7 +124,11 @@ void UEffectsManager::AddEffectToActor(AActor* InstigatorActor, AActor* Affected
 		TArray<UEffect*> tEffectsArray;
 		tEffectsArray.Add(tEffect);
 
-		this->m_EffectsMap.Add(AffectedActor, tEffectsArray);
+		FEffectsArray tArrayStruct;
+		tArrayStruct.EffectsArray = tEffectsArray;
+
+		this->m_EffectsMap.Add(AffectedActor, tArrayStruct);
+		//this->m_EffectsMap.Add(AffectedActor, tEffectsArray);
 	}
 
 
@@ -109,7 +144,7 @@ void UEffectsManager::AddEffectsToActor(AActor* InstigatorActor, AActor* Affecte
 
 void UEffectsManager::FindEffectsByActor(AActor* AffectedActor, TArray<UEffect*>& EffectsArray, bool& IsArrayFound)
 {
-	TArray<UEffect*>* tEffectsArray = this->m_EffectsMap.Find(AffectedActor);
+	TArray<UEffect*>* tEffectsArray = &this->m_EffectsMap.Find(AffectedActor)->EffectsArray;
 
 	if (!tEffectsArray)
 	{
@@ -125,7 +160,7 @@ void UEffectsManager::FindEffectsByActor(AActor* AffectedActor, TArray<UEffect*>
 const TArray<UEffect*>* UEffectsManager::GetEffectsByActor(AActor* AffectedActor) const
 {
 	// Returns nullptr if the key can't be found
-	 return this->m_EffectsMap.Find(AffectedActor);
+	 return &this->m_EffectsMap.Find(AffectedActor)->EffectsArray;
 
 }
 

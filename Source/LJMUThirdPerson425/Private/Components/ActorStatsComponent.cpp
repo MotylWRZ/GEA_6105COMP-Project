@@ -114,7 +114,7 @@ void UActorStatsComponent::AddHealth(UPARAM(ref) AActor*& InstigatorActor, int32
 
 UActorStatsComponent* UActorStatsComponent::GetStatsComponent(AActor* FromActor)
 {
-	if (FromActor)
+	if (IsValid(FromActor))
 	{
 		return Cast<UActorStatsComponent>(FromActor->GetComponentByClass(UActorStatsComponent::StaticClass()));
 	}
@@ -123,6 +123,11 @@ UActorStatsComponent* UActorStatsComponent::GetStatsComponent(AActor* FromActor)
 
 bool UActorStatsComponent::IsEnemyByActor(AActor* Actor1, AActor* Actor2)
 {
+	if (!IsValid(Actor1) || !IsValid(Actor2))
+	{
+		return false;
+	}
+
 	UActorStatsComponent* tActor1Stats = UActorStatsComponent::GetStatsComponent(Actor1);
 	UActorStatsComponent* tActor2Stats = UActorStatsComponent::GetStatsComponent(Actor2);
 

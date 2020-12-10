@@ -16,11 +16,11 @@ UEffect::UEffect()
 
 }
 
-void UEffect::InitialiseEffect(AActor* InstigatorActor, AActor* AffectedActor, const FEffectStruct& EffectStruct)
+bool UEffect::InitialiseEffect(AActor* InstigatorActor, AActor* AffectedActor, const FEffectStruct& EffectStruct)
 {
-	if (!InstigatorActor || !AffectedActor)
+	if (!IsValid(InstigatorActor) || !IsValid(AffectedActor))
 	{
-		return;
+		return false;
 	}
 
 	UActorStatsComponent* tInstigatorStatsComp = UActorStatsComponent::GetStatsComponent(InstigatorActor);
@@ -39,6 +39,8 @@ void UEffect::InitialiseEffect(AActor* InstigatorActor, AActor* AffectedActor, c
 
 	this->SetIsActive(true);
 
+	return true;
+
 	this->OnEffectAdded.Broadcast(this);
 }
 
@@ -55,7 +57,7 @@ void UEffect::Update(float DeltaTime)
 	if (this->m_CurrentDuration >= m_EffectStruct.Duration)
 	{
 		this->SetIsActive(false);
-		this->OnEffectRemoved.Broadcast(this);
+		this->OnEffectRemoved.Broadcast();
 		this->m_CurrentDuration = 0.0f;
 		return;
 	}
@@ -63,6 +65,7 @@ void UEffect::Update(float DeltaTime)
 	if (!m_EffectStruct.AllowMultiHit)
 	{
 		this->ApplyEffect();
+		this->SetIsActive(false);
 		return;
 	}
 

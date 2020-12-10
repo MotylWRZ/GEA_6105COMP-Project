@@ -14,7 +14,7 @@ UModifiersManager::UModifiersManager()
 
 bool UModifiersManager::ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, const FStatsModifierStruct& StatsModifierStruct)
 {
-	if (!InstigatorActor || !ActorToModify)
+	if (!IsValid(InstigatorActor) || !IsValid(ActorToModify))
 	{
 		return false;
 	}

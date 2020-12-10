@@ -10,11 +10,8 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEffectAdded, UEffect*, EffectPtr);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEffectApplied, UEffect*, EffectPtr);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEffectRemoved, UEffect*, EffectPtr);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEffectRemoved);
 
-/**
- *
- */
 UCLASS(Blueprintable)
 class LJMUTHIRDPERSON425_API UEffect : public UObject
 {
@@ -22,7 +19,7 @@ class LJMUTHIRDPERSON425_API UEffect : public UObject
 
 public:
 	UEffect();
-	void InitialiseEffect(AActor* InstigatorActor, AActor* AffectedActor, const FEffectStruct& EffectStruct);
+	bool InitialiseEffect(AActor* InstigatorActor, AActor* AffectedActor, const FEffectStruct& EffectStruct);
 	void Update(float DeltaTime);
 	void ApplyEffect();
 
