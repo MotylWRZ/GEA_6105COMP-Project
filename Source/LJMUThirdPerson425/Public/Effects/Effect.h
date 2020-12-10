@@ -68,11 +68,14 @@ private:
 	float m_CurrentDuration;
 	int32 m_CurrentHitNum;
 
+	UPROPERTY()
 	AActor* m_InstigatorActor;
+	UPROPERTY()
 	AActor* m_AffectedActor;
 
 	bool m_bCanUseInstigatorStats;
 	FActorStatsStruct m_InstigatorActorStats;
 
+	UPROPERTY(EditDefaultsOnly)
 	FEffectStruct m_EffectStruct;
 };

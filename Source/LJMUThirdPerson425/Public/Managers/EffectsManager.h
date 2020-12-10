@@ -30,6 +30,8 @@ public:
 	void Update(float DeltaTime) override;
 	void Clear() override;
 
+	UEffect* CreateEffectFromStruct(AActor* InstigatorActor, AActor* AffectedActor, const FEffectStruct& EffectStruct);
+
 	UFUNCTION(BlueprintCallable)
 	void AddEffectToActor(AActor* InstigatorActor, AActor* AffectedActor, const FEffectStruct& EffectStruct);
 

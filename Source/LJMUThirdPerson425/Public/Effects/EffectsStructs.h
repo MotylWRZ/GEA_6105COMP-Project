@@ -9,6 +9,7 @@
 #include "UObject/NoExportTypes.h"
 #include "EffectsStructs.generated.h"
 
+class UEffect;
 
 UENUM(BlueprintType)enum class EEffectType : uint8
 {
@@ -25,28 +26,40 @@ struct FEffectStruct : public FTableRowBase
 {
 	GENERATED_BODY()
 
-		UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	// Use one of premade effect classes.
+	// Some of them can provide additional functionality implemented directly is specific class.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool UsePremadeEffectClass = false;
+
+	// Decide whether to overwire the EffectStruct of the chosen clas or to use original values from the class
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "UsePremadeEffectClass"))
+		bool OverwriteEffectClassProperties = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite , meta = (EditCondition = "UsePremadeEffectClass"))
+		TSubclassOf<UEffect> EffectClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!UsePremadeEffectClass || OverwriteEffectClassProperties"))
 		EEffectType EffectType;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!UsePremadeEffectClass || OverwriteEffectClassProperties"))
 		FStatsModifierStruct StatsModifierStruct;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!UsePremadeEffectClass || OverwriteEffectClassProperties"))
 		FName EffectName;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!UsePremadeEffectClass || OverwriteEffectClassProperties"))
 		FString EffectDescription;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!UsePremadeEffectClass || OverwriteEffectClassProperties"))
 		UTexture2D* EffectIcon;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!UsePremadeEffectClass || OverwriteEffectClassProperties"))
 		float Duration = 1.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!UsePremadeEffectClass || OverwriteEffectClassProperties"))
 		bool AllowMultiHit = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!UsePremadeEffectClass || OverwriteEffectClassProperties"))
 		int32 HitsNum = 1;
 
 };

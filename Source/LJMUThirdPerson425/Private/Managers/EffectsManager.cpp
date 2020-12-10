@@ -99,6 +99,53 @@ void UEffectsManager::Clear()
 
 }
 
+UEffect* UEffectsManager::CreateEffectFromStruct(AActor* InstigatorActor, AActor* AffectedActor, const FEffectStruct& EffectStruct)
+{
+	UEffect* tNewEffect;
+
+	if (EffectStruct.UsePremadeEffectClass && EffectStruct.EffectClass)
+	{
+		// Create an Effect of specified class
+		tNewEffect = NewObject<UEffect>(EffectStruct.EffectClass);
+		if (EffectStruct.OverwriteEffectClassProperties)
+		{
+			// Initialise effect and overwrite the default class struct from the specified class
+			if (tNewEffect->InitialiseEffect(InstigatorActor, AffectedActor, EffectStruct))
+			{
+				return tNewEffect;
+			}
+			else
+			{
+				return nullptr;
+			}
+
+		}
+		// Initialise effect and load the default class struct from the specified class
+		if (tNewEffect->InitialiseEffect(InstigatorActor, AffectedActor, EffectStruct.EffectClass.GetDefaultObject()->GetEffectStruct()))
+		{
+			return tNewEffect;
+		}
+		else
+		{
+			return nullptr;
+		}
+
+	}
+
+	// Create default Effect object
+	tNewEffect = NewObject<UEffect>();
+	if (tNewEffect->InitialiseEffect(InstigatorActor, AffectedActor, EffectStruct))
+	{
+		return tNewEffect;
+	}
+	else
+	{
+		return nullptr;
+	}
+
+
+}
+
 
 void UEffectsManager::AddEffectToActor(AActor* InstigatorActor, AActor* AffectedActor, const FEffectStruct& EffectStruct)
 {
@@ -113,17 +160,15 @@ void UEffectsManager::AddEffectToActor(AActor* InstigatorActor, AActor* Affected
 		return;
 	}
 
-
 	// Create a new instance of tEffect locally
-	UEffect* tEffect = NewObject<UEffect>();
-	if (!tEffect->InitialiseEffect(InstigatorActor, AffectedActor, EffectStruct))
+	UEffect* tEffect = this->CreateEffectFromStruct(InstigatorActor, AffectedActor, EffectStruct);
+
+	if (!tEffect)
 	{
-		// Effect initialisation failed
 		return;
 	}
+
 	this->SetShouldUpdate(true);
-
-
 
 	if (this->IsActorAffected(AffectedActor))
 	{

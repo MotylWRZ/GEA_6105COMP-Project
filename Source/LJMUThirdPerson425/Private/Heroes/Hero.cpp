@@ -154,7 +154,7 @@ bool AHero::CanEffectBeApplied_Implementation(EEffectType EffectType)
 	}
 	case EEffectType::Effect_Poison:
 	{
-		return false;
+		return true;
 	}
 	}
 	return true;
