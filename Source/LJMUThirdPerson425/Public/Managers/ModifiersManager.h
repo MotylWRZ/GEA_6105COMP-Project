@@ -39,6 +39,12 @@ struct FStatsModifierStruct
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool CanDamageAllies = false;
+
+	// Overloading "+" operator in order to allow StatsStructs addition
+	FStatsModifierStruct operator+(const FStatsModifierStruct& Other);
+
+	// Overloading "-" operator in order to allow StatsStructs subtraction
+	FStatsModifierStruct operator-(const FStatsModifierStruct& Other);
 };
 
 
@@ -64,5 +70,4 @@ public:
 	// After a check wheter the target actor is an ally or enemy in relation to Instigator actor, the stats will be modified
 	// Only basic stats can be modified using this function and they have to be explicitly specified
 	static bool ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, int32 DamageToApply = 0, int32 HealthToAdd = 0, bool CanDamageAllies = false);
-
 };

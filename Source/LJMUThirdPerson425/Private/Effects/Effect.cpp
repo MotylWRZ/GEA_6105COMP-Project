@@ -60,6 +60,13 @@ void UEffect::Update(float DeltaTime)
 
 	if (this->m_CurrentDuration >= m_EffectStruct.Duration)
 	{
+		// Perform the last hit if MultiHit is allowed
+		if (m_EffectStruct.AllowMultiHit)
+		{
+			this->ApplyEffect();
+		}
+
+
 		this->SetIsActive(false);
 		this->m_CurrentDuration = 0.0f;
 		return;
@@ -112,6 +119,7 @@ void UEffect::ApplyEffect()
 		// Use InstigatorActorStats to continue applying this effect on AffectedActor
 		if (UModifiersManager::ModifyActorStats(this->m_InstigatorActorStats, this->m_AffectedActor, this->m_EffectStruct.StatsModifierStruct))
 		{
+			this->AccumulateStatsChanges(this->m_EffectStruct.StatsModifierStruct);
 			this->OnEffectApplied.Broadcast(this);
 		}
 		return;
@@ -119,6 +127,7 @@ void UEffect::ApplyEffect()
 
 	if (UModifiersManager::ModifyActorStats(this->m_InstigatorActor, this->m_AffectedActor, this->m_EffectStruct.StatsModifierStruct))
 	{
+		this->AccumulateStatsChanges(this->m_EffectStruct.StatsModifierStruct);
 		this->OnEffectApplied.Broadcast(this);
 	}
 }
@@ -133,4 +142,29 @@ float UEffect::GetEffectStatsScore()
 	float tResult = static_cast<float>(tHitsLeft) + tDurationLeft + static_cast<float>(tDamage) + static_cast<float>(tHealth);
 
 	return tResult;
+}
+
+void UEffect::SetIsActive(bool IsActive)
+{
+	if (!IsActive)
+	{
+		// If it is not ea permanent effect, undo any changes in the affected actor stats
+		if (!this->m_EffectStruct.IsPermanentEffect)
+		{
+		this->UndoStatsChangesOnTarget();
+		}
+
+		OnEffectRemoved.Broadcast();
+	}
+
+	m_bIsActive = IsActive;
+}
+
+void UEffect::UndoStatsChangesOnTarget()
+{
+	FStatsModifierStruct tStatsModifier;
+	tStatsModifier.HealthToAdd = this->m_AccumulatedStatsChanges.DamageToApply;
+	tStatsModifier.DamageToApply = this->m_AccumulatedStatsChanges.HealthToAdd;
+
+	UModifiersManager::ModifyActorStats(this->m_InstigatorActor, this->m_AffectedActor, tStatsModifier);
 }

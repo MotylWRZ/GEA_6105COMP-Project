@@ -45,10 +45,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Effect")
 	float GetEffectStatsScore();
 
-	FORCEINLINE void SetIsActive(bool IsActive) { m_bIsActive = IsActive; if (!IsActive) { OnEffectRemoved.Broadcast(); }; }
+	void SetIsActive(bool IsActive);
 	FORCEINLINE void SetHitInterval(float HitInterval) { m_HitInterval = HitInterval; }
+	// Add the stats changes into AccumulatedStatsChanges struct and store them there
+	FORCEINLINE void AccumulateStatsChanges(const FStatsModifierStruct& StatsModifierStruct) { m_AccumulatedStatsChanges = m_AccumulatedStatsChanges + StatsModifierStruct; }
 
-
+	// Undo any stats changes that have been made by this effect
+	void UndoStatsChangesOnTarget();
 
 	UPROPERTY(BlueprintAssignable, Category = "Effect Delegates")
 	FOnEffectAdded OnEffectAdded;
@@ -77,6 +80,7 @@ private:
 
 	bool m_bCanUseInstigatorStats;
 	FActorStatsStruct m_InstigatorActorStats;
+	FStatsModifierStruct m_AccumulatedStatsChanges;
 
 	UPROPERTY(EditDefaultsOnly)
 	FEffectStruct m_EffectStruct;

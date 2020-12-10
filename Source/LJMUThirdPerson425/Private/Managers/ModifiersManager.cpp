@@ -95,3 +95,23 @@ bool UModifiersManager::ModifyActorStats(AActor* InstigatorActor, AActor* ActorT
 
 	return true;
 }
+
+FStatsModifierStruct FStatsModifierStruct::operator+(const FStatsModifierStruct& Other)
+{
+	FStatsModifierStruct tStatsModifier;
+
+	tStatsModifier.DamageToApply = this->DamageToApply + Other.DamageToApply;
+	tStatsModifier.HealthToAdd = this->HealthToAdd + Other.HealthToAdd;
+
+	return tStatsModifier;
+}
+
+FStatsModifierStruct FStatsModifierStruct::operator-(const FStatsModifierStruct& Other)
+{
+	FStatsModifierStruct tStatsModifier;
+
+	tStatsModifier.DamageToApply = this->DamageToApply - Other.DamageToApply;
+	tStatsModifier.HealthToAdd = this->HealthToAdd - Other.HealthToAdd;
+
+	return tStatsModifier;
+}
