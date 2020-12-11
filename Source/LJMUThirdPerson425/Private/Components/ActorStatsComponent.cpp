@@ -52,7 +52,7 @@ void UActorStatsComponent::ModifyHealth(int32 ModifyingValue)
 
 	if (Delta != 0)
 	{
-		// MulticastHealthChanged
+		OnActorHealthModified.Broadcast();
 		if (Delta > 0)
 		{
 			// MulticastOnHealed
@@ -81,6 +81,8 @@ void UActorStatsComponent::ModifyMaxHealth(int32 ModifyingValue)
 	{
 		this->m_ActorStats.Health = FMath::Clamp(this->m_ActorStats.Health, 0, NewHealthMax);
 	}
+
+	OnActorHealthModified.Broadcast();
 
 	this->m_ActorStats.HealthMax = NewHealthMax;
 }
