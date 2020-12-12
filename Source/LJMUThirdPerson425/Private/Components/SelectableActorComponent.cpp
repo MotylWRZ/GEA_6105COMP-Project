@@ -102,8 +102,26 @@ void USelectableActorComponent::ToggleIsSelected(bool IsSelected)
 	this->m_bIsSelected = IsSelected;
 }
 
-void USelectableActorComponent::SetOutlinableMeshes(TArray<UStaticMeshComponent*> StaticMeshComonents, TArray<USkeletalMeshComponent*> SkeletalMeshComonents)
+void USelectableActorComponent::SetHighlightableMeshes(TArray<UStaticMeshComponent*> StaticMeshComponents, TArray<USkeletalMeshComponent*> SkeletalMeshComponents)
 {
+	for (auto& SMComp : StaticMeshComponents)
+	{
+		if (!this->m_StaticMeshComponents.Contains(SMComp))
+		{
+			// Set the default stencil valie to 1.0f
+			// THIS WILL BE SET TO THE VALUE RESPECTING THE STATSUS AND THE TEAM OF THE OWNING ACTOR
+			SMComp->SetCustomDepthStencilValue(1.0f);
+			this->m_StaticMeshComponents.Add(SMComp);
+		}
+	}
+
+	for (auto& SKComp : SkeletalMeshComponents)
+	{
+		if (!this->m_SkeletalMeshComponents.Contains(SKComp))
+		{
+			this->m_SkeletalMeshComponents.Add(SKComp);
+		}
+	}
 }
 
 USelectableActorComponent* USelectableActorComponent::GetSelectableActorComponent(AActor* FromActor)
@@ -117,12 +135,26 @@ USelectableActorComponent* USelectableActorComponent::GetSelectableActorComponen
 
 void USelectableActorComponent::OnHovered()
 {
+	// Enable outlinig for all stored static meshes
+	for (auto& SMComp : this->m_StaticMeshComponents)
+	{
+		// Used by custom PostProcess to render outlines
+		SMComp->SetRenderCustomDepth(true);
+	}
+
 	this->m_OwnerHoverDecalComponent->SetVisibility(true);
 	this->OnActorHovered.Broadcast();
 }
 
 void USelectableActorComponent::OnUnhovered()
 {
+	// Disable outlinig of all stored static meshes
+	for (auto& SMComp : this->m_StaticMeshComponents)
+	{
+		// Used by custom PostProcess to render outlines
+		SMComp->SetRenderCustomDepth(false);
+	}
+
 	this->m_OwnerHoverDecalComponent->SetVisibility(false);
 	this->OnActorunhovered.Broadcast();
 }
