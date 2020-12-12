@@ -86,7 +86,7 @@ void AHeroPlayerController::SelectHoveredActor()
 
 		if (tPreviousActorSelectedComp)
 		{
-			tPreviousActorSelectedComp->ToggleIsSelected(false);
+			tPreviousActorSelectedComp->ToggleIsSelected(false, this->GetPawn());
 
 			this->m_SelectedActor = nullptr;
 		}
@@ -97,7 +97,7 @@ void AHeroPlayerController::SelectHoveredActor()
 	{
 		USelectableActorComponent* tCurrentActorSelectedComp = ISelectableInterface::Execute_GetSelectableComponent(this->m_HoveredActor);
 
-		tCurrentActorSelectedComp->ToggleIsSelected(true);
+		tCurrentActorSelectedComp->ToggleIsSelected(true, this->GetPawn());
 
 		if (tCurrentActorSelectedComp)
 		{
@@ -122,7 +122,7 @@ void AHeroPlayerController::HoverActor(AActor* HoveredActor)
 	{
 		USelectableActorComponent* tPreviousHoveredSelectable = ISelectableInterface::Execute_GetSelectableComponent(m_HoveredActor);
 
-		tPreviousHoveredSelectable->ToggleIsHovered(false);
+		tPreviousHoveredSelectable->ToggleIsHovered(false, this->GetPawn());
 
 		this->m_HoveredActor = nullptr;
 	}
@@ -138,7 +138,7 @@ void AHeroPlayerController::HoverActor(AActor* HoveredActor)
 			return;
 		}
 
-		tCurrentHoveredCSelectable->ToggleIsHovered(true);
+		tCurrentHoveredCSelectable->ToggleIsHovered(true, this->GetPawn());
 
 		//Assign the pointer to it, making it a new hovered actor
 		this->m_HoveredActor = HoveredActor;

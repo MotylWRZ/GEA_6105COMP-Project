@@ -4,6 +4,7 @@
 
 #include "../../LJMUThirdPerson425.h"
 #include "Interfaces/SelectableInterface.h"
+#include "Components/ActorStatsComponent.h"
 
 #include "Components/SelectableActorComponent.h"
 
@@ -30,10 +31,6 @@ void USelectableActorComponent::BeginPlay()
 	// Check if owner implements the ISelectible Interface
 	if (this->GetOwner()->GetClass()->ImplementsInterface(USelectableInterface::StaticClass()))
 	{
-		// If it implements the interface, get the decal components
-		this->m_OwnerHoverDecalComponent = ISelectableInterface::Execute_GetHoverDecalComponent(this->GetOwner());
-		this->m_OwnerSelectDecalComponent = ISelectableInterface::Execute_GetSelectDecalComponent(this->GetOwner());
-
 		// Check if GetSelectableCompoenent Interface function has been implemented by the component owner class
 		// If it does not provide an implementation this function, display an error message
 		USelectableActorComponent* tOwnerSelectbleComponentCheck = ISelectableInterface::Execute_GetSelectableComponent(this->GetOwner());
@@ -42,9 +39,9 @@ void USelectableActorComponent::BeginPlay()
 			UE_LOG(LogSelectableSystem, Error, TEXT("%s will not work. %s have to provide an implementation for GetSelectableComponent function."), *this->GetName(), *this->GetOwner()->GetName());
 		}
 
-		if (!m_OwnerHoverDecalComponent || !m_OwnerSelectDecalComponent)
+		if (this->m_StaticMeshComponents.Num() == 0 || this->m_SkeletalMeshComponents.Num() == 0)
 		{
-			UE_LOG(LogSelectableSystem, Error, TEXT("%s cannot work properly. %s needs to provide HoverDecal and SelecDecal components."),*this->GetName(), *this->GetOwner()->GetName());
+			UE_LOG(LogSelectableSystem, Error, TEXT("%s has not added any static or skleletal meshes into its SelectableActorComponent. %s will not be highlighted/outlined usin the post process material."),*this->GetName(), *this->GetOwner()->GetName());
 		}
 	}
 	else
@@ -62,17 +59,11 @@ void USelectableActorComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	// ...
 }
 
-void USelectableActorComponent::ToggleIsHovered(bool IsHovered)
+void USelectableActorComponent::ToggleIsHovered(bool IsHovered, AActor* HoveringActor)
 {
-	if (!this->m_OwnerHoverDecalComponent)
-	{
-		UE_LOG(LogSelectableSystem, Error, TEXT("Decal Component cannot be NULL"));
-		return;
-	}
-
 	if (IsHovered)
 	{
-		this->OnHovered();
+		this->OnHovered(HoveringActor);
 	}
 	else
 	{
@@ -82,17 +73,11 @@ void USelectableActorComponent::ToggleIsHovered(bool IsHovered)
 	this->m_bIsHovered= IsHovered;
 }
 
-void USelectableActorComponent::ToggleIsSelected(bool IsSelected)
+void USelectableActorComponent::ToggleIsSelected(bool IsSelected, AActor* SelectingActor)
 {
-	if (!this->m_OwnerHoverDecalComponent)
-	{
-		UE_LOG(LogSelectableSystem, Error, TEXT("Decal Component cannot be NULL"));
-		return;
-	}
-
 	if (IsSelected)
 	{
-		this->OnSelected();
+		this->OnSelected(SelectingActor);
 	}
 	else
 	{
@@ -106,21 +91,50 @@ void USelectableActorComponent::SetHighlightableMeshes(TArray<UStaticMeshCompone
 {
 	for (auto& SMComp : StaticMeshComponents)
 	{
-		if (!this->m_StaticMeshComponents.Contains(SMComp))
+		if (!this->m_StaticMeshComponents.Contains(SMComp) && SMComp)
 		{
-			// Set the default stencil valie to 1.0f
-			// THIS WILL BE SET TO THE VALUE RESPECTING THE STATSUS AND THE TEAM OF THE OWNING ACTOR
-			SMComp->SetCustomDepthStencilValue(1.0f);
 			this->m_StaticMeshComponents.Add(SMComp);
 		}
 	}
 
 	for (auto& SKComp : SkeletalMeshComponents)
 	{
-		if (!this->m_SkeletalMeshComponents.Contains(SKComp))
+		if (!this->m_SkeletalMeshComponents.Contains(SKComp) && SKComp)
 		{
 			this->m_SkeletalMeshComponents.Add(SKComp);
 		}
+	}
+}
+
+void USelectableActorComponent::AddHighlightableStaticMesh(UStaticMeshComponent* StaticMeshComponent)
+{
+	if (!this->m_StaticMeshComponents.Contains(StaticMeshComponent) && StaticMeshComponent)
+	{
+		this->m_StaticMeshComponents.Add(StaticMeshComponent);
+	}
+}
+
+void USelectableActorComponent::AddHighlightableSkeletalMesh(USkeletalMeshComponent* SkeletalMeshComponent)
+{
+	if (!this->m_SkeletalMeshComponents.Contains(SkeletalMeshComponent) && SkeletalMeshComponent)
+	{
+		this->m_SkeletalMeshComponents.Add(SkeletalMeshComponent);
+	}
+}
+
+void USelectableActorComponent::RemoveHighlightableStaticMesh(UStaticMeshComponent* StaticMeshComponent)
+{
+	if (this->m_StaticMeshComponents.Contains(StaticMeshComponent) && StaticMeshComponent)
+	{
+		this->m_StaticMeshComponents.Remove(StaticMeshComponent);
+	}
+}
+
+void USelectableActorComponent::RemoveHighlightableSkeletalMesh(USkeletalMeshComponent* SkeletalMeshComponent)
+{
+	if (this->m_SkeletalMeshComponents.Contains(SkeletalMeshComponent) && SkeletalMeshComponent)
+	{
+		this->m_SkeletalMeshComponents.Remove(SkeletalMeshComponent);
 	}
 }
 
@@ -133,41 +147,67 @@ USelectableActorComponent* USelectableActorComponent::GetSelectableActorComponen
 	return nullptr;
 }
 
-void USelectableActorComponent::OnHovered()
+void USelectableActorComponent::OnHovered(AActor* HoveringActor)
 {
+	int32 tCustomStencilIndex = 0;
+
+	if (UActorStatsComponent::IsEnemyByActor(this->GetOwner(), HoveringActor))
+	{
+		tCustomStencilIndex = STENCIL_ENEMY_OUTLINE;
+	}
+	else
+	{
+		tCustomStencilIndex = STENCIL_FRIENDLY_OUTLINE;
+	}
+
 	// Enable outlinig for all stored static meshes
 	for (auto& SMComp : this->m_StaticMeshComponents)
 	{
-		// Used by custom PostProcess to render outlines
-		SMComp->SetRenderCustomDepth(true);
+		if (SMComp)
+		{
+			// Used by custom PostProcess to render outlines
+			SMComp->SetCustomDepthStencilValue(tCustomStencilIndex);
+			SMComp->SetRenderCustomDepth(true);
+		}
 	}
 
-	this->m_OwnerHoverDecalComponent->SetVisibility(true);
+	for (auto& SKComp : this->m_SkeletalMeshComponents)
+	{
+		if (SKComp)
+		{
+			SKComp->SetCustomDepthStencilValue(tCustomStencilIndex);
+			SKComp->SetRenderCustomDepth(true);
+		}
+	}
+
 	this->OnActorHovered.Broadcast();
 }
 
 void USelectableActorComponent::OnUnhovered()
 {
 	// Disable outlinig of all stored static meshes
-	for (auto& SMComp : this->m_StaticMeshComponents)
-	{
-		// Used by custom PostProcess to render outlines
-		SMComp->SetRenderCustomDepth(false);
-	}
+		for (auto& SMComp : this->m_StaticMeshComponents)
+		{
+			// Used by custom PostProcess to render outlines
+			SMComp->SetRenderCustomDepth(false);
+		}
 
-	this->m_OwnerHoverDecalComponent->SetVisibility(false);
+		for (auto& SKComp : this->m_SkeletalMeshComponents)
+		{
+			SKComp->SetRenderCustomDepth(false);
+		}
+
+
 	this->OnActorunhovered.Broadcast();
 }
 
-void USelectableActorComponent::OnSelected()
+void USelectableActorComponent::OnSelected(AActor* SelectingActor)
 {
-	this->m_OwnerSelectDecalComponent->SetVisibility(true);
 	this->OnActorSelected.Broadcast();
 }
 
 void USelectableActorComponent::OnUnselected()
 {
-	this->m_OwnerSelectDecalComponent->SetVisibility(false);
 	this->OnActorUnselected.Broadcast();
 }
 

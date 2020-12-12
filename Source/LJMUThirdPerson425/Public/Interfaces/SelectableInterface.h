@@ -27,10 +27,6 @@ class LJMUTHIRDPERSON425_API ISelectableInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	 UDecalComponent* GetHoverDecalComponent();
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	 UDecalComponent* GetSelectDecalComponent();
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	 USelectableActorComponent* GetSelectableComponent();
 
 

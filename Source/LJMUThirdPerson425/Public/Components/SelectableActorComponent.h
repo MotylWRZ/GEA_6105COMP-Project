@@ -6,6 +6,11 @@
 #include "Components/ActorComponent.h"
 #include "SelectableActorComponent.generated.h"
 
+/* Stencil index mapping to PP_OutlineColored */
+#define STENCIL_FRIENDLY_OUTLINE 1;
+#define STENCIL_ENEMY_OUTLINE 2;
+
+
 class UDecalComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActorHovered);
@@ -32,16 +37,24 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable)
-	void ToggleIsHovered(bool IsHovered);
+	void ToggleIsHovered(bool IsHovered, AActor* HoveringActor);
 	UFUNCTION(BlueprintCallable)
-	void ToggleIsSelected(bool IsSelected);
+	void ToggleIsSelected(bool IsSelected, AActor* SelectingActor);
 
-	UFUNCTION(BlueprintCallable)
-	void SetDecalComponent(UDecalComponent* DecalComponent) { this->m_OwnerHoverDecalComponent = DecalComponent; }
+	/*UFUNCTION(BlueprintCallable)
+	void SetDecalComponent(UDecalComponent* DecalComponent) { this->m_OwnerHoverDecalComponent = DecalComponent; }*/
 
 	UFUNCTION(BlueprintCallable)
 	// Set meshes that will be outlined OnHovered and OnSelected events
 	void SetHighlightableMeshes(TArray<UStaticMeshComponent*> StaticMeshComponents, TArray<USkeletalMeshComponent*> SkeletalMeshComponents);
+	UFUNCTION(BlueprintCallable)
+	void AddHighlightableStaticMesh(UStaticMeshComponent* StaticMeshComponent);
+	UFUNCTION(BlueprintCallable)
+	void AddHighlightableSkeletalMesh(USkeletalMeshComponent* SkeletalMeshComponent);
+	UFUNCTION(BlueprintCallable)
+	void RemoveHighlightableStaticMesh(UStaticMeshComponent* StaticMeshComponent);
+	UFUNCTION(BlueprintCallable)
+	void RemoveHighlightableSkeletalMesh(USkeletalMeshComponent* SkeletalMeshComponent);
 	//////////////////
 	// Getters/Setters
 	//////////////////
@@ -54,11 +67,11 @@ public:
 	static USelectableActorComponent* GetSelectableActorComponent(AActor* FromActor);
 
 	UFUNCTION(BlueprintCallable)
-	void OnHovered();
+	void OnHovered(AActor* HoveringActor);
 	UFUNCTION(BlueprintCallable)
 	void OnUnhovered();
 	UFUNCTION(BlueprintCallable)
-	void OnSelected();
+	void OnSelected(AActor* SelectingActor);
 	UFUNCTION(BlueprintCallable)
 	void OnUnselected();
 
