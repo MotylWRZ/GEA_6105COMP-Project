@@ -39,6 +39,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetDecalComponent(UDecalComponent* DecalComponent) { this->m_OwnerHoverDecalComponent = DecalComponent; }
 
+	UFUNCTION(BlueprintCallable)
+	// Set meshes that will be outlined OnHovered and OnSelected events
+	void SetOutlinableMeshes(TArray<UStaticMeshComponent*> StaticMeshComonents, TArray<USkeletalMeshComponent*> SkeletalMeshComonents);
 	//////////////////
 	// Getters/Setters
 	//////////////////
@@ -83,6 +86,8 @@ private:
 private:
 	UDecalComponent* m_OwnerHoverDecalComponent;
 	UDecalComponent* m_OwnerSelectDecalComponent;
+	TArray<UStaticMeshComponent*> m_StaticMeshComponents;
+	TArray<USkeletalMeshComponent*> m_SkeletalMeshComopnents;
 	bool m_bIsHovered;
 	bool m_bIsSelected;
 };

@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+#include "Engine/PostProcessVolume.h"
 #include "Components/DecalComponent.h"
 
 #include "../../LJMUThirdPerson425.h"
@@ -100,6 +100,10 @@ void USelectableActorComponent::ToggleIsSelected(bool IsSelected)
 	}
 
 	this->m_bIsSelected = IsSelected;
+}
+
+void USelectableActorComponent::SetOutlinableMeshes(TArray<UStaticMeshComponent*> StaticMeshComonents, TArray<USkeletalMeshComponent*> SkeletalMeshComonents)
+{
 }
 
 USelectableActorComponent* USelectableActorComponent::GetSelectableActorComponent(AActor* FromActor)
