@@ -63,13 +63,13 @@ struct FAbilityStruct_AOE : public FAbilityStruct
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AAbility_AOE> AbilityAOEClass;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = "0"))
 		float RadiousStart;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool bChangeRadiousDynamically;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bChangeRadiousDynamically"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bChangeRadiousDynamically", ClampMin = "0"))
 		float RadiousEnd;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bChangeRadiousDynamically"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "bChangeRadiousDynamically", ClampMin = "0"))
 		float ChangeDuration;
 };
 

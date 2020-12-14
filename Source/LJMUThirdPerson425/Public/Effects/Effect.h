@@ -49,7 +49,7 @@ public:
 	FORCEINLINE void SetHitInterval(float HitInterval) { m_HitInterval = HitInterval; }
 	// Add the stats changes into AccumulatedStatsChanges struct and store them there
 	FORCEINLINE void AccumulateStatsChanges(const FStatsModifierStruct& StatsModifierStruct) { m_AccumulatedStatsChanges = m_AccumulatedStatsChanges + StatsModifierStruct; }
-
+	FORCEINLINE bool IsSuccess() { return FMath::RandRange(1, 100) <= m_EffectStruct.SuccessChance ? true : false; }
 	// Undo any stats changes that have been made by this effect
 	void UndoStatsChangesOnTarget();
 

@@ -24,6 +24,8 @@ bool UEffect::InitialiseEffect(AActor* InstigatorActor, AActor* AffectedActor, c
 		return false;
 	}
 
+
+
 	UActorStatsComponent* tInstigatorStatsComp = UActorStatsComponent::GetStatsComponent(InstigatorActor);
 
 	if (tInstigatorStatsComp)
@@ -37,6 +39,12 @@ bool UEffect::InitialiseEffect(AActor* InstigatorActor, AActor* AffectedActor, c
 	this->m_AffectedActor = AffectedActor;
 	this->m_EffectStruct = EffectStruct;
 	this->m_HitInterval = this->m_EffectStruct.Duration / this->m_EffectStruct.HitsNum;
+
+	// Check if this effect succeed
+	if (!this->IsSuccess())
+	{
+		return false;
+	}
 
 	this->SetIsActive(true);
 

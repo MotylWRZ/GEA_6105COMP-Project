@@ -81,7 +81,7 @@ protected:
 	virtual void UseAbilities();
 
 	virtual void ClearInActiveAbility(AAbility* InActiveAbility);
-	// Checki the Spell should be casted based on the SuccessChance
+	// Check if the Spell should be casted based on the SuccessChance
 	FORCEINLINE bool ShouldCast() { return FMath::RandRange(1, 100) <= m_SpellStruct.SuccessChance ? true : false; }
 
 public:
