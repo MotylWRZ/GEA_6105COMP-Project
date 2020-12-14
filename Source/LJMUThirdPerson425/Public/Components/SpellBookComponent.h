@@ -11,6 +11,8 @@
 #include "SpellBookComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnManaModified);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCooldownChange);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSpellCast);
 
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LJMUTHIRDPERSON425_API USpellBookComponent : public UActorComponent
@@ -72,15 +74,23 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Spellbook")
 	float GetManaRegenerationInterval() const { return m_ManaRegenerationInterval; }
+
+	UFUNCTION(BlueprintCallable, Category = "Spellbook")
+	bool CanCastSpell();
 	//UFUNCTION()
 	/*UFUNCTION(BlueprintCallable, Category = "Spellbook")
 	void SetMana(int32 NewManaAmount) {};*/
 
 	UPROPERTY(BlueprintAssignable, Category = "Spellbook")
-	FOnManaModified m_OnManaModified;
+	FOnManaModified	 OnManaModified;
+	UPROPERTY(BlueprintAssignable, Category = "Spellbook")
+	FOnCooldownChange OnCooldownChange;
+	UPROPERTY(BlueprintAssignable, Category = "Spellbook")
+	FOnSpellCast OnSpellCast;
 
 protected:
 	void RegenerateMana();
+	void ResetSpellCastCooldown();
 
 private:
 	void InitialiseMagicSpheres();
@@ -120,6 +130,13 @@ private:
 	int32 m_ManaRegenerationAmount;
 	UPROPERTY(EditDefaultsOnly)
 	float m_ManaRegenerationInterval;
+	UPROPERTY(EditDefaultsOnly)
+	float m_SpellCastCooldown;
 
-	FTimerHandle m_SpellbookTimerHandle;
+	bool m_bIsCooledDown;
+
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	FTimerHandle m_SpellbookManaTimerHandle;
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	FTimerHandle m_SpellbookCooldownTimerHandle;
 };

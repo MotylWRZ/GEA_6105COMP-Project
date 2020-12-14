@@ -10,6 +10,8 @@ USpellBookComponent::USpellBookComponent()
 	, m_ManaMax(20)
 	, m_ManaRegenerationAmount(1)
 	, m_ManaRegenerationInterval(1.0f)
+	, m_SpellCastCooldown(0.5f)
+	, m_bIsCooledDown(true)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -21,6 +23,13 @@ USpellBookComponent::USpellBookComponent()
 
 void USpellBookComponent::CastSpell(int32 SpellID)
 {
+	if (!this->CanCastSpell())
+	{
+		return;
+	}
+
+
+
 	// Try to find the spell with given ID
 	if (!this->m_SpellsList.Find(SpellID))
 	{
@@ -41,7 +50,7 @@ void USpellBookComponent::CastSpell(int32 SpellID)
 		{
 			return;
 		}
-		//tSpellsManager.Update();
+
 		// Spawn a new spell using the SpellStruct
 		ASpell* tNewSpell = tSpellsManager->CreateSpellFromStruct(tSpellStruct);
 
@@ -53,6 +62,14 @@ void USpellBookComponent::CastSpell(int32 SpellID)
 			UE_LOG(LogTemp, Error, TEXT("Spell casting unsuccesful"));
 			return;
 		}
+
+		// Mark the IsCooledDown as false in order to avoid spell overcasting
+		this->m_bIsCooledDown = false;
+
+		// Initialise and run SpellbookCooldownTimer with the delay equal to CaseSpellCoooldown duration value
+		GetWorld()->GetTimerManager().SetTimer(this->m_SpellbookCooldownTimerHandle, this, &USpellBookComponent::ResetSpellCastCooldown, this->m_SpellCastCooldown);
+		this->OnCooldownChange.Broadcast();
+		this->OnSpellCast.Broadcast();
 	}
 	else
 	{
@@ -107,8 +124,8 @@ void USpellBookComponent::BeginPlay()
 	InitialiseMagicSpheres();
 
 
-	// Initialise SpellbookTimer
-	GetWorld()->GetTimerManager().SetTimer(this->m_SpellbookTimerHandle, this, &USpellBookComponent::RegenerateMana, this->m_ManaRegenerationInterval, true);
+	// Initialise SpellbookManaTimer
+	GetWorld()->GetTimerManager().SetTimer(this->m_SpellbookManaTimerHandle, this, &USpellBookComponent::RegenerateMana, this->m_ManaRegenerationInterval, true);
 }
 
 void USpellBookComponent::LoadDataTable(UDataTable* DataTable)
@@ -163,7 +180,7 @@ void USpellBookComponent::ModifyMana(int32 ModifyingValue)
 	if (Delta != 0)
 	{
 		// Call the delegate OnManaModified
-		this->m_OnManaModified.Broadcast();
+		this->OnManaModified.Broadcast();
 
 		if (Delta > 0)
 		{
@@ -228,9 +245,20 @@ void USpellBookComponent::ModifyManaRegenerationInterval(float ModifyingValue)
 	this->m_ManaRegenerationAmount = tNewManaRegenerationInterval;
 }
 
+bool USpellBookComponent::CanCastSpell()
+{
+	return this->m_bIsCooledDown;
+}
+
 void USpellBookComponent::RegenerateMana()
 {
 	this->ModifyMana(this->m_ManaRegenerationAmount);
+}
+
+void USpellBookComponent::ResetSpellCastCooldown()
+{
+	this->m_bIsCooledDown = true;
+	this->OnCooldownChange.Broadcast();
 }
 
 void USpellBookComponent::InitialiseMagicSpheres()
