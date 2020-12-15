@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Components/CharacterStatsComponent.h"
-#include "Components/CombatComponent.h"
+//#include "Components/CombatComponent.h"
 
 #include "CoreMinimal.h"
 #include "Managers/ManagerBase.h"

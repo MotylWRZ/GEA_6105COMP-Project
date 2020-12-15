@@ -16,6 +16,27 @@ class USphereComponent;
 class UProjectileMovementComponent;
 class UParticleSystemComponent;
 
+USTRUCT(Blueprintable)
+struct FProjectileStruct
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		// Specify Maximum Actors that this projectile can hit. If it is > 1, projectile will continue
+		// movement and will hit any other actor until number of hit Actos will be equal to the MaximumHitActors
+		int32 HitActorsMax = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		// Specify the MAX duration of the projectile. it will be destroyed immediately after exceeding this duration
+		float DurationMax = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		// If TRUE, continue projectile movement and overlap any encountered allies
+		bool bIgnoreAlliesHit = true;
+};
+
+
 UCLASS()
 class LJMUTHIRDPERSON425_API AProjectileBase : public AActor
 {
@@ -32,8 +53,10 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	virtual void Initialise(AActor* ProjectileOwner, FStatsModifierStruct* StatsModifierStruct, int32 HitActorsMax = 1);
+	virtual void Initialise(AActor* ProjectileOwner, FStatsModifierStruct* StatsModifierStruct, FProjectileStruct* ProjectileStruct);
+	virtual void Initialise(AActor* ProjectileOwner, FStatsModifierStruct* StatsModifierStruct, int32 HitActorsMax = 1, bool IgnoreAlliesHit = true, float DurationMax = 1.0f);
 	virtual void AdjustProjectileVelocityToHitTarget(FVector TargetLocation);
+	virtual void DestroyProjectile();
 
 	UFUNCTION()
 	virtual void OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -50,6 +73,7 @@ public:
 	FOnProjectileHit OnProjectileMiss;
 	UPROPERTY(BlueprintAssignable, Category = "Projectile")
 	FOnProjectileDestroyed OnProjectileDestroyed;
+
 
 protected:
 	virtual void UpdateHitActors();
@@ -68,11 +92,31 @@ protected:
 	UPROPERTY()
 	AActor* m_ProjectileOwner;
 
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly)
+	FProjectileStruct m_ProjectileStruct;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	// Specify what changes will be made in the projectile target stats
 	FStatsModifierStruct m_StatsModifierStruct;
 
-	UPROPERTY()
-	int32 m_HitActorsMax;
+	//UPROPERTY()
+	//// Specify what changes will be made in the projectile target stats
+	//FStatsModifierStruct m_StatsModifierStruct;
+
+	//UPROPERTY()
+	//// Specify Maximum Actors that this projectile can hit. If it is > 1, projectile will continue
+	//// movement and will hit any other actor until number of hit Actos will be equal to the MaximumHitActors
+	//int32 m_HitActorsMax;
+
+	//UPROPERTY(EditDefaultsOnly)
+	//float m_DurationMax;
+	FTimerHandle m_ProjectileTimerHandle;
+
+	//UPROPERTY()
+	//// If TRUE, continue projectile movement and overlap any allies encountered
+	//bool m_bIgnoreAlliesHit;
+
 
 	bool m_bIsProjectileActive;
 private:

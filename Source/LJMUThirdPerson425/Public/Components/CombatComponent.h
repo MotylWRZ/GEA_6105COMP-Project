@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include"Projectiles/ProjectileBase.h"
+
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "CombatComponent.generated.h"
@@ -52,15 +54,14 @@ struct FRangedCombatStruct : public FCombatStruct
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool UseProjectiles;
+	bool UseProjectiles = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "UseProjectiles", EditConditionHides))
 	TSubclassOf<AProjectileBase> ProjectileClass;
 
-	// Define how many actors can be damaged by the projectile
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 MaxHitActors;
-
+	// Customise projectile using ProjectileStruct
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "UseProjectiles", EditConditionHides))
+	FProjectileStruct ProjectileStruct;
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )

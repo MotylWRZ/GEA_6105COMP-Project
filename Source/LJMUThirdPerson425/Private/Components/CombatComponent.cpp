@@ -284,12 +284,12 @@ void UCombatComponent::ShootProjectile()
 	// Create a temporary modifier stats struct
 	FStatsModifierStruct tStatsModifierStruct;
 
-	// Setup the struct values
+	// Setup the StatsModifierStruct values. Assign the combat stats values to it
 	tStatsModifierStruct.CanDamageAllies = false;
 	tStatsModifierStruct.DamageToApply = this->m_RangedCombatStruct.AttackDamage;
 
 	// Initialise the Projectile object
-	tProjectile->Initialise(this->GetOwner(), &tStatsModifierStruct, this->m_RangedCombatStruct.MaxHitActors);
+	tProjectile->Initialise(this->GetOwner(), &tStatsModifierStruct, &this->m_RangedCombatStruct.ProjectileStruct);
 
 	// Adjust the projectile velocity, so that it will try to land at the target location
 	tProjectile->AdjustProjectileVelocityToHitTarget(tTargetLocation);
