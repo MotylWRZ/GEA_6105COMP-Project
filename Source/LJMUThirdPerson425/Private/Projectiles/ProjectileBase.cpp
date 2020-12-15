@@ -95,6 +95,7 @@ void AProjectileBase::AdjustProjectileVelocityToHitTarget(FVector TargetLocation
 
 void AProjectileBase::DestroyProjectile()
 {
+
 	OnProjectileDestroyed.Broadcast();
 	this->Destroy();
 }
@@ -133,7 +134,6 @@ void AProjectileBase::SetIsProjectileActive(bool IsActive)
 	{
 		// Disable Overlap Events generation
 		this->m_CollisionSphereComponent->SetGenerateOverlapEvents(false);
-		this->DestroyProjectile();
 	}
 
 	this->m_bIsProjectileActive = IsActive;
