@@ -67,3 +67,4 @@ void UCharacterCombatComponent::ResetAttack()
 		this->m_Owner->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 	}
 }
+

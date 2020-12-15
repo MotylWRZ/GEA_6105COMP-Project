@@ -39,7 +39,7 @@ public:
 	float const GetDurationLeft() const { return m_EffectStruct.Duration - m_CurrentDuration; }
 
 	UFUNCTION(BlueprintCallable, Category = "Effect")
-	FEffectStruct GetEffectStruct() { return m_EffectStruct; }
+	FEffectStruct const GetEffectStruct() const { return m_EffectStruct; }
 
 	// Get the Effect stats score (all stats summed up)
 	UFUNCTION(BlueprintCallable, Category = "Effect")
