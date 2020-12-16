@@ -23,6 +23,16 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// Function which is called prior to Character destruction
+	// Implement this function in BP in order to extend the OnCharacterDestroyed() function
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+		void CharacterBeginDestroy();
+	// Override this function in child classes
+	virtual void CharacterBeginDestroy_Implementation();
+
+	// Explicitly detsroys character
+	virtual void DestroyCharacter();
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -37,4 +47,9 @@ public:
 	USceneComponent* m_RootComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCharacterStatsComponent* m_CharaterStatsComponent;
+	FTimerHandle m_CharacterBaseTimerHandle;
+
+	// Specify how long to wait before this actor will be destroyed after calling OnCharacterDestroyed function
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float m_DelayBeforeDestruction;
 };

@@ -68,7 +68,7 @@ void UActorStatsComponent::ModifyHealth(int32 ModifyingValue)
 	if (Delta < 0 && !this->IsAlive())
 	{
 		// MulticastOnDestroyed
-		this->OnActorDestroyed.Broadcast();
+		this->OnActorKilled.Broadcast();
 	}
 }
 

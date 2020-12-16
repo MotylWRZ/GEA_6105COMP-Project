@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "Interfaces/SelectableInterface.h"
 #include "Interfaces/CanHasEffectsInterface.h"
 #include "Interfaces/AttackableInterface.h"
 
@@ -14,7 +13,7 @@ class USelectableActorComponent;
 class UCharacterCombatComponent;
 
 UCLASS()
-class LJMUTHIRDPERSON425_API AAICharacterBase : public ACharacterBase, public IAttackableInterface, public ICanHasEffectsInterface, public ISelectableInterface
+class LJMUTHIRDPERSON425_API AAICharacterBase : public ACharacterBase, public IAttackableInterface, public ICanHasEffectsInterface
 {
 	GENERATED_BODY()
 
@@ -22,7 +21,8 @@ class LJMUTHIRDPERSON425_API AAICharacterBase : public ACharacterBase, public IA
 public:
 
 	AAICharacterBase();
-
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 	// IAttackableInterface implementation
 	UFUNCTION(BlueprintCallable)
 		virtual void ApplyDamage_Implementation(AActor* InstigatorActor, int32 DamageToApply) override;
@@ -36,5 +36,6 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCharacterCombatComponent* m_CharacterCombatComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USelectableActorComponent* m_SelectableActorComponent;
 };

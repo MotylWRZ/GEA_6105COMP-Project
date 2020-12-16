@@ -41,9 +41,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ToggleIsSelected(bool IsSelected, AActor* SelectingActor);
 
-	/*UFUNCTION(BlueprintCallable)
-	void SetDecalComponent(UDecalComponent* DecalComponent) { this->m_OwnerHoverDecalComponent = DecalComponent; }*/
-
 	UFUNCTION(BlueprintCallable)
 	// Set meshes that will be outlined OnHovered and OnSelected events
 	void SetHighlightableMeshes(TArray<UStaticMeshComponent*> StaticMeshComponents, TArray<USkeletalMeshComponent*> SkeletalMeshComponents);
@@ -97,8 +94,6 @@ private:
 	// Class Members
 	//////////////////
 private:
-	UDecalComponent* m_OwnerHoverDecalComponent;
-	UDecalComponent* m_OwnerSelectDecalComponent;
 	TArray<UStaticMeshComponent*> m_StaticMeshComponents;
 	TArray<USkeletalMeshComponent*> m_SkeletalMeshComponents;
 	bool m_bIsHovered;

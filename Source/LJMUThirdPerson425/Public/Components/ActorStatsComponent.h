@@ -8,7 +8,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActorDamaged);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActorHealed);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActorDestroyed);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActorKilled);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStatsModified);
 
 
@@ -112,7 +112,7 @@ public:
 		FOnActorHealed OnActorHealed;
 
 	UPROPERTY(BlueprintAssignable, Category = "Attributes")
-		FOnActorDestroyed OnActorDestroyed;
+		FOnActorKilled OnActorKilled;
 
 	UPROPERTY(BlueprintAssignable, Category = "Attributes")
 		FOnStatsModified OnActorHealthModified;

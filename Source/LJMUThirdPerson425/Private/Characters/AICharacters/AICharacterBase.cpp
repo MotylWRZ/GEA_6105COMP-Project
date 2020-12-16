@@ -8,8 +8,13 @@
 
 AAICharacterBase::AAICharacterBase()
 {
-	this->m_SelectableActorComponent = CreateDefaultSubobject<USelectableActorComponent>(TEXT("USelectableActorComponent"));
+	this->m_SelectableActorComponent = CreateDefaultSubobject<USelectableActorComponent>(TEXT("SelectableActorComponent"));
 	this->m_CharacterCombatComponent = CreateDefaultSubobject<UCharacterCombatComponent>(TEXT("CharacterCombatComponent"));
+}
+
+void AAICharacterBase::BeginPlay()
+{
+	Super::BeginPlay();
 }
 
 void AAICharacterBase::ApplyDamage_Implementation(AActor* InstigatorActor, int32 DamageToApply)

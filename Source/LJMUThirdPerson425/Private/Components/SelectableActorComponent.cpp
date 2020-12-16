@@ -3,21 +3,18 @@
 #include "Components/DecalComponent.h"
 
 #include "../../LJMUThirdPerson425.h"
-#include "Interfaces/SelectableInterface.h"
 #include "Components/ActorStatsComponent.h"
 
 #include "Components/SelectableActorComponent.h"
 
 // Sets default values for this component's properties
 USelectableActorComponent::USelectableActorComponent()
-	: m_OwnerHoverDecalComponent(nullptr)
-	, m_OwnerSelectDecalComponent(nullptr)
-	, m_bIsHovered(false)
+	: m_bIsHovered(false)
 	, m_bIsSelected(false)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
 }
@@ -28,26 +25,10 @@ void USelectableActorComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Check if owner implements the ISelectible Interface
-	/*if (this->GetOwner()->GetClass()->ImplementsInterface(USelectableInterface::StaticClass()))
-	{*/
-		// Check if GetSelectableComponent Interface function has been implemented by the component owner class
-		// If it does not provide an implementation this function, display an error message
-		USelectableActorComponent* tOwnerSelectbleComponent = USelectableActorComponent::GetSelectableActorComponent(this->GetOwner());
-		if (!tOwnerSelectbleComponent)
-		{
-			UE_LOG(LogSelectableSystem, Error, TEXT("%s will not work. %s have to provide an implementation for GetSelectableComponent function."), *this->GetName(), *this->GetOwner()->GetName());
-		}
-
 		if (this->m_StaticMeshComponents.Num() == 0 || this->m_SkeletalMeshComponents.Num() == 0)
 		{
-			UE_LOG(LogSelectableSystem, Error, TEXT("%s has not added any static or skleletal meshes into its SelectableActorComponent. %s will not be highlighted/outlined usin the post process material."),*this->GetName(), *this->GetOwner()->GetName());
+			UE_LOG(LogSelectableSystem, Error, TEXT("%s has not added any static or skeletal meshes into its SelectableActorComponent. %s will not be highlighted/outlined usin the post process material."),*this->GetName(), *this->GetOwner()->GetName());
 		}
-	/*}*/
-	/*else
-	{
-		UE_LOG(LogSelectableSystem, Error, TEXT("%s needs to implement SelectableInterface"), *this->GetOwner()->GetName());
-	}*/
 }
 
 

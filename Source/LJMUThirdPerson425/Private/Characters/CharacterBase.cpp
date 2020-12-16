@@ -6,6 +6,7 @@
 
 // Sets default values
 ACharacterBase::ACharacterBase()
+	:m_DelayBeforeDestruction(1.0f)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -25,6 +26,21 @@ void ACharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// bind CharacterBeginDestroy to OnActorDestroyed deleg
+	this->m_CharaterStatsComponent->OnActorKilled.AddDynamic(this, &ACharacterBase::CharacterBeginDestroy);
+
+
+}
+
+void ACharacterBase::CharacterBeginDestroy_Implementation()
+{
+	// Destroy character after delay
+	this->GetWorld()->GetTimerManager().SetTimer(this->m_CharacterBaseTimerHandle, this, &ACharacterBase::DestroyCharacter, this->m_DelayBeforeDestruction, false);
+}
+
+void ACharacterBase::DestroyCharacter()
+{
+	this->Destroy();
 }
 
 // Called every frame
