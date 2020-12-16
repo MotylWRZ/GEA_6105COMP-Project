@@ -29,12 +29,12 @@ void USelectableActorComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// Check if owner implements the ISelectible Interface
-	if (this->GetOwner()->GetClass()->ImplementsInterface(USelectableInterface::StaticClass()))
-	{
-		// Check if GetSelectableCompoenent Interface function has been implemented by the component owner class
+	/*if (this->GetOwner()->GetClass()->ImplementsInterface(USelectableInterface::StaticClass()))
+	{*/
+		// Check if GetSelectableComponent Interface function has been implemented by the component owner class
 		// If it does not provide an implementation this function, display an error message
-		USelectableActorComponent* tOwnerSelectbleComponentCheck = ISelectableInterface::Execute_GetSelectableComponent(this->GetOwner());
-		if (!tOwnerSelectbleComponentCheck)
+		USelectableActorComponent* tOwnerSelectbleComponent = USelectableActorComponent::GetSelectableActorComponent(this->GetOwner());
+		if (!tOwnerSelectbleComponent)
 		{
 			UE_LOG(LogSelectableSystem, Error, TEXT("%s will not work. %s have to provide an implementation for GetSelectableComponent function."), *this->GetName(), *this->GetOwner()->GetName());
 		}
@@ -43,11 +43,11 @@ void USelectableActorComponent::BeginPlay()
 		{
 			UE_LOG(LogSelectableSystem, Error, TEXT("%s has not added any static or skleletal meshes into its SelectableActorComponent. %s will not be highlighted/outlined usin the post process material."),*this->GetName(), *this->GetOwner()->GetName());
 		}
-	}
-	else
+	/*}*/
+	/*else
 	{
 		UE_LOG(LogSelectableSystem, Error, TEXT("%s needs to implement SelectableInterface"), *this->GetOwner()->GetName());
-	}
+	}*/
 }
 
 

@@ -63,8 +63,9 @@ struct FRangedCombatStruct : public FCombatStruct
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "UseProjectiles"))
 	FProjectileStruct ProjectileStruct;
 
+	// Projectile Launch location relative to the component owner actor
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "UseProjectiles"))
-	FVector ProjectileLaunchPosition;
+	FVector ProjectileLaunchRelativeLocation;
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )

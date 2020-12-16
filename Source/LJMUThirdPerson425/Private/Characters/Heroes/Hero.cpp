@@ -12,7 +12,7 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 
-#include "Heroes/Hero.h"
+#include "Characters/Heroes/Hero.h"
 
 // Sets default values
 AHero::AHero()

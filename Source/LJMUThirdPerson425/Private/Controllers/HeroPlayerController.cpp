@@ -3,9 +3,9 @@
 
 
 #include "../../LJMUThirdPerson425.h"
-#include "Heroes/Hero.h"
+#include "Characters/Heroes/Hero.h"
+#include "Components/CombatComponent.h"
 #include "Components/SelectableActorComponent.h"
-#include "Interfaces/SelectableInterface.h"
 #include "Interfaces/AttackableInterface.h"
 #include "GameFramework/PlayerController.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
@@ -82,7 +82,7 @@ void AHeroPlayerController::SelectHoveredActor()
 	if (this->m_SelectedActor)
 	{
 
-		USelectableActorComponent* tPreviousActorSelectedComp = ISelectableInterface::Execute_GetSelectableComponent(this->m_SelectedActor);
+		USelectableActorComponent* tPreviousActorSelectedComp = USelectableActorComponent::GetSelectableActorComponent(this->m_SelectedActor);
 
 		if (tPreviousActorSelectedComp)
 		{
@@ -95,7 +95,7 @@ void AHeroPlayerController::SelectHoveredActor()
 	// Check if the hit Actor implements the Selectable Interface
 	if (this->m_HoveredActor)
 	{
-		USelectableActorComponent* tCurrentActorSelectedComp = ISelectableInterface::Execute_GetSelectableComponent(this->m_HoveredActor);
+		USelectableActorComponent* tCurrentActorSelectedComp = USelectableActorComponent::GetSelectableActorComponent(this->m_HoveredActor);
 
 		tCurrentActorSelectedComp->ToggleIsSelected(true, this->GetPawn());
 
@@ -104,6 +104,14 @@ void AHeroPlayerController::SelectHoveredActor()
 			// If yes, assign the pointer to it
 			this->m_SelectedActor = this->m_HoveredActor;
 		}
+	}
+
+	UCombatComponent* tPawnCombatComp = UCombatComponent::GetCombatComponent(this->GetPawn());
+
+	// If player pawn has CombatComponent, try to set current selected actor as a target (even if it is nullptr)
+	if (tPawnCombatComp)
+	{
+			tPawnCombatComp->SetTarget(this->m_SelectedActor);
 	}
 }
 
@@ -120,21 +128,22 @@ void AHeroPlayerController::HoverActor(AActor* HoveredActor)
 	// set the HoveredActor ptr to nullptr
 	if (this->m_HoveredActor)
 	{
-		USelectableActorComponent* tPreviousHoveredSelectable = ISelectableInterface::Execute_GetSelectableComponent(m_HoveredActor);
+		USelectableActorComponent* tPreviousHoveredSelectable = USelectableActorComponent::GetSelectableActorComponent(m_HoveredActor);
 
 		tPreviousHoveredSelectable->ToggleIsHovered(false, this->GetPawn());
 
 		this->m_HoveredActor = nullptr;
 	}
 
-	// Check if the hit Actor implements the Selectable Interface
-	if (HoveredActor && HoveredActor->GetClass()->ImplementsInterface(USelectableInterface::StaticClass()))
+	// Check if the hit Actor can be Selected (has SelectableActorComponent)
+	if (HoveredActor)
 	{
-		USelectableActorComponent* tCurrentHoveredCSelectable = ISelectableInterface::Execute_GetSelectableComponent(HoveredActor);
+		USelectableActorComponent* tCurrentHoveredCSelectable = USelectableActorComponent::GetSelectableActorComponent(HoveredActor);
 
 		if (!tCurrentHoveredCSelectable)
 		{
-			UE_LOG(LogSelectableSystem, Error, TEXT("%s cannot be hovered or selected. It is Selectable but it does not provide an implementation for SelectableInterface"), *HoveredActor->GetName());
+			// return if hovered actor is not a selectable actor
+			this->m_HoveredActor = nullptr;
 			return;
 		}
 
