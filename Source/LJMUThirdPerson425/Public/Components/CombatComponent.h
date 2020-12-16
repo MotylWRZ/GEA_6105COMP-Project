@@ -56,12 +56,15 @@ struct FRangedCombatStruct : public FCombatStruct
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool UseProjectiles = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "UseProjectiles", EditConditionHides))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "UseProjectiles"))
 	TSubclassOf<AProjectileBase> ProjectileClass;
 
 	// Customise projectile using ProjectileStruct
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "UseProjectiles", EditConditionHides))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "UseProjectiles"))
 	FProjectileStruct ProjectileStruct;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "UseProjectiles"))
+	FVector ProjectileLaunchPosition;
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -72,7 +75,6 @@ class LJMUTHIRDPERSON425_API UCombatComponent : public UActorComponent
 public:
 	// Sets default values for this component's properties
 	UCombatComponent();
-
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

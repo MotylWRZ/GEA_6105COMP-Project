@@ -274,12 +274,17 @@ void UCombatComponent::ShootProjectile()
 		return;
 	}
 
-	FVector tStartLocation = this->GetOwner()->GetActorLocation();
+	// Setup initial projectile transform
+
+	// Calculate start projectile location as relative to the component owner's location
+	FVector tStartLocation = this->m_RangedCombatStruct.ProjectileLaunchPosition + this->GetOwner()->GetActorLocation();
+	FTransform tStartTransform = this->GetOwner()->GetTransform();
+	tStartTransform.SetLocation(tStartLocation);
+
 	FVector tTargetLocation = this->m_TargetActor->GetActorLocation();
 
 	// Spawn projectile object
-	AProjectileBase* tProjectile = GetWorld()->SpawnActor<AProjectileBase>(this->m_RangedCombatStruct.ProjectileClass, this->GetOwner()->GetActorTransform());
-
+	AProjectileBase* tProjectile = GetWorld()->SpawnActor<AProjectileBase>(this->m_RangedCombatStruct.ProjectileClass, tStartTransform);
 
 	// Create a temporary modifier stats struct
 	FStatsModifierStruct tStatsModifierStruct;
