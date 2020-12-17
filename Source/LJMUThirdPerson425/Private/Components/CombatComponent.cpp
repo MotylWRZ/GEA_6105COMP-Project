@@ -269,7 +269,7 @@ void UCombatComponent::ResetAttack()
 void UCombatComponent::ShootProjectile()
 {
 
-	if (!this->m_RangedCombatStruct.ProjectileClass)
+	if (!this->m_RangedCombatStruct.ProjectileClass || !this->m_TargetActor)
 	{
 		return;
 	}
@@ -345,7 +345,7 @@ bool UCombatComponent::IsTargetInRangedRange()
 float UCombatComponent::GetDistanceToTarget()
 {
 	// Return false if there is no active target
-	if (!this->m_TargetActor)
+	if (!m_TargetActor)
 	{
 		return false;
 	}
@@ -353,7 +353,7 @@ float UCombatComponent::GetDistanceToTarget()
 	AActor* tOwner = this->GetOwner();
 
 	FVector tOwnerLoc = tOwner->GetActorLocation();
-	FVector tTargetLoc = this->m_TargetActor->GetTargetLocation();
+	FVector tTargetLoc = this->m_TargetActor->GetActorLocation();
 
 	// Calculate the distance between the target and the owner
 	const float tDistance = FVector::Dist(tOwnerLoc, tTargetLoc);

@@ -45,8 +45,10 @@ public:
 
 	// Class Members
 	USceneComponent* m_RootComponent;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCharacterStatsComponent* m_CharaterStatsComponent;
+
 	FTimerHandle m_CharacterBaseTimerHandle;
 
 	// Specify how long to wait before this actor will be destroyed after calling OnCharacterDestroyed function

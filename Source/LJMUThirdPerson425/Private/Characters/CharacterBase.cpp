@@ -11,14 +11,7 @@ ACharacterBase::ACharacterBase()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Root component setup
-	/*this->m_RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root Component"));
-
-	this->RootComponent = this->m_RootComponent;*/
-
-	// CharacterStatsComponent setup
-	this->m_CharaterStatsComponent = CreateDefaultSubobject<UCharacterStatsComponent>(TEXT("Character Stats Component"));
-
+	this->m_CharaterStatsComponent = CreateDefaultSubobject<UCharacterStatsComponent>(TEXT("CharacterStatsComponent"));
 }
 
 // Called when the game starts or when spawned
@@ -26,7 +19,6 @@ void ACharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// bind CharacterBeginDestroy to OnActorDestroyed deleg
 	this->m_CharaterStatsComponent->OnActorKilled.AddDynamic(this, &ACharacterBase::CharacterBeginDestroy);
 
 
