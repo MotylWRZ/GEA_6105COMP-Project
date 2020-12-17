@@ -4,6 +4,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/WorldSettings.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Utilities/General/HelperFunctionsLibrary.h"
 
 #include "Components/ActorStatsComponent.h"
 #include "Interfaces/AttackableInterface.h"
@@ -212,8 +213,8 @@ void UCombatComponent::PerformRangedAttack()
 
 void UCombatComponent::SetTarget(AActor* NewTarget)
 {
-	// Set a new Target. Return if it is NULL or does not implement StatsInterface
-	if (!NewTarget || !NewTarget->GetClass()->ImplementsInterface(UAttackableInterface::StaticClass()))
+	// Set a new Target. Return if it is NULL or does not implement AttackableInterface
+	if (!NewTarget || !UHelperFunctionsLibrary::IsActorAttackable(NewTarget))
 	{
 		this->m_TargetActor = nullptr;
 		this->ResetAttack();
