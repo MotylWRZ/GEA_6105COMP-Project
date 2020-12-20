@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Components/ActorPickUpComponent.h"
 #include "Components/CharacterStatsComponent.h"
 #include "Components/CharacterCombatComponent.h"
 #include "Components/SpellBookComponent.h"
@@ -48,6 +49,7 @@ AHero::AHero()
 
 	this->m_SpellbookComponent = CreateDefaultSubobject<USpellBookComponent>(TEXT("SpellbookComponent"));
 	this->m_CharacterCombatComponent = CreateDefaultSubobject<UCharacterCombatComponent>(TEXT("CharacterCombatComponent"));
+	this->m_ActorPickUpComponent = CreateDefaultSubobject<UActorPickUpComponent>(TEXT("ActorPickupComponent"));
 }
 
 void AHero::OnResetVR()

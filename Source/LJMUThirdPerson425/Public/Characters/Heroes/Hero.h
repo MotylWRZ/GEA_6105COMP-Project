@@ -12,6 +12,7 @@
 
 class USpellBookComponent;
 class UCharacterCombatComponent;
+class UActorPickUpComponent;
 
 UCLASS()
 class LJMUTHIRDPERSON425_API AHero : public ACharacterBase, public IAttackableInterface, public ICanHasEffectsInterface
@@ -94,6 +95,8 @@ public:
 		UCharacterCombatComponent* m_CharacterCombatComponent;
 	UPROPERTY(EditDefaultsOnly)
 		USpellBookComponent* m_SpellbookComponent;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UActorPickUpComponent* m_ActorPickUpComponent;
 private:
 
 
