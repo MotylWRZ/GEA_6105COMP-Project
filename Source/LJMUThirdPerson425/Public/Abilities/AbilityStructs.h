@@ -35,12 +35,14 @@ struct FAbilityIntervalStruct
 };
 
 
-USTRUCT()
+USTRUCT(Blueprintable)
 struct FAbilityStruct : public FTableRowBase
 {
 	GENERATED_BODY()
 
 	explicit FAbilityStruct();
+
+	public:
 
 	// Particle system that will be used for this ability
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -108,19 +110,19 @@ UENUM(BlueprintType)enum class EAbilityType : uint8
 	Ability_AOE,
 };
 
-USTRUCT(BlueprintType)
+USTRUCT(Blueprintable)
 struct FAbilityStructCustomised
 {
 	GENERATED_BODY()
+public:
 
-
-	UPROPERTY(EditAnywhere, Category = "CustomisedAbility")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite,  Category = "CustomisedAbility")
 	EAbilityType AbilityType = EAbilityType::Ability_Self;
 
-	UPROPERTY(EditAnywhere, Category = "CustomisedAbility", meta = (EditCondition = "AbilityType == EAbilityType::Ability_Targeted", EditConditionHides))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CustomisedAbility", meta = (EditCondition = "AbilityType == EAbilityType::Ability_Targeted", EditConditionHides))
 		FAbilityStruct_Targeted AbilityTargetedStruct;
-	UPROPERTY(EditAnywhere, Category = "CustomisedAbility", meta = (EditCondition = "AbilityType == EAbilityType::Ability_Self", EditConditionHides))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CustomisedAbility", meta = (EditCondition = "AbilityType == EAbilityType::Ability_Self", EditConditionHides))
 		FAbilityStruct_Self AbilitySelfStruct;
-	UPROPERTY(EditAnywhere, Category = "CustomisedAbility", meta = (EditCondition = "AbilityType == EAbilityType::Ability_AOE", EditConditionHides))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CustomisedAbility", meta = (EditCondition = "AbilityType == EAbilityType::Ability_AOE", EditConditionHides))
 		FAbilityStruct_AOE AbilityAOEStruct;
 };
