@@ -138,7 +138,15 @@ void USelectableActorComponent::OnHovered(AActor* HoveringActor)
 	}
 	else
 	{
-		tCustomStencilIndex = STENCIL_FRIENDLY_OUTLINE;
+		UActorStatsComponent* tOwnerStats = UActorStatsComponent::GetStatsComponent(this->GetOwner());
+		if(!tOwnerStats)
+		{
+			tCustomStencilIndex = STENCIL_NEUTRAL_OUTLINE;
+		}
+		else
+		{
+			tCustomStencilIndex = STENCIL_FRIENDLY_OUTLINE;
+		}
 	}
 
 	// Enable outlinig for all stored static meshes

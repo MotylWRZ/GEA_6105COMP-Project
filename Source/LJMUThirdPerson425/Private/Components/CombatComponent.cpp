@@ -211,10 +211,41 @@ void UCombatComponent::PerformRangedAttack()
 	IAttackableInterface::Execute_ApplyDamage(this->m_TargetActor, tOwner, this->m_RangedCombatStruct.AttackDamage);
 }
 
+float UCombatComponent::GetTargetDistanceWithLineTrace()
+{
+	TArray<FHitResult> tHitResults;
+
+	FVector tPosStart = this->GetOwner()->GetActorLocation();
+	FVector tPosEnd = this->m_TargetActor->GetActorLocation();
+
+	const FName TraceTag("MyTraceTag");
+
+	FCollisionQueryParams tTraceParams;
+	tTraceParams.TraceTag = TraceTag;
+
+	//UKismetSystemLibrary::LineTrace(this, tPosStart, tPosEnd, ETraceTypeQuery::)
+	GetWorld()->LineTraceMultiByChannel(tHitResults, tPosStart, tPosEnd, ECollisionChannel::ECC_Visibility, tTraceParams);
+
+	for (auto& tHitResult : tHitResults)
+	{
+		AActor* tHitActor = tHitResult.Actor.Get();
+
+		// Check if thitActor is the current TragetActor
+		if (tHitActor == this->m_TargetActor)
+		{
+			// return line trace distance to the target
+			return tHitResult.Distance;
+		}
+	}
+
+	return 99999.0f;
+}
+
 void UCombatComponent::SetTarget(AActor* NewTarget)
 {
 	// Set a new Target. Return if it is NULL or does not implement AttackableInterface
-	if (!NewTarget || !UHelperFunctionsLibrary::IsActorAttackable(NewTarget))
+	if (!NewTarget || !UHelperFunctionsLibrary::IsActorAttackable(NewTarget)
+		|| !UActorStatsComponent::IsEnemyByActor(this->GetOwner(), NewTarget))
 	{
 		this->m_TargetActor = nullptr;
 		this->ResetAttack();
@@ -328,6 +359,13 @@ bool UCombatComponent::IsTargetInMeleeRange()
 		return true;
 	}
 
+	float tDistanceFromLineTrace = this->GetTargetDistanceWithLineTrace();
+
+	if (tDistanceFromLineTrace <= this->m_MeleeCombatStruct.AttackRange)
+	{
+		return true;
+	}
+
 	return false;
 }
 
@@ -336,6 +374,13 @@ bool UCombatComponent::IsTargetInRangedRange()
 	float tDistance = this->GetDistanceToTarget();
 
 	if (tDistance < this->m_RangedCombatStruct.AttackRange)
+	{
+		return true;
+	}
+
+	float tDistanceFromLineTrace = this->GetTargetDistanceWithLineTrace();
+
+	if (tDistanceFromLineTrace <= this->m_RangedCombatStruct.AttackRange)
 	{
 		return true;
 	}
@@ -370,53 +415,3 @@ UCombatComponent* UCombatComponent::GetCombatComponent(AActor* FromActor)
 	}
 	return nullptr;
 }
-
-
-
-//bool UCombatComponent::Attack()
-//{
-//	/*if (this->m_bAutoAttackModeEnabled)
-//	{
-//		return false;
-//	}*/
-//
-//	if (!this->m_TargetActor)
-//	{
-//		return false;
-//	}
-//
-//	// Play AnimMontage based on the curent AttackMode
-//	switch (this->m_CurrentAttackMode)
-//	{
-//	case EAttackMode::Attack_Melee:
-//	{
-//		UAnimationHelpers::PlayMontageRandomlyWithLength(this->m_MeleeCombatStruct.AnimationMontage,
-//			this->m_AnimatedMesh,
-//			this->m_MeleeCombatStruct.AttackIntervalDuration);
-//		break;
-//	}
-//	case EAttackMode::Attack_Ranged:
-//	{
-//		UAnimationHelpers::PlayMontageRandomlyWithLength(this->m_RangedCombatStruct.AnimationMontage,
-//			this->m_AnimatedMesh,
-//			this->m_RangedCombatStruct.AttackIntervalDuration);
-//		break;
-//	}
-//	}
-//
-//	// Return if target is not alive or is not valid
-//	if (!this->m_TargetActor || !IAttackableInterface::Execute_IsAlive(this->m_TargetActor))
-//	{
-//		this->ResetAttack();
-//		return false;
-//	}
-//
-//	// Change the IsAttacking flag to true
-//	this->m_bIsAttacking = true;
-//
-//	return true;
-//}
-
-
-
-

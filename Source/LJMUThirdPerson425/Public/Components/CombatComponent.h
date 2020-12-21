@@ -161,6 +161,9 @@ protected:
 	virtual void PerformMeleeAttack();
 	virtual void PerformRangedAttack();
 
+	// returns distance to target using line trace
+	virtual float GetTargetDistanceWithLineTrace();
+
 public:
 	////////////////////////
 	//Public Class Members

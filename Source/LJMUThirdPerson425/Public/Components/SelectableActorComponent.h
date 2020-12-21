@@ -9,6 +9,7 @@
 /* Stencil index mapping to PP_OutlineColored */
 #define STENCIL_FRIENDLY_OUTLINE 1;
 #define STENCIL_ENEMY_OUTLINE 2;
+#define STENCIL_NEUTRAL_OUTLINE 3;
 
 
 class UDecalComponent;
