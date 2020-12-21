@@ -40,7 +40,9 @@ class LJMUTHIRDPERSON425_API ARPGGameMode : public AGameModeBase
 		///////////////////////////////////////////////
 		//Delegates
 		///////////////////////////////////////////////
+		UPROPERTY(BlueprintAssignable, Category = "RPGGameMode")
 		FOnPlayerWon OnPlayerWon;
+		UPROPERTY(BlueprintAssignable, Category = "RPGGameMode")
 		FOnPlayerLost OnPlayerLost;
 
 protected:
