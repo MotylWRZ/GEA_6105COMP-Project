@@ -19,7 +19,11 @@ public:
 	// Sets default values for this actor's properties
 	APickupActorBase();
 
-	virtual void OnPickedUp();
+	// Implement this function in BP in order to extend the OnPickedUp() function
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+		void OnPickedUp();
+	// Override this function in child classes
+	virtual void OnPickedUp_Implementation();
 
 protected:
 	// Called when the game starts or when spawned

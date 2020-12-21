@@ -13,7 +13,7 @@ APickupActorBase::APickupActorBase()
 	this->m_SelectableActorComponent = CreateDefaultSubobject<USelectableActorComponent>(TEXT("SelectableActorComponent"));
 }
 
-void APickupActorBase::OnPickedUp()
+void APickupActorBase::OnPickedUp_Implementation()
 {
 }
 

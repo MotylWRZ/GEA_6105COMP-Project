@@ -50,6 +50,8 @@ AHero::AHero()
 	this->m_SpellbookComponent = CreateDefaultSubobject<USpellBookComponent>(TEXT("SpellbookComponent"));
 	this->m_CharacterCombatComponent = CreateDefaultSubobject<UCharacterCombatComponent>(TEXT("CharacterCombatComponent"));
 	this->m_ActorPickUpComponent = CreateDefaultSubobject<UActorPickUpComponent>(TEXT("ActorPickupComponent"));
+
+	this->m_ActorPickUpComponent->SetupAttachment(this->RootComponent);
 }
 
 void AHero::OnResetVR()
