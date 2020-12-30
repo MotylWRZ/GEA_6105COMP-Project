@@ -5,6 +5,8 @@
 #include "GameFramework/WorldSettings.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Utilities/General/HelperFunctionsLibrary.h"
+#include "Sound/SoundCue.h"
+#include "Sound/SoundAttenuation.h"
 
 #include "Components/ActorStatsComponent.h"
 #include "Interfaces/AttackableInterface.h"
@@ -174,6 +176,9 @@ void UCombatComponent::PerformAttack()
 		break;
 	}
 	}
+
+	// Play Attack Sound
+	this->PlayAttackSound();
 }
 
 void UCombatComponent::PerformMeleeAttack()
@@ -330,6 +335,52 @@ void UCombatComponent::ShootProjectile()
 
 	// Adjust the projectile velocity, so that it will try to land at the target location
 	tProjectile->AdjustProjectileVelocityToHitTarget(tTargetLocation);
+}
+
+void UCombatComponent::PlayAttackSound()
+{
+	FVector tOwnerLocation = this->GetOwner()->GetActorLocation();
+
+	// Setup SoundAttenuation
+	/*FSoundAttenuationSettings tSoundAttenuationSettings;
+
+	tSoundAttenuationSettings.AttenuationShape = EAttenuationShape::Sphere;
+	tSoundAttenuationSettings.OmniRadius = 300.0f;
+	tSoundAttenuationSettings.FalloffDistance = 1000.0f;
+	tSoundAttenuationSettings.DistanceAlgorithm = EAttenuationDistanceModel::Linear;*/
+
+
+	// Play the attack sound based on the current Attack Mode
+	switch (this->m_CurrentAttackMode)
+	{
+	case EAttackMode::Attack_Melee:
+	{
+		if (this->m_MeleeCombatStruct.AttackSound)
+		{
+			// Override default attenuation settings ofg the sound
+		/*	this->m_MeleeCombatStruct.AttackSound->AttenuationOverrides = tSoundAttenuationSettings;
+			this->m_MeleeCombatStruct.AttackSound->bOverrideAttenuation = true;*/
+
+			UGameplayStatics::PlaySoundAtLocation(this->GetWorld(), this->m_MeleeCombatStruct.AttackSound,
+													tOwnerLocation);
+		}
+		break;
+	}
+	case EAttackMode::Attack_Ranged:
+	{
+		if (this->m_RangedCombatStruct.AttackSound)
+		{
+			// Override default attenuation settings ofg the sound
+			/*this->m_RangedCombatStruct.AttackSound->AttenuationOverrides = tSoundAttenuationSettings;
+			this->m_RangedCombatStruct.AttackSound->bOverrideAttenuation = true;*/
+
+			UGameplayStatics::PlaySoundAtLocation(this->GetWorld(), this->m_RangedCombatStruct.AttackSound, tOwnerLocation);
+		}
+		break;
+	}
+	default:
+		break;
+	}
 }
 
 bool UCombatComponent::CanAttackRanged()

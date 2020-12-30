@@ -16,6 +16,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnReturnToIdle);
 
 class UAnimMontage;
 class AProjectileBase;
+class USoundCue;
 
 UENUM(BlueprintType)
 enum EAttackMode
@@ -41,6 +42,9 @@ struct FCombatStruct
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float AttackIntervalDuration;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		USoundCue* AttackSound;
 
 	// Should apply damage immediately after performing attack action ?
 	// On Attack can be binded into event in order to apply custom or additional effects
@@ -105,6 +109,7 @@ public:
 	virtual void ResetAttack();
 
 	virtual void ShootProjectile();
+	void PlayAttackSound();
 
 
 	//////////////////////
@@ -201,4 +206,5 @@ private:
 	FTimerHandle m_CombatTimerHandle;
 	bool m_bIsAttacking;
 	AActor* m_TargetActor;
+
 };
