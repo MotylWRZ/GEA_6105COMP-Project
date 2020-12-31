@@ -48,6 +48,7 @@ void AAbility_AOE::UseAbility_Implementation()
 	this->m_SphereCollisionComponent->SetSphereRadius(this->m_AOEAbilityStruct.RadiousStart);
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), this->m_AOEAbilityStruct.ParticleSystem, this->m_AbilityUser->GetActorTransform());
+	this->PlayAbilitySound(this->m_AOEAbilityStruct.AbilitySound);
 
 }
 

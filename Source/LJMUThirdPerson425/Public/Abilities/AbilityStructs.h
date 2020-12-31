@@ -15,6 +15,7 @@ class AAbility_Targeted;
 class AAbility_Self;
 class AAbility_AOE;
 class AAbility;
+class USoundCue;
 
 USTRUCT(Blueprintable)
 struct FAbilityIntervalStruct
@@ -49,10 +50,15 @@ struct FAbilityStruct : public FTableRowBase
 	UParticleSystem* ParticleSystem;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USoundCue* AbilitySound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FStatsModifierStruct StatsModifierStruct;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FEffectStruct> Effects;
+
+
 };
 
 // Ability Struct - Area Of Effect. It will affect the targets within the given radious.

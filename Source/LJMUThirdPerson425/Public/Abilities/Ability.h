@@ -10,6 +10,7 @@
 DECLARE_DELEGATE_OneParam(FOnAbilityDestroyed, AAbility*);
 
 struct FStatsModifierStruct;
+class USoundCue;
 
 UCLASS(Abstract)
 class LJMUTHIRDPERSON425_API AAbility : public AActor
@@ -80,6 +81,7 @@ protected:
 	virtual void ApplyEffectOnActor(AActor* AffectedActor, const FEffectStruct& EffectStruct);
 	virtual void ApplyEffectsonActor(AActor* AffectedActor, const TArray<FEffectStruct>& EffectsStructs);
 	virtual void UpdateAbilityIntervals(FAbilityIntervalStruct& AbilityIntervalStruct, float DeltaTime);
+	virtual void PlayAbilitySound(USoundCue* SoundCue);
 
 
 

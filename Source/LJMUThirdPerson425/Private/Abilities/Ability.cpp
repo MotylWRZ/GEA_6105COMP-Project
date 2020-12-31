@@ -5,6 +5,8 @@
 #include "../../LJMUThirdPerson425.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "GameInstances/RPGGameInstance.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "Utilities/General/HelperFunctionsLibrary.h"
 #include "Components/ActorStatsComponent.h"
@@ -156,4 +158,17 @@ void AAbility::ApplyEffectsonActor(AActor* AffectedActor, const TArray<FEffectSt
 	UEffectsManager* tEffectsManager = URPGGameInstance::GetEffectsManager(this);
 
 	tEffectsManager->AddEffectsToActor(this->m_AbilityUser, AffectedActor, EffectsStructs);
+}
+
+void AAbility::PlayAbilitySound(USoundCue* SoundCue)
+{
+	if (!SoundCue)
+	{
+		return;
+	}
+
+	FVector tUserLocation = this->m_AbilityUser->GetActorLocation();
+
+	UGameplayStatics::PlaySoundAtLocation(this->GetWorld(), SoundCue,
+		tUserLocation);
 }

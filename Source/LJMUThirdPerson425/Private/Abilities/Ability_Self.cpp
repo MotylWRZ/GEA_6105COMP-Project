@@ -32,6 +32,10 @@ void AAbility_Self::UseAbility_Implementation()
 	FTransform tUserTransform = this->m_AbilityUser->GetTransform();
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), this->m_AbilityStructSelf.ParticleSystem, tUserTransform);
+	this->PlayAbilitySound(this->m_AbilityStructSelf.AbilitySound);
+
+	// Apply all the effects on th eability user
+	this->ApplyEffectsonActor(this->GetAbilityUser(), this->m_AbilityStructSelf.Effects);
 
 	this->m_bShouldUpdate = true;
 }
@@ -42,8 +46,11 @@ void AAbility_Self::Update(float DeltaTime)
 
 	this->UpdateAbilityIntervals(this->m_AbilityStructSelf.AbilityIntervalStruct, DeltaTime);
 
+
+
 	if (this->m_AbilityStructSelf.AbilityIntervalStruct.CurrentInterval >=
-		this->m_AbilityStructSelf.AbilityIntervalStruct.IntervalsNum)
+		this->m_AbilityStructSelf.AbilityIntervalStruct.IntervalsNum
+		|| !this->m_AbilityStructSelf.AbilityIntervalStruct.UseIntervals)
 	{
 		this->SetIsAbilityActive(false);
 	}
