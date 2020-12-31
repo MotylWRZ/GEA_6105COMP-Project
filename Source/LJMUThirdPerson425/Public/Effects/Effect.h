@@ -19,9 +19,12 @@ class LJMUTHIRDPERSON425_API UEffect : public UObject
 
 public:
 	UEffect();
-	bool InitialiseEffect(AActor* InstigatorActor, AActor* AffectedActor, const FEffectStruct& EffectStruct);
-	void Update(float DeltaTime);
+	virtual bool InitialiseEffect(AActor* InstigatorActor, AActor* AffectedActor, const FEffectStruct& EffectStruct);
+	virtual void Update(float DeltaTime);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void ApplyEffect();
+	void ApplyEffect_Implementation();
 
 	///////////////////////
 	// Accessors/Mutators
@@ -59,6 +62,20 @@ public:
 	FOnEffectApplied OnEffectApplied;
 	UPROPERTY(BlueprintAssignable, Category = "Effect Delegates")
 	FOnEffectRemoved OnEffectRemoved;
+
+protected:
+	UPROPERTY()
+		AActor* m_InstigatorActor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		AActor* m_AffectedActor;
+
+	bool m_bCanUseInstigatorStats;
+	FActorStatsStruct m_InstigatorActorStats;
+	FStatsModifierStruct m_AccumulatedStatsChanges;
+
+	UPROPERTY(EditDefaultsOnly)
+		FEffectStruct m_EffectStruct;
+
 private:
 	// This should be changed to false if the effect Duration <= 0.0f
 	bool m_bIsActive = true;
@@ -72,16 +89,4 @@ private:
 
 	float m_CurrentDuration;
 	int32 m_CurrentHitNum;
-
-	UPROPERTY()
-	AActor* m_InstigatorActor;
-	UPROPERTY()
-	AActor* m_AffectedActor;
-
-	bool m_bCanUseInstigatorStats;
-	FActorStatsStruct m_InstigatorActorStats;
-	FStatsModifierStruct m_AccumulatedStatsChanges;
-
-	UPROPERTY(EditDefaultsOnly)
-	FEffectStruct m_EffectStruct;
 };

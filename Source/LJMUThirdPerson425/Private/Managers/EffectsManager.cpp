@@ -20,15 +20,17 @@ void UEffectsManager::Update(float DeltaTime)
 	for (auto& tPair : this->m_EffectsMap)
 	{
 		// Go to the next iteration if the array is empty
-		if (tPair.Value.EffectsArray.Num() == 0)
+		if (tPair.Value.EffectsArray.Num() == 0 || !tPair.Key->GetClass()->IsValidLowLevel())
 		{
 			continue;
 		}
 
-		// Update all the effects from the current pair
-		for (auto& tEffect : tPair.Value.EffectsArray)
+
+		for (int32 i = 0; i < tPair.Value.EffectsArray.Num(); ++i)
 		{
-			if (tEffect)
+			UEffect* tEffect = tPair.Value.EffectsArray[i];
+
+			if (tEffect->GetClass()->IsValidLowLevel())
 			{
 				tEffect->Update(DeltaTime);
 			}
@@ -106,10 +108,11 @@ UEffect* UEffectsManager::CreateEffectFromStruct(AActor* InstigatorActor, AActor
 	if (EffectStruct.UsePremadeEffectClass && EffectStruct.EffectClass)
 	{
 		// Create an Effect of specified class
-		tNewEffect = NewObject<UEffect>(EffectStruct.EffectClass);
+		tNewEffect = NewObject<UEffect>(this->GetWorld(), EffectStruct.EffectClass);
 		if (EffectStruct.OverwriteEffectClassProperties)
 		{
 			// Initialise effect and overwrite the default class struct from the specified class
+
 			if (tNewEffect->InitialiseEffect(InstigatorActor, AffectedActor, EffectStruct))
 			{
 				return tNewEffect;
@@ -156,6 +159,13 @@ void UEffectsManager::AddEffectToActor(AActor* InstigatorActor, AActor* Affected
 
 	// Return if the AffectedActor cannot take the effect of the current type
 	if (!ICanHasEffectsInterface::Execute_CanEffectBeApplied(AffectedActor, EffectStruct.EffectType))
+	{
+		return;
+	}
+
+	// Check if effect can be applied on allies and enemies
+	if (!EffectStruct.ApplyEffectOnAllies && UActorStatsComponent::IsEnemyByActor(InstigatorActor, AffectedActor)
+		|| !EffectStruct.ApplyEffectOnEnemies && !UActorStatsComponent::IsEnemyByActor(InstigatorActor, AffectedActor))
 	{
 		return;
 	}
@@ -248,7 +258,7 @@ bool UEffectsManager::AddAndReplaceEffect(UEffect* EffectToAdd, AActor* Affected
 		// Remove Current Effect
 		// Set this effect to inactive so that it will be removed from the array
 		tEffectCurrent->SetIsActive(false);
-		this->m_EffectsMap.Find(AffectedActor)->EffectsArray.Remove(tEffectCurrent);
+		//this->m_EffectsMap.Find(AffectedActor)->EffectsArray.Remove(tEffectCurrent);
 
 		// Add EffectToAdd as it has better score
 		this->m_EffectsMap.Find(AffectedActor)->EffectsArray.Add(tHigherScoreEffect);

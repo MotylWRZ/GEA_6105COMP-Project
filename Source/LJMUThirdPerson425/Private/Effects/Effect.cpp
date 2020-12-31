@@ -48,17 +48,24 @@ bool UEffect::InitialiseEffect(AActor* InstigatorActor, AActor* AffectedActor, c
 
 	this->SetIsActive(true);
 
-	return true;
-
 	this->OnEffectAdded.Broadcast(this);
+
+	return true;
 }
 
 void UEffect::Update(float DeltaTime)
 {
-	if (!this->m_bIsActive)
+	if (!this->m_AffectedActor || !this->m_InstigatorActor)
+	{
+		this->m_bIsActive = false;
+	}
+
+	if (!this->m_bIsActive )
 	{
 		return;
 	}
+
+
 
 	// Calculate current duration
 	this->m_CurrentDuration += DeltaTime;
@@ -104,7 +111,7 @@ void UEffect::Update(float DeltaTime)
 	}
 }
 
-void UEffect::ApplyEffect()
+void UEffect::ApplyEffect_Implementation()
 {
 	if (!this->m_AffectedActor)
 	{
