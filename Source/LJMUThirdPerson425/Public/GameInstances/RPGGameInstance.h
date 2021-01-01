@@ -2,15 +2,14 @@
 
 #pragma once
 
-#include "Managers/EffectsManager.h"
-#include "Managers/SpellsManager.h"
-#include "Managers/AbilitiesManager.h"
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "RPGGameInstance.generated.h"
 
-
+class USpellsManager;
+class UAbilitiesManager;
+class UEffectsManager;
 /**
  *
  */
@@ -36,6 +35,10 @@ public:
 
 	virtual void Init() override;
 	virtual void Shutdown() override;
+
+	virtual void InitialiseManagers();
+	virtual void ResetManagers();
+	virtual void OnWorldChanged(UWorld* OldWorld, UWorld* NewWorld) override;
 
 public:
 

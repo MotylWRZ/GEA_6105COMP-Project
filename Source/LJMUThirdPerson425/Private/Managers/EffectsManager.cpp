@@ -8,7 +8,7 @@
 UEffectsManager::UEffectsManager()
 {
 	this->SetShouldUpdate(true);
-	this->SetClearInterval(0.1f);
+	this->SetClearInterval(5.0f);
 	this->SetUpdateInterval(0.1f);
 
 }

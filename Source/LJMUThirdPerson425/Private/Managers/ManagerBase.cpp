@@ -1,5 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/GameMode.h"
 
 #include "Managers/ManagerBase.h"
 
@@ -15,13 +17,15 @@ UManagerBase::UManagerBase()
 
 void UManagerBase::Tick(float DeltaTime)
 {
-	this->m_CurrentClearInterval += DeltaTime;
-	this->m_CurrentUpdateInterval += DeltaTime;
-
-	if (this->m_CurrentUpdateInterval < this->m_UpdateInterval)
+	UWorld* tWorld = this->GetWorld();
+	// do not update the manager in this frame if the game/world is paused
+	if (tWorld && this->GetWorld()->IsPaused()) //tGameMode && tGameMode->IsPaused())
 	{
 		return;
 	}
+
+	this->m_CurrentClearInterval += DeltaTime;
+	this->m_CurrentUpdateInterval += DeltaTime;
 
 	this->Update(this->m_CurrentUpdateInterval);
 
@@ -34,6 +38,7 @@ void UManagerBase::Update(float DeltaTime)
 
 void UManagerBase::Clear()
 {
+	UE_LOG(LogTemp, Error, TEXT("%s is active"), *this->GetName());
 	this->m_CurrentClearInterval = 0.0f;
 }
 
