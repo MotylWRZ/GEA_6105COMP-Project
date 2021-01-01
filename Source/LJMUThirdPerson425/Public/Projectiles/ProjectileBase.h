@@ -11,6 +11,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnProjectileHit);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnProjectileMiss);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnProjectileDestroyed);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnProjectileDeactivated);
 
 class USphereComponent;
 class UProjectileMovementComponent;
@@ -57,6 +58,8 @@ public:
 	virtual void Initialise(AActor* ProjectileOwner, FStatsModifierStruct* StatsModifierStruct, FProjectileStruct* ProjectileStruct);
 	virtual void Initialise(AActor* ProjectileOwner, FStatsModifierStruct* StatsModifierStruct, int32 HitActorsMax = 1, bool IgnoreAlliesHit = true, float DurationMax = 1.0f);
 	virtual void AdjustProjectileVelocityToHitTarget(FVector TargetLocation);
+
+	UFUNCTION(BlueprintCallable)
 	virtual void DestroyProjectile();
 
 	UFUNCTION()
@@ -74,6 +77,8 @@ public:
 	FOnProjectileHit OnProjectileMiss;
 	UPROPERTY(BlueprintAssignable, Category = "Projectile")
 	FOnProjectileDestroyed OnProjectileDestroyed;
+	UPROPERTY(BlueprintAssignable, Category = "Projectile")
+		FOnProjectileDestroyed OnProjectileDeactivated;
 
 
 protected:
@@ -100,24 +105,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	// Specify what changes will be made in the projectile target stats
 	FStatsModifierStruct m_StatsModifierStruct;
-
-	//UPROPERTY()
-	//// Specify what changes will be made in the projectile target stats
-	//FStatsModifierStruct m_StatsModifierStruct;
-
-	//UPROPERTY()
-	//// Specify Maximum Actors that this projectile can hit. If it is > 1, projectile will continue
-	//// movement and will hit any other actor until number of hit Actos will be equal to the MaximumHitActors
-	//int32 m_HitActorsMax;
-
-	//UPROPERTY(EditDefaultsOnly)
-	//float m_DurationMax;
 	FTimerHandle m_ProjectileTimerHandle;
-
-	//UPROPERTY()
-	//// If TRUE, continue projectile movement and overlap any allies encountered
-	//bool m_bIgnoreAlliesHit;
-
 
 	bool m_bIsProjectileActive;
 private:

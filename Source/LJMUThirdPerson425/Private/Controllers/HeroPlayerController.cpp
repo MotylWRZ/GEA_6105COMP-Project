@@ -53,12 +53,10 @@ void AHeroPlayerController::CheckForTarget()
 
 	DeprojectMousePositionToWorld(tWorldPos, tWorldDir);
 
-	//tWorldDir *= 3000.0f;
-	//tWorldDir += tWorldPos;
-
 	const FName TraceTag("MyTraceTag");
 
-	GetWorld()->DebugDrawTraceTag = TraceTag;
+	// Draw Debug Trace Line
+	//GetWorld()->DebugDrawTraceTag = TraceTag;
 
 	FCollisionQueryParams CollisionParams;
 	CollisionParams.TraceTag = TraceTag;

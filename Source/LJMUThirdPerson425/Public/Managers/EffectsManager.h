@@ -61,6 +61,7 @@ protected:
 	bool IsActorAffected(AActor* Actor);
 
 private:
+	UPROPERTY()
 	TMap<AActor*, FEffectsArray> m_EffectsMap;
 
 	int32 UpdateNum;

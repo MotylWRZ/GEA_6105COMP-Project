@@ -113,10 +113,12 @@ void AProjectileBase::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedCo
 
 	if (UModifiersManager::ModifyActorStats(this->m_ProjectileOwner, OtherActor, this->m_StatsModifierStruct))
 	{
-		this->UpdateHitActors();
+
 
 		this->m_ProjectileHitParticleSystem->SetWorldLocation(this->GetActorLocation());
 		this->m_ProjectileHitParticleSystem->SetActive(true);
+
+		this->UpdateHitActors();
 
 		this->OnProjectileHit.Broadcast();
 	}
@@ -134,6 +136,7 @@ void AProjectileBase::SetIsProjectileActive(bool IsActive)
 	{
 		// Disable Overlap Events generation
 		this->m_CollisionSphereComponent->SetGenerateOverlapEvents(false);
+		this->OnProjectileDeactivated.Broadcast();
 	}
 
 	this->m_bIsProjectileActive = IsActive;

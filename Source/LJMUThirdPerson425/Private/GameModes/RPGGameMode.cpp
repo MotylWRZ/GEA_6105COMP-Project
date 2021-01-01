@@ -7,6 +7,11 @@
 #include "GameModes/RPGGameMode.h"
 // Fill out your copyright notice in the Description page of Project Settings.
 
+void ARPGGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
+{
+	Super::InitGame(MapName, Options, ErrorMessage);
+}
+
 void ARPGGameMode::BeginPlay()
 {
 	Super::BeginPlay();

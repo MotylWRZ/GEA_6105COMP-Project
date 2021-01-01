@@ -65,13 +65,9 @@ void UEffect::Update(float DeltaTime)
 		return;
 	}
 
-
-
 	// Calculate current duration
 	this->m_CurrentDuration += DeltaTime;
 	this->m_CurrentHitInterval += DeltaTime;
-
-
 
 	if (this->m_CurrentDuration >= m_EffectStruct.Duration)
 	{

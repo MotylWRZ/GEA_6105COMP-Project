@@ -33,7 +33,4 @@ void URPGGameInstance::Init()
 
 void URPGGameInstance::Shutdown()
 {
-	/*this->m_SpellsManager = nullptr;
-	this->m_AbilitiesManager = nullptr;
-	this->m_EffectsManager = nullptr;*/
 }

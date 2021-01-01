@@ -8,7 +8,7 @@
 UEffectsManager::UEffectsManager()
 {
 	this->SetShouldUpdate(true);
-	this->SetClearInterval(10.0f);
+	this->SetClearInterval(0.1f);
 	this->SetUpdateInterval(0.1f);
 
 }
@@ -32,6 +32,8 @@ void UEffectsManager::Update(float DeltaTime)
 
 			if (tEffect->GetClass()->IsValidLowLevel())
 			{
+				FEffectStruct tStruct = tEffect->GetEffectStruct();
+
 				tEffect->Update(DeltaTime);
 			}
 		}
@@ -72,9 +74,6 @@ void UEffectsManager::Clear()
 			return tEffectsArrA.EffectsArray.Num() < tEffectsArrB.EffectsArray.Num();
 		});
 
-	// Temporary arry to store keys of inactive pairs (incative pair will be if the effects array is empty)
-	TArray<AActor*> tInactiveElemKeys;
-
 	for (TMap<AActor*, FEffectsArray>::TIterator it = this->m_EffectsMap.CreateIterator(); it; ++it)
 	{
 		// End the loop if value (array) is not empty. That means we reached the part of the map with filled Effect arrays
@@ -83,15 +82,9 @@ void UEffectsManager::Clear()
 			break;
 		}
 
-		// Add the key of the element wit empty effects array
-		tInactiveElemKeys.Add(it.Key());
+		// Clear the empty element
+		this->m_EffectsMap.Remove(it.Key());
 
-	}
-
-	// Clear the map from the elements with empty arrays
-	for (int32 i = 0; i < tInactiveElemKeys.Num(); ++i)
-	{
-		this->m_EffectsMap.Remove(tInactiveElemKeys[i]);
 	}
 
 	// Gropud invalid elements together in order to prepare them for removal
@@ -136,7 +129,7 @@ UEffect* UEffectsManager::CreateEffectFromStruct(AActor* InstigatorActor, AActor
 	}
 
 	// Create default Effect object
-	tNewEffect = NewObject<UEffect>();
+	tNewEffect = NewObject<UEffect>(this->GetWorld());
 	if (tNewEffect->InitialiseEffect(InstigatorActor, AffectedActor, EffectStruct))
 	{
 		return tNewEffect;
@@ -153,6 +146,13 @@ UEffect* UEffectsManager::CreateEffectFromStruct(AActor* InstigatorActor, AActor
 void UEffectsManager::AddEffectToActor(AActor* InstigatorActor, AActor* AffectedActor, const FEffectStruct& EffectStruct)
 {
 	if (!IsValid(InstigatorActor) || !IsValid(AffectedActor) || !UHelperFunctionsLibrary::CanActorHasEffects(AffectedActor))
+	{
+		return;
+	}
+
+	// Check if affected actor is alive
+	UActorStatsComponent* tAffectedActorStats = UActorStatsComponent::GetStatsComponent(AffectedActor);
+	if(tAffectedActorStats && !tAffectedActorStats->IsAlive())
 	{
 		return;
 	}
