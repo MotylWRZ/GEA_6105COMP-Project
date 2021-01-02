@@ -56,7 +56,6 @@ void UCombatComponent::BeginPlay()
 		m_CurrentTime = this->m_RangedCombatStruct.AttackIntervalDuration;
 	}
 
-	// Access the World Settings
 	// Activate the timer
 	GetWorld()->GetTimerManager().SetTimer(this->m_CombatTimerHandle, this,
 		&UCombatComponent::CustomTickComponent, this->m_ComponentUpdateInterval,
@@ -99,17 +98,22 @@ void UCombatComponent::CustomTickComponent()
 		return;
 	}
 
-
 	// Initiate attack action
 	this->AttackStart();
 }
 
 void UCombatComponent::AttackStart()
 {
-	//// Update Current Time
-	//this->m_CurrentTime += GetWorld()->GetTimerManager().GetTimerElapsed(this->m_CombatTimerHandle);
 	// Update Current Time
 	this->m_CurrentTime += GetWorld()->GetTimerManager().GetTimerElapsed(this->m_CombatTimerHandle);
+
+	//// Return if target is not alive or is not valid
+	//if (!this->m_TargetActor || !this->m_TargetActor->GetClass()->ImplementsInterface(UAttackableInterface::StaticClass()) || !IAttackableInterface::Execute_IsAlive(this->m_TargetActor))
+	//{
+	//	this->ResetAttack();
+	//	return;
+	//}
+
 
 	// Play AnimMontage based on the curent AttackMode
 	switch (this->m_CurrentAttackMode)
@@ -142,12 +146,7 @@ void UCombatComponent::AttackStart()
 	}
 	}
 
-	// Return if target is not alive or is not valid
-	if (!this->m_TargetActor || !IAttackableInterface::Execute_IsAlive(this->m_TargetActor))
-	{
-		this->ResetAttack();
-		return;
-	}
+
 
 	// Change the IsAttacking flag to true
 	this->m_bIsAttacking = true;
@@ -252,7 +251,6 @@ void UCombatComponent::SetTarget(AActor* NewTarget)
 	if (!NewTarget || !UHelperFunctionsLibrary::IsActorAttackable(NewTarget)
 		|| !UActorStatsComponent::IsEnemyByActor(this->GetOwner(), NewTarget))
 	{
-		this->m_TargetActor = nullptr;
 		this->ResetAttack();
 		return;
 	}
@@ -260,10 +258,17 @@ void UCombatComponent::SetTarget(AActor* NewTarget)
 	// If not alive, reset TargetActor and return
 	if (!IAttackableInterface::Execute_IsAlive(NewTarget))
 	{
-		this->m_TargetActor = nullptr;
 		this->ResetAttack();
 		return;
 	}
+
+	if (this->m_TargetActor == NewTarget)
+	{
+		return;
+	}
+
+	// Reset attack to stop any active combat
+	this->ResetAttack();
 
 	// If it is alive set it as a new target
 	this->m_TargetActor = NewTarget;
@@ -291,7 +296,6 @@ void UCombatComponent::ResetAttack()
 	{
 		m_CurrentTime = this->m_RangedCombatStruct.AttackIntervalDuration;
 	}
-
 
 	this->m_bIsAttacking = false;
 
@@ -341,15 +345,6 @@ void UCombatComponent::PlayAttackSound()
 {
 	FVector tOwnerLocation = this->GetOwner()->GetActorLocation();
 
-	// Setup SoundAttenuation
-	/*FSoundAttenuationSettings tSoundAttenuationSettings;
-
-	tSoundAttenuationSettings.AttenuationShape = EAttenuationShape::Sphere;
-	tSoundAttenuationSettings.OmniRadius = 300.0f;
-	tSoundAttenuationSettings.FalloffDistance = 1000.0f;
-	tSoundAttenuationSettings.DistanceAlgorithm = EAttenuationDistanceModel::Linear;*/
-
-
 	// Play the attack sound based on the current Attack Mode
 	switch (this->m_CurrentAttackMode)
 	{
@@ -357,10 +352,6 @@ void UCombatComponent::PlayAttackSound()
 	{
 		if (this->m_MeleeCombatStruct.AttackSound)
 		{
-			// Override default attenuation settings ofg the sound
-		/*	this->m_MeleeCombatStruct.AttackSound->AttenuationOverrides = tSoundAttenuationSettings;
-			this->m_MeleeCombatStruct.AttackSound->bOverrideAttenuation = true;*/
-
 			UGameplayStatics::PlaySoundAtLocation(this->GetWorld(), this->m_MeleeCombatStruct.AttackSound,
 													tOwnerLocation);
 		}
@@ -370,10 +361,6 @@ void UCombatComponent::PlayAttackSound()
 	{
 		if (this->m_RangedCombatStruct.AttackSound)
 		{
-			// Override default attenuation settings ofg the sound
-			/*this->m_RangedCombatStruct.AttackSound->AttenuationOverrides = tSoundAttenuationSettings;
-			this->m_RangedCombatStruct.AttackSound->bOverrideAttenuation = true;*/
-
 			UGameplayStatics::PlaySoundAtLocation(this->GetWorld(), this->m_RangedCombatStruct.AttackSound, tOwnerLocation);
 		}
 		break;
@@ -441,13 +428,13 @@ bool UCombatComponent::IsTargetInRangedRange()
 
 float UCombatComponent::GetDistanceToTarget()
 {
+	AActor* tOwner = this->GetOwner();
+
 	// Return false if there is no active target
-	if (!m_TargetActor)
+	if (!m_TargetActor || !m_TargetActor->GetClass()->IsValidLowLevel() || !tOwner)
 	{
 		return false;
 	}
-
-	AActor* tOwner = this->GetOwner();
 
 	FVector tOwnerLoc = tOwner->GetActorLocation();
 	FVector tTargetLoc = this->m_TargetActor->GetActorLocation();

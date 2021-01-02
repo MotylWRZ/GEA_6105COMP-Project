@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "../../LJMUThirdPerson425.h"
 #include "Characters/Heroes/Hero.h"
 #include "Components/CombatComponent.h"
@@ -160,6 +161,16 @@ void AHeroPlayerController::MoveCharacter()
 	{
 		return;
 	}
+
+	FVector tPawnLocation = tPlayerPawn->GetActorLocation();
+
+	// Rotate towards the hit location
+	FRotator tLookAtRotation = UKismetMathLibrary::FindLookAtRotation(tPawnLocation, this->m_HitLocation);
+
+	FRotator tCurrentRotation = tPlayerPawn->GetActorRotation();
+	FRotator tNewRotation = FRotator(tCurrentRotation.Pitch, tLookAtRotation.Yaw, tCurrentRotation.Roll);
+
+	tPlayerPawn->SetActorRotation(tNewRotation);
 
 	if (this->m_HoveredActor
 		&& this->m_HoveredActor->GetClass()->ImplementsInterface(UAttackableInterface::StaticClass()))

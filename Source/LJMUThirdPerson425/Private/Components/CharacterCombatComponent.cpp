@@ -38,8 +38,8 @@ void UCharacterCombatComponent::AttackStart()
 
 
 	// Check if the owner implements AttackableInterface. If it is and is not alive, do not continue
-	if (this->m_Owner->GetClass()->ImplementsInterface(UAttackableInterface::StaticClass())
-		&& !IAttackableInterface::Execute_IsAlive(this->m_Owner))
+	if (!this->m_Owner->GetClass()->ImplementsInterface(UAttackableInterface::StaticClass())
+		|| !IAttackableInterface::Execute_IsAlive(this->m_Owner))
 	{
 		this->ResetAttack();
 		return;
