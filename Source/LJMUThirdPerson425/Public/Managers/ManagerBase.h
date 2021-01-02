@@ -40,10 +40,10 @@ protected:
 	FORCEINLINE void ResetClearInterval() { m_ClearInterval = DEFAULT_CLEAR_INTERVAL; }
 
 	// Unpause the Updating
-	FORCEINLINE void UpdateStart() { this->m_bShouldUpdate = true; /*GetWorld()->GetTimerManager().UnPauseTimer(m_ManagerTimerHandle);*/ }
+	FORCEINLINE void UpdateStart() { this->m_bShouldUpdate = true;}
 
 	// Pause the Updating
-	FORCEINLINE void UpdateStop() { this->m_bShouldUpdate = false;/*GetWorld()->GetTimerManager().PauseTimer(m_ManagerTimerHandle);*/ }
+	FORCEINLINE void UpdateStop() { this->m_bShouldUpdate = false;}
 
 	FORCEINLINE bool ShouldClear() { return m_ClearInterval <= m_CurrentClearInterval; }
 public:

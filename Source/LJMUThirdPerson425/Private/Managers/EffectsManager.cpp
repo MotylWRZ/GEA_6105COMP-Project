@@ -100,46 +100,37 @@ UEffect* UEffectsManager::CreateEffectFromStruct(AActor* InstigatorActor, AActor
 
 	if (EffectStruct.UsePremadeEffectClass && EffectStruct.EffectClass)
 	{
-		// Create an Effect of specified class
+		// Create an Effect of specified, premade class
 		tNewEffect = NewObject<UEffect>(this->GetWorld(), EffectStruct.EffectClass);
 		if (EffectStruct.OverwriteEffectClassProperties)
 		{
 			// Initialise effect and overwrite the default class struct from the specified class
-
-			if (tNewEffect->InitialiseEffect(InstigatorActor, AffectedActor, EffectStruct))
-			{
-				return tNewEffect;
-			}
-			else
-			{
-				return nullptr;
-			}
-
-		}
-		// Initialise effect and load the default class struct from the specified class
-		if (tNewEffect->InitialiseEffect(InstigatorActor, AffectedActor, EffectStruct.EffectClass.GetDefaultObject()->GetEffectStruct()))
-		{
-			return tNewEffect;
+			tNewEffect->InitialiseEffect(InstigatorActor, AffectedActor, EffectStruct);
 		}
 		else
 		{
-			return nullptr;
+			// Initialise effect and load the default class struct from the specified class
+			tNewEffect->InitialiseEffect(InstigatorActor, AffectedActor, EffectStruct.EffectClass.GetDefaultObject()->GetEffectStruct());
 		}
-
-	}
-
-	// Create default Effect object
-	tNewEffect = NewObject<UEffect>(this->GetWorld());
-	if (tNewEffect->InitialiseEffect(InstigatorActor, AffectedActor, EffectStruct))
-	{
-		return tNewEffect;
 	}
 	else
 	{
-		return nullptr;
+		// Create and initialise default Effect object
+		tNewEffect = NewObject<UEffect>(this->GetWorld());
+		tNewEffect->InitialiseEffect(InstigatorActor, AffectedActor, EffectStruct);
 	}
 
-
+	// Check if effect can be applied on allies and enemies
+	if (!tNewEffect || (!tNewEffect->GetEffectStruct().ApplyEffectOnAllies && !UActorStatsComponent::IsEnemyByActor(InstigatorActor, AffectedActor))
+		|| (!tNewEffect->GetEffectStruct().ApplyEffectOnEnemies && UActorStatsComponent::IsEnemyByActor(InstigatorActor, AffectedActor)))
+	{
+		return nullptr;
+	}
+	else
+	{
+		// Return the created effect
+		return tNewEffect;
+	}
 }
 
 
@@ -163,12 +154,9 @@ void UEffectsManager::AddEffectToActor(AActor* InstigatorActor, AActor* Affected
 		return;
 	}
 
-	// Check if effect can be applied on allies and enemies
-	if (!EffectStruct.ApplyEffectOnAllies && UActorStatsComponent::IsEnemyByActor(InstigatorActor, AffectedActor)
-		|| !EffectStruct.ApplyEffectOnEnemies && !UActorStatsComponent::IsEnemyByActor(InstigatorActor, AffectedActor))
-	{
-		return;
-	}
+	bool a = UActorStatsComponent::IsEnemyByActor(InstigatorActor, AffectedActor);
+
+
 
 	// Create a new instance of tEffect locally
 	UEffect* tEffect = this->CreateEffectFromStruct(InstigatorActor, AffectedActor, EffectStruct);

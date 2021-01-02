@@ -12,7 +12,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnManaModified);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCooldownChange);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSpellCast);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSpellCast, bool, WasSuccessful);
 
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LJMUTHIRDPERSON425_API USpellBookComponent : public UActorComponent

@@ -60,6 +60,7 @@ void USpellBookComponent::CastSpell(int32 SpellID)
 		if (!tNewSpell->CastSpell(this->GetOwner()))
 		{
 			UE_LOG(LogTemp, Error, TEXT("Spell casting unsuccesful"));
+			this->OnSpellCast.Broadcast(false);
 			return;
 		}
 
@@ -69,7 +70,7 @@ void USpellBookComponent::CastSpell(int32 SpellID)
 		// Initialise and run SpellbookCooldownTimer with the delay equal to CaseSpellCoooldown duration value
 		GetWorld()->GetTimerManager().SetTimer(this->m_SpellbookCooldownTimerHandle, this, &USpellBookComponent::ResetSpellCastCooldown, this->m_SpellCastCooldown);
 		this->OnCooldownChange.Broadcast();
-		this->OnSpellCast.Broadcast();
+		this->OnSpellCast.Broadcast(true);
 	}
 	else
 	{

@@ -73,7 +73,7 @@ protected:
 	FActorStatsStruct m_InstigatorActorStats;
 	FStatsModifierStruct m_AccumulatedStatsChanges;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 		FEffectStruct m_EffectStruct;
 
 private:
