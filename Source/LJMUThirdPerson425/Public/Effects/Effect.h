@@ -66,7 +66,7 @@ public:
 protected:
 	UPROPERTY()
 		AActor* m_InstigatorActor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite)
 		AActor* m_AffectedActor;
 
 	bool m_bCanUseInstigatorStats;

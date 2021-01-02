@@ -69,7 +69,7 @@ struct FEffectStruct : public FTableRowBase
 		int32 HitsNum = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!UsePremadeEffectClass || OverwriteEffectClassProperties", ClampMin = "0", ClampMax = "100"))
-		float SuccessChance  = 100.0f;
+		int SuccessChance  = 100.0f;
 
 	// If TRUE: this effect will cause permanent changes to its targets (ie stats will be modified permanently)
 	// If FALSE: this effec will cause temporary changes to its targets (ie stats will be modifiet temporarily. At the end of the effect activity, all changes in stats will be withdrawn)

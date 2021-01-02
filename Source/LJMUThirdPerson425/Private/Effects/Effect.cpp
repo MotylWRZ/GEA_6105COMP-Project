@@ -149,8 +149,11 @@ float UEffect::GetEffectStatsScore()
 	float tDurationLeft = this->GetDurationLeft();
 	int32 tDamage = this->m_EffectStruct.StatsModifierStruct.DamageToApply;
 	int32 tHealth = this->m_EffectStruct.StatsModifierStruct.HealthToAdd;
+	int32 tSpeed = this->m_EffectStruct.StatsModifierStruct.ModifySpeed;
+	int32 tArmor = this->m_EffectStruct.StatsModifierStruct.ModifyArmor;
+	int32 tMana = this->m_EffectStruct.StatsModifierStruct.ModifyMana;
 
-	float tResult = static_cast<float>(tHitsLeft) + tDurationLeft + static_cast<float>(tDamage) + static_cast<float>(tHealth);
+	float tResult = static_cast<float>(tHitsLeft + tDurationLeft + tDamage + tHealth + tSpeed + tArmor + tMana);
 
 	return tResult;
 }
