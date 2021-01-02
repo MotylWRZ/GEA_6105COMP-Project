@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Managers/ModifiersManager.h"
 #include "Components/SelectableActorComponent.h"
 
 #include "PickupActors/PickupActorBase.h"
@@ -13,8 +14,9 @@ APickupActorBase::APickupActorBase()
 	this->m_SelectableActorComponent = CreateDefaultSubobject<USelectableActorComponent>(TEXT("SelectableActorComponent"));
 }
 
-void APickupActorBase::OnPickedUp_Implementation()
+void APickupActorBase::OnPickedUp_Implementation(AActor* PickingActor)
 {
+	UModifiersManager::ModifyActorStats(this, PickingActor, this->m_ItemStatsModifierStruct);
 }
 
 // Called when the game starts or when spawned

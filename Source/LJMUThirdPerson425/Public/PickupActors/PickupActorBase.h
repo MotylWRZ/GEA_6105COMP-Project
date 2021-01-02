@@ -2,7 +2,7 @@
 
 #pragma once
 
-
+#include "Managers/ModifiersManager.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -21,9 +21,9 @@ public:
 
 	// Implement this function in BP in order to extend the OnPickedUp() function
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-		void OnPickedUp();
+		void OnPickedUp(AActor* PickingActor);
 	// Override this function in child classes
-	virtual void OnPickedUp_Implementation();
+	virtual void OnPickedUp_Implementation(AActor* PickingActor);
 
 protected:
 	// Called when the game starts or when spawned
@@ -37,4 +37,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USelectableActorComponent* m_SelectableActorComponent;
 
+	// This struct will be used to modify stats of PickingActor
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FStatsModifierStruct m_ItemStatsModifierStruct;
 };

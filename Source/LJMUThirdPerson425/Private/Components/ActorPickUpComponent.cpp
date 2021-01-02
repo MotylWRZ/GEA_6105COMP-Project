@@ -20,9 +20,11 @@ void UActorPickUpComponent::BeginPlay()
 void UActorPickUpComponent::OnPickupSphereBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	APickupActorBase* tPickupActor = Cast<APickupActorBase>(OtherActor);
+	AActor* tPickingActor = this->GetOwner();
 
-	if (tPickupActor)
+
+	if (tPickupActor && tPickingActor)
 	{
-		tPickupActor->OnPickedUp();
+		tPickupActor->OnPickedUp(tPickingActor);
 	}
 }
