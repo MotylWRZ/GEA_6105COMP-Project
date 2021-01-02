@@ -107,14 +107,6 @@ void UCombatComponent::AttackStart()
 	// Update Current Time
 	this->m_CurrentTime += GetWorld()->GetTimerManager().GetTimerElapsed(this->m_CombatTimerHandle);
 
-	//// Return if target is not alive or is not valid
-	//if (!this->m_TargetActor || !this->m_TargetActor->GetClass()->ImplementsInterface(UAttackableInterface::StaticClass()) || !IAttackableInterface::Execute_IsAlive(this->m_TargetActor))
-	//{
-	//	this->ResetAttack();
-	//	return;
-	//}
-
-
 	// Play AnimMontage based on the curent AttackMode
 	switch (this->m_CurrentAttackMode)
 	{
@@ -145,8 +137,6 @@ void UCombatComponent::AttackStart()
 		break;
 	}
 	}
-
-
 
 	// Change the IsAttacking flag to true
 	this->m_bIsAttacking = true;
@@ -188,6 +178,7 @@ void UCombatComponent::PerformMeleeAttack()
 
 	if (!this->m_TargetActor || !IAttackableInterface::Execute_IsAlive(this->m_TargetActor))
 	{
+		this->ResetAttack();
 		return;
 	}
 
@@ -207,6 +198,7 @@ void UCombatComponent::PerformRangedAttack()
 
 	if (!this->m_RangedCombatStruct.bInstantEffect || !this->m_TargetActor || !IAttackableInterface::Execute_IsAlive(this->m_TargetActor))
 	{
+		this->ResetAttack();
 		return;
 	}
 
@@ -267,11 +259,14 @@ void UCombatComponent::SetTarget(AActor* NewTarget)
 		return;
 	}
 
+	this->ResetAttack();
 	// If it is alive set it as a new target
 	this->m_TargetActor = NewTarget;
 
 	// UnPause the Timer
 	GetWorld()->GetTimerManager().UnPauseTimer(this->m_CombatTimerHandle);
+
+	this->OnNewTargetSet.Broadcast(this->m_TargetActor);
 }
 
 void UCombatComponent::ResetAttack()

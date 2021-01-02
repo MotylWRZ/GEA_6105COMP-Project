@@ -13,6 +13,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAttack);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAttackMelee);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAttackRanged);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnReturnToIdle);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNewTargetSet, AActor*, NewTargetRef);
 
 class UAnimMontage;
 class AProjectileBase;
@@ -145,16 +146,18 @@ public:
 	/////////////
 	// Delegates
 	/////////////
-	UPROPERTY(BlueprintAssignable, Category = "Attributes")
+	UPROPERTY(BlueprintAssignable, Category = "CombatDelegates")
 		FOnAttackStart OnAttackStart;
-	UPROPERTY(BlueprintAssignable, Category = "Attributes")
+	UPROPERTY(BlueprintAssignable, Category = "CombatDelegates")
 		FOnAttack OnAttack;
-	UPROPERTY(BlueprintAssignable, Category = "Attributes")
+	UPROPERTY(BlueprintAssignable, Category = "CombatDelegates")
 		FOnAttackMelee OnAttackMelee;
-	UPROPERTY(BlueprintAssignable, Category = "Attributes")
+	UPROPERTY(BlueprintAssignable, Category = "CombatDelegates")
 		FOnAttackRanged OnAttackRanged;
-	UPROPERTY(BlueprintAssignable, Category = "Attributes")
+	UPROPERTY(BlueprintAssignable, Category = "CombatDelegates")
 		FOnReturnToIdle OnReturnToIdle;
+	UPROPERTY(BlueprintAssignable, Category = "CombatDelegates")
+		FOnNewTargetSet OnNewTargetSet;
 
 protected:
 	///////////////////////////
@@ -200,11 +203,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ranged Combat", meta = (EditCondition = "m_bIsRangedActive"))
 		FRangedCombatStruct m_RangedCombatStruct;
 
-private:
-	TEnumAsByte<EAttackMode> m_CurrentAttackMode;
-	float m_CurrentTime;
-	FTimerHandle m_CombatTimerHandle;
-	bool m_bIsAttacking;
+protected:
 	AActor* m_TargetActor;
-
+	TEnumAsByte<EAttackMode> m_CurrentAttackMode;
+	FTimerHandle m_CombatTimerHandle;
+	float m_CurrentTime;
+	bool m_bIsAttacking;
 };

@@ -24,6 +24,9 @@ public:
 		UFUNCTION(BlueprintCallable, Category = "Combat")
 		virtual void AttackStart() override;
 
+	// Custom Component Update override
+	virtual void CustomTickComponent() override;
+
 	virtual void PerformMeleeAttack() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")

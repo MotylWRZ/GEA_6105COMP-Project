@@ -1,6 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+
 #include "Components/CharacterStatsComponent.h"
+
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Interfaces/AttackableInterface.h"
 #include "GameFramework/Character.h"
 #include "Animation/AnimMontage.h"
@@ -36,20 +40,28 @@ void UCharacterCombatComponent::AttackStart()
 {
 	Super::AttackStart();
 
+	AActor* tOwner = this->GetOwner();
 
 	// Check if the owner implements AttackableInterface. If it is and is not alive, do not continue
-	if (!this->m_Owner->GetClass()->ImplementsInterface(UAttackableInterface::StaticClass())
-		|| !IAttackableInterface::Execute_IsAlive(this->m_Owner))
+	if (!tOwner->GetClass()->ImplementsInterface(UAttackableInterface::StaticClass())
+		|| !IAttackableInterface::Execute_IsAlive(tOwner))
 	{
 		this->ResetAttack();
 		return;
 	}
+
+
 
 	if (this->m_bDisableMovementDuringAttack)
 	{
 		// Disable Movement
 		this->m_Owner->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
 	}
+}
+
+void UCharacterCombatComponent::CustomTickComponent()
+{
+	Super::CustomTickComponent();
 }
 
 void UCharacterCombatComponent::PerformMeleeAttack()

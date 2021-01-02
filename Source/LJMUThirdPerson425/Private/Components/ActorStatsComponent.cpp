@@ -65,7 +65,7 @@ void UActorStatsComponent::ModifyHealth(int32 ModifyingValue)
 		}
 	}
 
-	if (Delta < 0 && !this->IsAlive())
+	if (!this->IsAlive())
 	{
 		// MulticastOnDestroyed
 		this->OnActorKilled.Broadcast();
@@ -89,15 +89,6 @@ void UActorStatsComponent::ModifyMaxHealth(int32 ModifyingValue)
 
 void UActorStatsComponent::TakeDamage(UPARAM(ref) AActor*& InstigatorActor, int32 DamageToApply)
 {
-	// Try to get a StatsComponentn from the Instigator Actor
-	//UActorStatsComponent* tInstigatorStats = UActorStatsComponent::GetStatsComponent(InstigatorActor);
-
-	//// Check if the ComponentStats is valid and compare the team Ids in order to identify enemy/ally
-	//// Apply damage to enemies only
-	//if (tInstigatorStats && !IsEnemyByComponent(tInstigatorStats, this))
-	//{
-	//	return;
-	//}
 	ModifyHealth(-DamageToApply);
 }
 
