@@ -1,5 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+
+#include "Components/SpellbookComponent.h"
+
 #include "Utilities/General/HelperFunctionsLibrary.h"
 #include "Interfaces/AttackableInterface.h"
 
@@ -19,33 +22,38 @@ bool UModifiersManager::ModifyActorStats(AActor* InstigatorActor, AActor* ActorT
 		return false;
 	}
 
-	// Modify Actor Stats
+	// try to get the ActorStatsComponent from the ActorToModify
 	UActorStatsComponent* tStatsComponent = UActorStatsComponent::GetStatsComponent(ActorToModify);
 
-	if (!tStatsComponent || !UHelperFunctionsLibrary::IsActorAttackable(ActorToModify))
+	if (tStatsComponent)
 	{
-		return false;
-	}
+		// Try to cast the ActorStatsComponent to the CharacterStatsComponent class
+		UCharacterStatsComponent* tCharacterStatsComponent = Cast<UCharacterStatsComponent>(tStatsComponent);
 
-	// Check if these actors are enemies for each other
-	if (!UActorStatsComponent::IsEnemyByActor(InstigatorActor, ActorToModify))
-	{
-		// If they are allies add health
-		tStatsComponent->AddHealth(InstigatorActor, StatsModifierStruct.HealthToAdd);
-
-		// Apply damage to ally only if it is allowed
-		if (StatsModifierStruct.CanDamageAllies)
+		if (tCharacterStatsComponent)
 		{
-			IAttackableInterface::Execute_ApplyDamage(ActorToModify, InstigatorActor, StatsModifierStruct.DamageToApply);
+			// If cast succeeded
+			// Modify the CharacterStatsComponent (this will modify basic ActorStats and Characater stats)
+			ModifyActorCharacterComponent(InstigatorActor, tCharacterStatsComponent, StatsModifierStruct);
 		}
-		return true;
+		else
+		{
+			// If cast failed
+			// Modify the ActorStatsComponent
+			ModifyActorStatsComponent(InstigatorActor, tStatsComponent, StatsModifierStruct);
+		}
 	}
 
-	// Apply damage to enemy actor
-	IAttackableInterface::Execute_ApplyDamage(ActorToModify, InstigatorActor, StatsModifierStruct.DamageToApply);
+	// Try to get the Spellbook component from the ActorToModify
+	USpellBookComponent* tSpellbookComponent = Cast<USpellBookComponent>(ActorToModify->GetComponentByClass(USpellBookComponent::StaticClass()));
+
+	if (tSpellbookComponent)
+	{
+		// Modify the SpellbookComponent
+		ModifyActorSpellbookComponent(InstigatorActor, tSpellbookComponent, StatsModifierStruct);
+	}
 
 	return true;
-
 }
 
 bool UModifiersManager::ModifyActorStats(const FActorStatsStruct& InstigatorActorStats, AActor* ActorToModify, const FStatsModifierStruct& StatsModifierStruct)
@@ -94,6 +102,67 @@ bool UModifiersManager::ModifyActorStats(AActor* InstigatorActor, AActor* ActorT
 	IAttackableInterface::Execute_ApplyDamage(ActorToModify, InstigatorActor, DamageToApply);
 
 	return true;
+}
+
+void UModifiersManager::ModifyActorStatsComponent(AActor* InstigatorActor, UActorStatsComponent* ComponentToModify, const FStatsModifierStruct& StatsModifierStruct)
+{
+	// Modify Actor Stats
+	UActorStatsComponent* tStatsComponent = ComponentToModify;
+	AActor* tComponentOwner = tStatsComponent->GetOwner();
+
+	if (!tStatsComponent || !tComponentOwner)
+	{
+		return;
+	}
+
+	// Check if these actors are enemies for each other
+	if (!UActorStatsComponent::IsEnemyByActor(InstigatorActor, tComponentOwner))
+	{
+		// If they are allies add health
+		tStatsComponent->AddHealth(InstigatorActor, StatsModifierStruct.HealthToAdd);
+
+		// Apply damage to ally only if it is allowed
+		if (StatsModifierStruct.CanDamageAllies && UHelperFunctionsLibrary::IsActorAttackable(tComponentOwner))
+		{
+
+			IAttackableInterface::Execute_ApplyDamage(tComponentOwner, InstigatorActor, StatsModifierStruct.DamageToApply);
+		}
+		return;
+	}
+
+	if (UHelperFunctionsLibrary::IsActorAttackable(tComponentOwner))
+	{
+		// Apply damage to enemy actor
+		IAttackableInterface::Execute_ApplyDamage(tComponentOwner, InstigatorActor, StatsModifierStruct.DamageToApply);
+	}
+
+}
+
+void UModifiersManager::ModifyActorCharacterComponent(AActor* InstigatorActor, UCharacterStatsComponent* ComponentToModify, const FStatsModifierStruct& StatsModifierStruct)
+{
+	UCharacterStatsComponent* tCharacterStatsComponent = ComponentToModify;
+
+	if (!tCharacterStatsComponent)
+	{
+		return;
+	}
+
+	ModifyActorStatsComponent(InstigatorActor, ComponentToModify, StatsModifierStruct);
+
+	tCharacterStatsComponent->ModifySpeed(StatsModifierStruct.ModifySpeed);
+	tCharacterStatsComponent->ModifyArmor(StatsModifierStruct.ModifyArmor);
+}
+
+void UModifiersManager::ModifyActorSpellbookComponent(AActor* InstigatorActor, USpellBookComponent* ComponentToModify, const FStatsModifierStruct& StatsModifierStruct)
+{
+	USpellBookComponent* tSpellbookComponent = ComponentToModify;
+
+	if (!tSpellbookComponent)
+	{
+		return;
+	}
+
+	tSpellbookComponent->ModifyMana(StatsModifierStruct.ModifyMana);
 }
 
 FStatsModifierStruct FStatsModifierStruct::operator+(const FStatsModifierStruct& Other)

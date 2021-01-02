@@ -267,9 +267,6 @@ void UCombatComponent::SetTarget(AActor* NewTarget)
 		return;
 	}
 
-	// Reset attack to stop any active combat
-	this->ResetAttack();
-
 	// If it is alive set it as a new target
 	this->m_TargetActor = NewTarget;
 
@@ -431,7 +428,7 @@ float UCombatComponent::GetDistanceToTarget()
 	AActor* tOwner = this->GetOwner();
 
 	// Return false if there is no active target
-	if (!m_TargetActor || !m_TargetActor->GetClass()->IsValidLowLevel() || !tOwner)
+	if ((m_TargetActor && !m_TargetActor->GetClass()->IsValidLowLevel()) || !tOwner)
 	{
 		return false;
 	}

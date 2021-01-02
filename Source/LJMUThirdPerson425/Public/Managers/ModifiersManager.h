@@ -3,13 +3,12 @@
 #pragma once
 
 #include "Components/CharacterStatsComponent.h"
-//#include "Components/CombatComponent.h"
 
 #include "CoreMinimal.h"
 #include "Managers/ManagerBase.h"
 #include "ModifiersManager.generated.h"
 
-
+class USpellBookComponent;
 
 USTRUCT(Blueprintable)
 //Use this struct to Modify any property of the target actor
@@ -36,6 +35,15 @@ struct FStatsModifierStruct
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 HealthToAdd = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ModifySpeed = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ModifyArmor = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ModifyMana = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool CanDamageAllies = false;
@@ -70,4 +78,9 @@ public:
 	// After a check wheter the target actor is an ally or enemy in relation to Instigator actor, the stats will be modified
 	// Only basic stats can be modified using this function and they have to be explicitly specified
 	static bool ModifyActorStats(AActor* InstigatorActor, AActor* ActorToModify, int32 DamageToApply = 0, int32 HealthToAdd = 0, bool CanDamageAllies = false);
+
+protected:
+	static void ModifyActorStatsComponent(AActor* InstigatorActor, UActorStatsComponent* ComponentToModify, const FStatsModifierStruct& StatsModifierStruct);
+	static void ModifyActorCharacterComponent(AActor* InstigatorActor, UCharacterStatsComponent* ComponentToModify, const FStatsModifierStruct& StatsModifierStruct);
+	static void ModifyActorSpellbookComponent(AActor* InstigatorActor, USpellBookComponent* ComponentToModify, const FStatsModifierStruct& StatsModifierStruct);
 };
