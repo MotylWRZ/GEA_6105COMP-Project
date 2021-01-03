@@ -65,7 +65,7 @@ struct FEffectStruct : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!UsePremadeEffectClass || OverwriteEffectClassProperties"))
 		bool AllowMultiHit = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!UsePremadeEffectClass || OverwriteEffectClassProperties", ClampMin = "0"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "AllowMultiHit && !UsePremadeEffectClass || OverwriteEffectClassProperties", ClampMin = "0"))
 		int32 HitsNum = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!UsePremadeEffectClass || OverwriteEffectClassProperties", ClampMin = "0", ClampMax = "100"))

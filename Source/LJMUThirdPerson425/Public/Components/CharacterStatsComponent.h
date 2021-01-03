@@ -68,8 +68,12 @@ protected:
 	// Stats
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0"))
-	int32 m_Armor;
+	int32 m_Armor = 10;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0"))
-	int32 m_MovementSpeed;
+	int32 m_ArmorMax = 100;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0"))
+	int32 m_MovementSpeed = 300;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0"))
+	int32 m_MovementSpeedMax = 300;
 
 };

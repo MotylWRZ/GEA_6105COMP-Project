@@ -43,6 +43,11 @@ void UCharacterStatsComponent::ModifyArmor(int32 ModifyingValue)
 		this->m_Armor = 0;
 	}
 
+	if (this->m_Armor > this->m_ArmorMax)
+	{
+		this->m_Armor = this->m_ArmorMax;
+	}
+
 	this->OnArmorModified.Broadcast();
 }
 
@@ -53,6 +58,11 @@ void UCharacterStatsComponent::ModifySpeed(int32 ModifyingValue)
 	if (this->m_MovementSpeed < 0)
 	{
 		this->m_MovementSpeed = 0;
+	}
+
+	if (this->m_MovementSpeed > this->m_MovementSpeedMax)
+	{
+		this->m_MovementSpeed = this->m_MovementSpeedMax;
 	}
 
 	this->OnMovementSpeedModified.Broadcast();

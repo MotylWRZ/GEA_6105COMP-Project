@@ -171,6 +171,9 @@ FStatsModifierStruct FStatsModifierStruct::operator+(const FStatsModifierStruct&
 
 	tStatsModifier.DamageToApply = this->DamageToApply + Other.DamageToApply;
 	tStatsModifier.HealthToAdd = this->HealthToAdd + Other.HealthToAdd;
+	tStatsModifier.ModifySpeed = this->ModifySpeed + Other.ModifySpeed;
+	tStatsModifier.ModifyArmor = this->ModifyArmor + Other.ModifyArmor;
+	tStatsModifier.ModifyMana = this->ModifyMana + Other.ModifyMana;
 
 	return tStatsModifier;
 }
@@ -181,6 +184,9 @@ FStatsModifierStruct FStatsModifierStruct::operator-(const FStatsModifierStruct&
 
 	tStatsModifier.DamageToApply = this->DamageToApply - Other.DamageToApply;
 	tStatsModifier.HealthToAdd = this->HealthToAdd - Other.HealthToAdd;
+	tStatsModifier.ModifySpeed = this->ModifySpeed - Other.ModifySpeed;
+	tStatsModifier.ModifyArmor = this->ModifyArmor - Other.ModifyArmor;
+	tStatsModifier.ModifyMana = this->ModifyMana - Other.ModifyMana;
 
 	return tStatsModifier;
 }

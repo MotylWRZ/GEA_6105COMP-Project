@@ -179,6 +179,9 @@ void UEffect::UndoStatsChangesOnTarget()
 	FStatsModifierStruct tStatsModifier;
 	tStatsModifier.HealthToAdd = this->m_AccumulatedStatsChanges.DamageToApply;
 	tStatsModifier.DamageToApply = this->m_AccumulatedStatsChanges.HealthToAdd;
+	tStatsModifier.ModifySpeed -= this->m_AccumulatedStatsChanges.ModifySpeed;
+	tStatsModifier.ModifyArmor -= this->m_AccumulatedStatsChanges.ModifyArmor;
+	tStatsModifier.ModifyMana -= this->m_AccumulatedStatsChanges.ModifyMana;
 
 	UModifiersManager::ModifyActorStats(this->m_InstigatorActor, this->m_AffectedActor, tStatsModifier);
 }
