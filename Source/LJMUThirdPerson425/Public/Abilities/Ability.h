@@ -21,8 +21,6 @@ public:
 	// Sets default values for this actor's properties
 	AAbility();
 
-
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -83,8 +81,6 @@ protected:
 	virtual void UpdateAbilityIntervals(FAbilityIntervalStruct& AbilityIntervalStruct, float DeltaTime);
 	virtual void PlayAbilitySound(USoundCue* SoundCue);
 
-
-
 	// Class Members
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
@@ -97,6 +93,4 @@ protected:
 	bool m_bShouldUpdate;
 	bool m_bIsAbilityActive;
 	float m_CurrentUpdateTime;
-
-private:
 };

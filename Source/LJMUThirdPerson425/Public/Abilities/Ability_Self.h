@@ -30,7 +30,6 @@ public:
 	virtual void UseAbility_Implementation() override;
 	virtual void Update(float DeltaTime);
 
-
 	FORCEINLINE virtual const FAbilityStruct* GetAbilityStruct() const override { return &m_AbilityStructSelf; }
 	FORCEINLINE virtual void SetAbilityStruct(FAbilityStruct* AbilityStruct) override { this->m_AbilityStructSelf = *UHelperFunctionsLibrary::CastToDerived<FAbilityStruct_Self>(AbilityStruct); }
 

@@ -31,14 +31,6 @@ public:
 	virtual void Update(float DeltaTime) override;
 	virtual void Clear() override;
 
-protected:
-
-private:
-
-
-public:
-
-
 private:
 	TArray<ASpell*> m_ActiveSpells;
 	TArray<ASpell*> m_InactiveSpells;

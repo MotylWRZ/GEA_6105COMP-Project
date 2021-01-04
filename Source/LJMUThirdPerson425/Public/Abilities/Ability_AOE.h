@@ -29,7 +29,6 @@ protected:
 	virtual void UpdateSphereCollision(float DeltaTime);
 	virtual void Update(float DeltaTime) override;
 
-
 public:
 	USceneComponent* m_RootComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

@@ -63,6 +63,4 @@ protected:
 private:
 	UPROPERTY()
 	TMap<AActor*, FEffectsArray> m_EffectsMap;
-
-	int32 UpdateNum;
 };

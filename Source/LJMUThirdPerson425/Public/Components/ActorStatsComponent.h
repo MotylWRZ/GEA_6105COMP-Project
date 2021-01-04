@@ -66,9 +66,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Stats")
 		virtual void AddHealth(UPARAM(ref) AActor*& InstigatorActor, int32 HealthToAdd);
 
-
-
-
 	//////////////////
 	/// Getters/Setters
 	//////////////////
@@ -105,16 +102,16 @@ public:
 	/////////////
 	// Delegates
 	/////////////
-	UPROPERTY(BlueprintAssignable, Category = "Attributes")
+	UPROPERTY(BlueprintAssignable, Category = "Delegates")
 		FOnActorDamaged OnActorDamaged;
 
-	UPROPERTY(BlueprintAssignable, Category = "Attributes")
+	UPROPERTY(BlueprintAssignable, Category = "Delegates")
 		FOnActorHealed OnActorHealed;
 
-	UPROPERTY(BlueprintAssignable, Category = "Attributes")
+	UPROPERTY(BlueprintAssignable, Category = "Delegates")
 		FOnActorKilled OnActorKilled;
 
-	UPROPERTY(BlueprintAssignable, Category = "Attributes")
+	UPROPERTY(BlueprintAssignable, Category = "Delegates")
 		FOnStatsModified OnActorHealthModified;
 
 

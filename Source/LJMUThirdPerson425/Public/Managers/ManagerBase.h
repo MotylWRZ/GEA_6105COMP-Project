@@ -54,6 +54,4 @@ protected:
 	float m_CurrentUpdateInterval;
 	float m_CurrentClearInterval;
 	float m_ClearInterval;
-private:
-
 };

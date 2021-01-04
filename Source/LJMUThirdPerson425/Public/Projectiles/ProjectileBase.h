@@ -71,15 +71,14 @@ public:
 //////////////
 // DELEGATES
 //////////////
-	UPROPERTY(BlueprintAssignable, Category = "Projectile")
+	UPROPERTY(BlueprintAssignable, Category = "Projectile Delegates")
 	FOnProjectileHit OnProjectileHit;
-	UPROPERTY(BlueprintAssignable, Category = "Projectile")
+	UPROPERTY(BlueprintAssignable, Category = "Projectile Delegates")
 	FOnProjectileHit OnProjectileMiss;
-	UPROPERTY(BlueprintAssignable, Category = "Projectile")
+	UPROPERTY(BlueprintAssignable, Category = "Projectile Delegates")
 	FOnProjectileDestroyed OnProjectileDestroyed;
-	UPROPERTY(BlueprintAssignable, Category = "Projectile")
-		FOnProjectileDestroyed OnProjectileDeactivated;
-
+	UPROPERTY(BlueprintAssignable, Category = "Projectile Delegates")
+	FOnProjectileDestroyed OnProjectileDeactivated;
 
 protected:
 	virtual void UpdateHitActors();
@@ -100,7 +99,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	FProjectileStruct m_ProjectileStruct;
-
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	// Specify what changes will be made in the projectile target stats
