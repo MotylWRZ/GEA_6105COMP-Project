@@ -122,6 +122,19 @@ void AHero::Tick(float DeltaTime)
 
 }
 
+void AHero::ZoomCamera(float ZoomingValue)
+{
+	float tCurrentCameraBoomHeight = CameraBoom->SocketOffset.Z;
+
+	tCurrentCameraBoomHeight += ZoomingValue * this->m_ZoomMultiplier;
+
+	float tNewHeight = FMath::Clamp(tCurrentCameraBoomHeight, this->m_CameraBoomHeightMin, this->m_CameraBoomHeightMax);
+
+	this->CameraBoom->SocketOffset.Z = tNewHeight;
+
+	this->CameraBoom->TargetArmLength = tNewHeight / 2.0f;
+}
+
 void AHero::ApplyDamage_Implementation(AActor* InstigatorActor, int32 DamageToApply)
 {
 	this->m_CharaterStatsComponent->TakeDamage(InstigatorActor, DamageToApply);
@@ -170,11 +183,6 @@ void AHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-
-	PlayerInputComponent->BindAxis("MoveForward", this, &AHero::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AHero::MoveRight);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
@@ -183,7 +191,7 @@ void AHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("TurnRate", this, &AHero::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AHero::LookUpAtRate);
-
+	PlayerInputComponent->BindAxis("ZoomIn", this, &AHero::ZoomCamera);
 
 	// handle touch devices
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &AHero::TouchStarted);

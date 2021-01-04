@@ -25,10 +25,11 @@ public:
 		virtual void MoveCharacter();
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite)
 	AActor* m_HoveredActor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY( BlueprintReadWrite)
 	AActor* m_SelectedActor;
+
 	FTimerHandle m_ControllerTimerHandle;
 
 	FVector m_HitLocation;

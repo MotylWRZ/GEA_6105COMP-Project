@@ -80,6 +80,7 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	virtual void ZoomCamera(float ZoomingValue);
 
 	// IAttackableInterface implementation
 	UFUNCTION(BlueprintCallable)
@@ -97,6 +98,14 @@ public:
 		USpellBookComponent* m_SpellbookComponent;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UActorPickUpComponent* m_ActorPickUpComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+		float m_ZoomMultiplier;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+		float m_CameraBoomHeightMin;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+		float m_CameraBoomHeightMax;
+
 private:
 
 
