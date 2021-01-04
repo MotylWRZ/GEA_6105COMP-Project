@@ -24,7 +24,7 @@ void USpellsManager::Tick(float DeltaTime)
 			this->m_InactiveSpells.Add(tSpell);
 		}
 	}
-	// Remove all inactive pointers from the Active array
+	// Remove all pointers to incactive spells from the Active array
 	m_ActiveSpells.RemoveAll([](ASpell* Spell)
 		{
 			return !Spell->IsSpellActive();
@@ -95,34 +95,7 @@ ASpell* USpellsManager::CreateSpellFromStruct(const FSpellStruct& SpellStruct)
 
 void USpellsManager::Update(float DeltaTime)
 {
-	//USpellsManager::Update();
 
-	//// Update all spells
-	//for (int32 i = this->m_ActiveSpells.Num() - 1; i >= 0; --i)
-	//{
-	//	ASpell* tSpell = m_ActiveSpells[i];
-
-	//	if (!tSpell->IsSpellActive())
-	//	{
-	//		this->m_InactiveSpells.Add(tSpell);
-	//	}
-	//}
-	//// Remove all inactive pointers from the Active array
-	//m_ActiveSpells.RemoveAll([](ASpell* Spell)
-	//	{
-	//		return !Spell->IsSpellActive();
-	//	});
-
-	//if (this->ShouldClear())
-	//{
-	//	this->Clear();
-	//}
-
-	//if (this->m_ActiveSpells.Num() == 0 && this->m_InactiveSpells.Num() == 0)
-	//{
-	//	// Stop updating this manager
-	//	this->SetShouldUpdate(false);
-	//}
 }
 
 void USpellsManager::Clear()
